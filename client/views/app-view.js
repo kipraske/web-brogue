@@ -5,7 +5,11 @@ define([
     "views/console"
 ], function( $, _, BackBone, console){
 
-var App = Backbone.View.extend({
+/*
+ *  AppView is responsible for the initialization and teardown of the application
+ */
+
+var AppView = Backbone.View.extend({
 
     initialize : function (){
 	console.render();
@@ -13,6 +17,6 @@ var App = Backbone.View.extend({
 
 });
 
-return new App();
+return new AppView();
 
 });
