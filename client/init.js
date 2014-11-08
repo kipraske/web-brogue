@@ -6,4 +6,4 @@ require.config({
     },
 });
 
-require(["app"]);
+require(["views/app-view"]);
