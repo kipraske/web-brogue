@@ -4,7 +4,7 @@ define([
     'backbone',
     ], function( $, _, BackBone ){
 
-	var ConsoleCell = Backbone.Model.extend({
+	var ConsoleCellModel = Backbone.Model.extend({
 
 	    defaults: {
 
@@ -12,6 +12,6 @@ define([
 
 	});
 
-	return ConsoleCell;
+	return ConsoleCellModel;
 
     });

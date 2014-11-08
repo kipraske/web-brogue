@@ -3,7 +3,7 @@ define([
     "underscore",
     "backbone",    
     "views/console-cell"
-    ], function( $, _, BackBone, Cell){
+    ], function( $, _, BackBone, ConsoleCell){
 
 	var Console = Backbone.View.extend({
 
@@ -13,6 +13,6 @@ define([
 
 	});
 
-	return Console;
+	return new Console();
 
     });
