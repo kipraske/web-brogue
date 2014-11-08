@@ -2,17 +2,17 @@ define([
     "jquery",
     "underscore",
     "backbone",    
-    "models/app"
-], function( $, _, BackBone){
+    "views/console"
+], function( $, _, BackBone, console){
 
-var AppView = Backbone.View.extend({
+var App = Backbone.View.extend({
 
     initialize : function (){
-	console.log("initialized!");
+	console.render();
     }
 
 });
 
-return new AppView();
+return new App();
 
 });
