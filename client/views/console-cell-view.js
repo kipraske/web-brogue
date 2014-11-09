@@ -21,9 +21,12 @@ define([
 	    },
             
             render : function(){
-                this.$el.html(this.model.char);
-                this.el.style.color = this.model.fColor;
-                this.el.style.backgroundColor = this.model.bColor;
+                var modelData = this.model.toJSON();
+                
+                this.el.innerHTML = modelData.char;
+                this.el.style.color = modelData.fColor;
+                this.el.style.backgroundColor = modelData.bColor;
+                return this;
             }
 
 	});
