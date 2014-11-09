@@ -40,6 +40,9 @@ define([
             for (var i = 0; i < _CONSOLE_ROWS; i++) {          
                 for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
                     _consoleCells[i][j].render();
+                    
+                    //TODO : I never added the subviews to the DOM so they are not being added anywhere.  http://stackoverflow.com/questions/9292160/backbone-js-views-parent-elements
+                    
                 }          
             }
         },
