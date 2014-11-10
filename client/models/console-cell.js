@@ -14,10 +14,8 @@ define([
             widthPercent: 1,
             heightPercent: 2,
             leftPositionPercent: 0,
-            topPositionPercent: 0,
-            scaleFactor: 1
+            topPositionPercent: 0
         },
-        //TODO: this style information should be handled by the view rather than the model here.  Model should just have x,y, and colors
 
         initialize: function() {
             this.set({

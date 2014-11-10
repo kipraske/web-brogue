@@ -34,9 +34,6 @@ define([
             
             this.initializeConsoleCells();
 
-            //TODO - initialize console css class based on options
-            //this.className = blah;
-
             this.render();
         },
         initializeConsoleCells: function() {
@@ -56,11 +53,7 @@ define([
                     });
 
                     this.$el.append(cellView.render().el);
-                    row.push(cellView);
-                    
-                    // TODO render the new cell view and append it to this view
-                    // this.el.append(cellview.render().el);
-                    
+                    row.push(cellView);                  
                 }          
                 _consoleCells.push(row);
             }
@@ -72,16 +65,6 @@ define([
         },
         
         calculateConsoleCellSize : function(){
-            /*
-            var tempCellView = new ConsoleCellView({
-                id: "console-cell-temp",
-                x : -1,
-                y : -1
-            });
-            this.$el.append(tempCellView.render().el);
-            
-            var initialCalcHeight = tempCellView.$el.height(); 
-            */
             _consoleCellWidthPercent = 100 / _CONSOLE_COLUMNS;
             
             var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
@@ -118,9 +101,6 @@ define([
         
     });
 
-    var returnConsole = new Console();
-    dispatcher.registerHandler(returnConsole.setModelData);
-
-    return returnConsole;
+    return Console;
 
 });
