@@ -12,12 +12,12 @@ define([
     var _consoleCells = [];
 
     var Console = Backbone.View.extend({
-        el : "#main",
+        el : "#console",
         
         events: {},
         initialize: function() {
             this.$el.removeClass();
-            this.$el.addClass("console");
+            this.$el.addClass("full");
             this.initializeConsoleCells();
 
             //TODO - initialize console css class based on options
