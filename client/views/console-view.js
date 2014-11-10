@@ -40,9 +40,9 @@ define([
             this.render();
         },
         initializeConsoleCells: function() {
-            for (var i = 0; i < _CONSOLE_ROWS; i++) {     
+            for (var j = 0; j < _CONSOLE_ROWS; j++) {     
                 var row = [];       
-                for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
+                for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
                     var cellModel = new CellModel({
                         x : i,
                         y : j,
