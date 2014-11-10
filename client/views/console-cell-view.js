@@ -20,12 +20,10 @@ define([
                 this.listenTo(this.model, "change", this.render());
 	    },
             
-            render : function(){
-                var modelData = this.model.toJSON();
-                
-                this.el.innerHTML = modelData.char;
-                this.el.style.color = modelData.fColor;
-                this.el.style.backgroundColor = modelData.bColor;
+            render : function(){              
+                this.el.innerHTML = this.model.get("char");
+                this.el.style.color = this.model.get("foregroundColor");
+                this.el.style.backgroundColor = this.model.get("backgroundColor");
                 return this;
             }
 
