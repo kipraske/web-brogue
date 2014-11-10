@@ -54,6 +54,7 @@ header {
 /* 2.2 - Console --------------------*/
 
 .console {
+    position : relative;
     box-sizing : border-box;
     overflow : hidden;
 }
@@ -71,6 +72,10 @@ header {
 }
 
 .console.partial-width {}
+
+.console-cell{
+    position : absolute;
+}
 
 /* 3.0 Sidebar
 =========================
