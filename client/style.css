@@ -1,0 +1,77 @@
+
+/**
+Table Of Contents
+=======================
+0.0 - General
+    0.1 - Reset
+    0.2 - General
+1.0 - Header
+2.0 - Main Area
+    2.1 - Lobby
+    2.2 - Console
+3.0 - Chat Sidebar
+
+*/
+
+/* 0.0 - Reset
+ =====================
+*/
+
+/* 0.1 Reset Styles -----------------*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	border: 0;
+	font-family: inherit;
+	font-size: 100%;
+	font-style: inherit;
+	font-weight: inherit;
+	margin: 0;
+	outline: 0;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+/* 0.2 General Styles ---------------*/
+body{
+    background-color: #000000;
+}
+
+/* 1.0 Header
+=========================
+*/
+
+header {
+    height: 10vh;
+    background-color : grey;
+}
+
+/* 2.0 Main
+=========================
+*/
+
+/* 2.1 - Lobby --------------------*/
+
+/* 2.2 - Console --------------------*/
+
+.console {
+    box-sizing : border-box;
+    overflow : hidden;
+}
+
+.console.full-height {
+    height : 100vh;
+}
+
+.console.partial-height {
+    height : 90vh;
+}
+
+.console.full-width {
+    width : 100%;
+}
+
+.console.partial-width {}
+
+/* 3.0 Sidebar
+=========================
+*/
