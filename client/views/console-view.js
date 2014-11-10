@@ -91,7 +91,7 @@ define([
                 _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
             }
             else{
-                _consoleCellHeightPercent = 100 / _CONSOLE_ROWS / _consoleCellAspectRatio;
+                _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
             }
         },
         
