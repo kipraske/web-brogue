@@ -21,7 +21,7 @@ require([
     var console = new Console();
     
     dispatcher.registerHandlers({
-        "brogue" : console.setModelData
+        "brogue" : console.updateModelData
     });
     
     $(document).on("unload", function(){

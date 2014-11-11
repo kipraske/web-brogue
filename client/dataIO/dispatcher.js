@@ -3,24 +3,20 @@ define ([
     "dataIO/socket"
 ], function( _, socket ){
     
-    var _messageQueue = [];
     var _handlers = {};
+    
+    //TODO - may wish to implement a message queue so we can prioritize some messages over others
     
     var dispatcher = {
         registerHandlers : function(handlerCollection){  
-            _extend(_handlers, handlerCollection);
+            _.extend(_handlers, handlerCollection);
         },
         prepareData : function(data){
             // deflate data
             // parse JSON and return object
         },
-        enqueueMessage : function(){
-            // puts the message in the queue
-        },
-        dispatch : function(){
-            // takes next message in queue
-            // removes from the queue
-            // executes handler based on msg.dataType
+        dispatch : function(message){
+            _handlers[message.type](message.data);
         }
     };
     

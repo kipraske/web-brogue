@@ -6,9 +6,13 @@ define([
 
     var ConsoleCellModel = Backbone.Model.extend({
         defaults: {
-            char: "0",
-            foregroundColor: "#FFFFFF",
-            backgroundColor: "#000000",
+            char: 65,
+            foregroundRed: 255,
+            foregroundGreen: 255,
+            foregroundBlue: 255,
+            backgroundRed: 0,
+            backgroundGreen: 0,
+            backgroundBlue: 0,
             x: 0,
             y: 0,
             widthPercent: 1,
