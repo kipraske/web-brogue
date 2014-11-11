@@ -36,6 +36,8 @@ define([
             this.el.style.height = this.model.get("heightPercent") + "%";
             this.el.style.left = this.model.get("leftPositionPercent") + "%";
             this.el.style.top = this.model.get("topPositionPercent") + "%";
+            this.el.style.fontSize = this.model.get("charSizePx") + "px";
+            this.el.style.paddingTop = this.model.get("charPaddingPx") + "px";
         }
     });
 

@@ -57,6 +57,7 @@ header {
     position : relative;
     box-sizing : border-box;
     overflow : hidden;
+    font-family: monospace;
 }
 
 .console.full-height {
@@ -75,6 +76,8 @@ header {
 
 .console-cell{
     position : absolute;
+    overflow: hidden;
+    text-align: center;
 }
 
 /* 3.0 Sidebar

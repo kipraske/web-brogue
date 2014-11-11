@@ -15,6 +15,8 @@ define([
     var _consoleHeight;
     var _consoleCellWidthPercent;
     var _consoleCellHeightPercent;
+    var _consoleCellCharSizePx;
+    var _consoleCellCharPaddingPx;
     var _consoleCellAspectRatio = 0.53;  //TODO: set this via options model, reset via resize function
 
     var Console = Backbone.View.extend({
@@ -44,7 +46,9 @@ define([
                         x : i,
                         y : j,
                         widthPercent : _consoleCellWidthPercent,
-                        heightPercent : _consoleCellHeightPercent
+                        heightPercent : _consoleCellHeightPercent,
+                        charSizePx : _consoleCellCharSizePx,
+                        charPaddingPx : _consoleCellCharPaddingPx
                     });
                     
                     var cellView = new ConsoleCellView({
@@ -67,8 +71,12 @@ define([
         calculateConsoleCellSize : function(){
             _consoleCellWidthPercent = 100 / _CONSOLE_COLUMNS;
             
+            // Cell Aspect Ratio
             var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
             var cellPixelHeight = cellPixelWidth / _consoleCellAspectRatio;
+            
+            // TODO : current cell character positioning really assumes that we are using the else case of this clause
+            // on wide screen where the aspect ratio is squished we end up with some overlap
             
             if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight){
                 _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
@@ -76,10 +84,10 @@ define([
             else{
                 _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
             }
-        },
-        
-        resizeConsoleCells : function(){
             
+            // Cell Character Positioning
+            _consoleCellCharSizePx = cellPixelHeight * 3 / 5;
+            _consoleCellCharPaddingPx = cellPixelHeight / 10; 
         },
 
         render : function(){
@@ -116,7 +124,9 @@ define([
                 for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
                     _consoleCells[i][j].model.set({
                         widthPercent : _consoleCellWidthPercent,
-                        heightPercent : _consoleCellHeightPercent
+                        heightPercent : _consoleCellHeightPercent,
+                        charSizePx : _consoleCellCharSizePx,
+                        charPaddingPx : _consoleCellCharPaddingPx
                     });
                     _consoleCells[i][j].model.calculatePositionAttributes();
                     _consoleCells[i][j].applySize();

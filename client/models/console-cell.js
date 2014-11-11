@@ -6,7 +6,7 @@ define([
 
     var ConsoleCellModel = Backbone.Model.extend({
         defaults: {
-            char: 65,
+            char: 48,
             foregroundRed: 255,
             foregroundGreen: 255,
             foregroundBlue: 255,
@@ -15,6 +15,8 @@ define([
             backgroundBlue: 0,
             x: 0,
             y: 0,
+            charSizePx : 10,
+            charPaddingPx : 2,
             widthPercent: 1,
             heightPercent: 2,
             leftPositionPercent: 0,
@@ -31,7 +33,7 @@ define([
                 topPositionPercent : this.get("y") * this.get("heightPercent")
             });
         }
-
+      
     });
 
     return ConsoleCellModel;
