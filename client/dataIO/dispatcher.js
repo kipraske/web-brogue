@@ -1,15 +1,17 @@
-define (["dataIO/socket"], function(socket){
+define ([
+    "underscore",
+    "dataIO/socket"
+], function( _, socket ){
     
-    var messageQueue = [];
-    var handlers = {};
+    var _messageQueue = [];
+    var _handlers = {};
     
     var dispatcher = {
-        registerHandler : function(){
-            // adds handler to handlers object
+        registerHandlers : function(handlerCollection){  
+            _extend(_handlers, handlerCollection);
         },
-        prepareData : function(){
+        prepareData : function(data){
             // deflate data
-            
             // parse JSON and return object
         },
         enqueueMessage : function(){
