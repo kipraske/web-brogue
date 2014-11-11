@@ -18,20 +18,23 @@ require([
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     testRunner.attachToGlobalScope();
     
+    // initialize each view
     var console = new Console();
     
+    // handle all incoming data from the websocket connection
     dispatcher.registerHandlers({
-        "brogue" : console.updateModelData
+        "brogue" : console.updateCellModelData
     });
     
+    // clean up application
     $(document).on("unload", function(){
         console.save();
     });
     
-    $(document).on("resize"), function(){
-        
-        //TODO implement a throttled resizing function for our views
-        
-    };
+    // responsive resizing
+    var throttledResize = _.debounce(function(){
+            console.resize();
+        }, 100);
+    $(window).resize(throttledResize);
     
 });

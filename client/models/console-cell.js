@@ -22,6 +22,10 @@ define([
         },
 
         initialize: function() {
+           this.calculatePositionAttributes();
+        },
+        
+        calculatePositionAttributes : function(){
             this.set({
                 leftPositionPercent : this.get("x") * this.get("widthPercent"),
                 topPositionPercent : this.get("y") * this.get("heightPercent")

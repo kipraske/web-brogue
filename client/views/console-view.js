@@ -90,13 +90,11 @@ define([
             }
         },
         
-        updateModelData : function(data) {
-            
-            var dIndex = 0;
-            
+        updateCellModelData : function(data) {
+            var dIndex = 0;          
             for (var i = 0; i < _CONSOLE_ROWS; i++) {          
                 for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
-                    var setobj = {
+                    _consoleCells[i][j].model.set({
                         char: data[dIndex++],
                         foregroundRed: data[dIndex++],
                         foregroundGreen: data[dIndex++],
@@ -104,14 +102,26 @@ define([
                         backgroundRed: data[dIndex++],
                         backgroundGreen: data[dIndex++],
                         backgroundBlue: data[dIndex++]
-                    };
-                    
-                    
-                    _consoleCells[i][j].model.set(setobj);
+                    });
                     _consoleCells[i][j].render();
                 }          
             }
         return this;
+        },
+        
+        resize : function(){
+            this.calculateConsoleSize();
+            this.calculateConsoleCellSize();
+            for (var i = 0; i < _CONSOLE_ROWS; i++) {           
+                for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
+                    _consoleCells[i][j].model.set({
+                        widthPercent : _consoleCellWidthPercent,
+                        heightPercent : _consoleCellHeightPercent
+                    });
+                    _consoleCells[i][j].model.calculatePositionAttributes();
+                    _consoleCells[i][j].applySize();
+                }
+            }
         }
         
     });
