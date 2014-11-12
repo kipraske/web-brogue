@@ -73,11 +73,10 @@ define([
             var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
             var cellPixelHeight = cellPixelWidth / _consoleCellAspectRatio;
             
-            // TODO : current cell character positioning really assumes that we are using the else case of this clause
-            // on wide screen where the aspect ratio is squished we end up with some overlap
-            
+            //If this height will make the console go off screen, ignore the aspect ratio and just use the full height
             if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight){
                 _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
+                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;
             }
             else{
                 _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
@@ -85,7 +84,7 @@ define([
             
             // Cell Character Positioning
             _consoleCellCharSizePx = cellPixelHeight * 3 / 5;
-            _consoleCellCharPaddingPx = cellPixelHeight / 10; 
+            _consoleCellCharPaddingPx = cellPixelHeight / 5; 
         },
 
         render : function(){
