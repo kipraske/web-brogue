@@ -13,6 +13,7 @@ define([
     var _consoleCells = [];
     var _consoleWidth;
     var _consoleHeight;
+    var _consoleCellTopOffsetPercent;
     var _consoleCellWidthPercent;
     var _consoleCellHeightPercent;
     var _consoleCellCharSizePx;
@@ -46,7 +47,8 @@ define([
                         widthPercent : _consoleCellWidthPercent,
                         heightPercent : _consoleCellHeightPercent,
                         charSizePx : _consoleCellCharSizePx,
-                        charPaddingPx : _consoleCellCharPaddingPx
+                        charPaddingPx : _consoleCellCharPaddingPx,
+                        topOffsetPercent : _consoleCellTopOffsetPercent
                     });
                     
                     var cellView = new ConsoleCellView({
@@ -76,10 +78,15 @@ define([
             //If this height will make the console go off screen, ignore the aspect ratio and just use the full height
             if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight){
                 _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
-                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;
+                _consoleCellTopOffsetPercent = 0;
+                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;        
             }
             else{
                 _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
+                
+                // sweet sweet vertical centering
+                var topOffSetPx = (_consoleHeight - cellPixelHeight * _CONSOLE_ROWS) / 2;
+                _consoleCellTopOffsetPercent = topOffSetPx / _consoleHeight * 100;
             }
             
             // Cell Character Positioning
@@ -123,7 +130,8 @@ define([
                         widthPercent : _consoleCellWidthPercent,
                         heightPercent : _consoleCellHeightPercent,
                         charSizePx : _consoleCellCharSizePx,
-                        charPaddingPx : _consoleCellCharPaddingPx
+                        charPaddingPx : _consoleCellCharPaddingPx,
+                        topOffsetPercent : _consoleCellTopOffsetPercent
                     });
                     _consoleCells[i][j].model.calculatePositionAttributes();
                     _consoleCells[i][j].applySize();
