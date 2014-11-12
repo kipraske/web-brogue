@@ -35,8 +35,6 @@ define([
             this.calculateConsoleCellSize();
             
             this.initializeConsoleCells();
-
-            this.render();
         },
         initializeConsoleCells: function() {
             for (var j = 0; j < _CONSOLE_ROWS; j++) {     
