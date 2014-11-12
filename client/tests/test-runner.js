@@ -1,7 +1,8 @@
 define([
     'tests/test-socket',
-    'tests/test-brogue-message-rand'
-], function(tSocket, randMsg) {
+    'tests/test-brogue-message-rand',
+    'tests/test-brogue-message-few'
+], function(tSocket, randMsg, fewMsg) {
 
     var tests = {};
 
@@ -10,6 +11,7 @@ define([
         
         tests.all = runAll;
         tests.randMsg = randMsg;
+        tests.fewMsg = fewMsg;
     }
     
     function runAll(){

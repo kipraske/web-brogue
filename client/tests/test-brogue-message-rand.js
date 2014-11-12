@@ -1,5 +1,8 @@
 define(['dataIO/dispatcher'], function(dispatcher) {
 
+    // Fill the entire console with random background, foreground, and character values
+    // Worst case scenario load test
+
     function dispatchRandomMessage() {
         var fillArray = [];
 
