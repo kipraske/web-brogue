@@ -1,0 +1,14 @@
+{
+    "name" : "Brogue Server",
+    "version" : 1.0,
+    "contributors" : [{
+            "name" : "Kristofer Raske",
+            "email" : "kip.raske@gmail.com"
+    }],
+    "main" : "app.js",
+    "dependencies" : {
+        "express" : "*",
+        "ws" : "*"
+    }
+}
+
