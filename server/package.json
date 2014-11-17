@@ -1,6 +1,6 @@
 {
-    "name" : "Brogue Server",
-    "version" : 1.0,
+    "name" : "web-brogue",
+    "version" : "0.0.1",
     "contributors" : [{
             "name" : "Kristofer Raske",
             "email" : "kip.raske@gmail.com"
@@ -11,4 +11,3 @@
         "ws" : "*"
     }
 }
-
