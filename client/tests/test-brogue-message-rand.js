@@ -1,4 +1,4 @@
-define(['dataIO/dispatcher'], function(dispatcher) {
+define(['dataIO/router'], function(router) {
 
     // Fill the entire console with random background, foreground, and character values
     // Worst case scenario load test
@@ -15,7 +15,7 @@ define(['dataIO/dispatcher'], function(dispatcher) {
             data: fillArray
         };
         
-        dispatcher.dispatch(message);
+        router.dispatch(message);
     }
     
     return dispatchRandomMessage;

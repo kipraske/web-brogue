@@ -1,4 +1,4 @@
-define(['dataIO/dispatcher'], function(dispatcher){
+define(['dataIO/router'], function(router){
    //fake socket so I can hook it up
     var socket = {
        send : function (msg){
@@ -31,12 +31,12 @@ define(['dataIO/dispatcher'], function(dispatcher){
            // TODO: it seems the stone soup code contains a message queue which is handled when the script is ready for the next message
            // That would be a nice thing to do  here too
            
-           // TODO : I think the dispatcher should be able to handle each of these steps
-           // dispatcher.prepareData -> msg.dataType and msg.data etc
-           // dispatcher.enqueueMessage(msg)
-           // then in dispatcher dispatcher.dispatch(msg)-> calls the appropriate handler when system resources are good
+           // TODO : I think the router should be able to handle each of these steps
+           // router.prepareData -> msg.dataType and msg.data etc
+           // router.enqueueMessage(msg)
+           // then in router router.dispatch(msg)-> calls the appropriate handler when system resources are good
            
-           dispatcher.dispatch(msgType, payload);
+           router.dispatch(msgType, payload);
        }
    }; 
    

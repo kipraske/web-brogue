@@ -2,10 +2,10 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    'dataIO/dispatcher',
+    'dataIO/router',
     "views/console-cell-view",
     "models/console-cell"
-], function($, _, Backbone, dispatcher, ConsoleCellView, CellModel) {
+], function($, _, Backbone, router, ConsoleCellView, CellModel) {
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;

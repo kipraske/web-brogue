@@ -11,9 +11,9 @@ require([
     "underscore",
     "backbone",
     "tests/test-runner",
-    "dataIO/dispatcher",
+    "dataIO/router",
     "views/console-view"
-], function( $, _, Backbone, testRunner, dispatcher, Console){
+], function( $, _, Backbone, testRunner, router, Console){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     testRunner.attachToGlobalScope();
@@ -22,7 +22,7 @@ require([
     var console = new Console();
     
     // handle all incoming data from the websocket connection
-    dispatcher.registerHandlers({
+    router.registerHandlers({
         "brogue" : console.updateCellModelData
     });
     

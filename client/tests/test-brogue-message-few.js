@@ -1,4 +1,4 @@
-define(['dataIO/dispatcher'], function(dispatcher) {
+define(['dataIO/router'], function(router) {
     
     // Fills 5% of cells with a random character
     // Testing updating less of the cells at a time which is more realistic for real game data
@@ -26,7 +26,7 @@ define(['dataIO/dispatcher'], function(dispatcher) {
             data: fillArray
         };
         
-        dispatcher.dispatch(message);
+        router.dispatch(message);
     }
     
     return dispatchFewMessage;
