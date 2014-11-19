@@ -10,8 +10,6 @@ app.get("/", function(req, res){
     res.sendFile(clientPath + "/index.html");
 });
 
-console.log(clientPath);
-
 server = app.listen(80, function(){
     
 var port = server.address().port;
