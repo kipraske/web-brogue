@@ -1,5 +1,7 @@
+users = require("../users");
+
 module.exports = {
-    spawn : function(){
+    spawn : function(data){
         
     },
     Socket : function(ws, router){
