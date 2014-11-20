@@ -11,8 +11,17 @@ app.use(session({secret: '1234567890QWERTY'}));
 var clientPath = path.normalize(__dirname + "../../../client");
 app.use(express.static(clientPath));
 
+//routes
 app.get("/", function(req, res){
     res.sendFile(clientPath + "/index.html");
+});
+
+app.post("/login", function(req, res){
+    res.write("request for login recieved");
+});
+
+app.post("/register", function(req, res){
+    res.write("request for new user recieved");
 });
 
 server = app.listen(80, function(){

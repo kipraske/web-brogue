@@ -11,6 +11,9 @@
         "express" : "*",
         "ws" : "*",
         "cookie-parser" : "*",
-        "express-session" : "*"
+        "express-session" : "*",
+        "bcrypt-nodejs" : "latest",
+        "passport" : "~0.1.17",         
+        "passport-local" : "~0.1.6"
     }
 }
