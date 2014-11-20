@@ -7,7 +7,7 @@ console.log("ws server listening on port %s", wsPort);
 var brogue = require("./brogue");
 
 var router = require("./router");
-router.registerHandlers({
+router.recieve.registerHandlers({
     "new" : brogue.spawn
 });
 
@@ -16,8 +16,8 @@ wss.on("connection", function(ws) {
     var brogueSocket = new brogue.Socket(ws, router);
     
     ws.on("message", function(rawMsg){
-       var msg = router.prepareData(rawMsg);
-       router.route(msg);
+       var msg = router.recieve.prepareData(rawMsg);
+       router.recieve.route(msg);
        console.log("recieved %s", msg);
     });
     
