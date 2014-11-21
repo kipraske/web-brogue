@@ -5,6 +5,11 @@ var app = express();
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
 
+// TODO: set up the authentication parts in a different file
+// something like require(./auth)(app, passport);
+
+// may want to do something similar for session configuration.  First things first - websocket
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(
@@ -23,7 +28,7 @@ passport.use(new LocalStrategy(
 
 
 // Http Server Configuration
-var clientPath = path.normalize(__dirname + "../client");
+var clientPath = path.normalize(__dirname + "/../client");
 app.use(express.static(clientPath));
 
 //routes
@@ -72,21 +77,22 @@ var WebSocketServer = require("ws").Server;
 var wss = new WebSocketServer({port: wsPort});
 console.log("ws server listening on port %s", wsPort);
 
-var brogue = require("./brogue");
+var BrogueController = require("./controllers/brogue-controller");
 
-var router = require("./router");
-router.recieve.registerHandlers({
-    "new" : brogue.spawn
-});
+var Router = require("./controllers/router");
 
 wss.on("connection", function(ws) {
-        
-    var brogueSocket = new brogue.Socket(ws, router);
+
+    var router = new Router();
+
+    var brogue = new BrogueController(ws);
+    
+    router.registerController(brogue);
     
     ws.on("message", function(rawMsg){
-       var msg = router.recieve.prepareData(rawMsg);
-       router.recieve.route(msg);
-       console.log("recieved %s", msg);
+       var msg = router.prepareRecievedData(rawMsg);
+       router.route(msg);
+       console.log("recieved message for %s", msg.controller);
     });
     
 });

@@ -7,7 +7,9 @@ define(['dataIO/router'], function(router){
     socket.onopen = function(){
         console.log("test socket open");
         
-        socket.send("test message to server");
+        
+        // TODO: remove this test and set up cases
+        socket.send('{"controller" : "brogue", "type" : "new", "data" : "test message to server"}');
     };
     
     socket.onmessage = function(event){
