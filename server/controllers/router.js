@@ -6,12 +6,10 @@ function Router(){
 }
 
 Router.prototype = {
-    registerController : function(controllerInstance) {
-        this.routeCollection[controllerInstance.controllerName] = controllerInstance;
-    },
     registerControllers : function(controllerCollection) {
+        var self = this;
         controllerCollection.forEach(function(controller){
-            this.registerController(controller);
+            self.routeCollection[controller.controllerName] = controller;
         });
     },
     prepareRecievedData : function(rawMessage) {

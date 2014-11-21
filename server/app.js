@@ -87,7 +87,9 @@ wss.on("connection", function(ws) {
 
     var brogue = new BrogueController(ws);
     
-    router.registerController(brogue);
+    router.registerControllers([
+        brogue
+    ]);
     
     ws.on("message", function(rawMsg){
        var msg = router.prepareRecievedData(rawMsg);
