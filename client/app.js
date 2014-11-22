@@ -10,13 +10,13 @@ require([
     "jquery",
     "underscore",
     "backbone",
-    "tests/test-runner",
+    "tests/debug-mode",
     "dataIO/router",
     "views/console-view"
-], function( $, _, Backbone, testRunner, router, Console){
+], function( $, _, Backbone, debugMode, router, Console){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
-    testRunner.attachToGlobalScope();
+    debugMode.attachToGlobalScope();
     
     // initialize each view
     var console = new Console();
