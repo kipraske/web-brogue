@@ -21,7 +21,7 @@ require([
     // initialize each view
     var console = new Console();
     
-    // handle all incoming data from the websocket connection
+    // set up routes for the websocket connection
     router.registerHandlers({
         "brogue" : console.updateCellModelData
     });
