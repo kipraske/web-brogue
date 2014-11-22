@@ -3,6 +3,8 @@ define(['dataIO/router'], function(router) {
     // Fills 5% of cells with a random character
     // Testing updating less of the cells at a time which is more realistic for real game data
     
+    // TODO : update me so that we use the correct single-cell form of data update
+    
     function dispatchFewMessage() {
         var fillArray = [];
         var setNextColor = 0;

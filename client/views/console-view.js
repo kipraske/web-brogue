@@ -9,6 +9,7 @@ define([
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;
+    var _MESSAGE_UPDATE_SIZE = 9;
 
     var _consoleCells = [];
     var _consoleWidth;
@@ -102,23 +103,23 @@ define([
             }
         },
         
-        updateCellModelData : function(data) {
-            var dIndex = 0;          
-            for (var i = 0; i < _CONSOLE_ROWS; i++) {          
-                for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
-                    _consoleCells[i][j].model.set({
-                        char: data[dIndex++],
-                        foregroundRed: data[dIndex++],
-                        foregroundGreen: data[dIndex++],
-                        foregroundBlue: data[dIndex++],
-                        backgroundRed: data[dIndex++],
-                        backgroundGreen: data[dIndex++],
-                        backgroundBlue: data[dIndex++]
-                    });
-                    _consoleCells[i][j].render();
-                }          
-            }
-        return this;
+        updateCellModelData: function(data) {
+            var dataArray = new Uint8Array(data);
+            var dIndex = 0;
+            var dataXCoord = dataArray[dIndex++];
+            var dataYCoord = dataArray[dIndex++];
+
+            _consoleCells[dataXCoord][dataYCoord].model.set({
+                char: dataArray[dIndex++],
+                foregroundRed: dataArray[dIndex++],
+                foregroundGreen: dataArray[dIndex++],
+                foregroundBlue: dataArray[dIndex++],
+                backgroundRed: dataArray[dIndex++],
+                backgroundGreen: dataArray[dIndex++],
+                backgroundBlue: dataArray[dIndex++]
+            });
+
+            _consoleCells[dataXCoord][dataYCoord].render();
         },
         
         resize : function(){

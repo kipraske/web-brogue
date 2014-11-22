@@ -7,7 +7,7 @@ define ([
     
     //TODO - may wish to implement a message queue so we can prioritize some messages over others
     
-    var dispatcher = {
+    var router = {
         registerHandlers : function(handlerCollection){  
             _.extend(_handlers, handlerCollection);
         },
@@ -15,13 +15,19 @@ define ([
             // deflate data
             // parse JSON and return object
         },
-        dispatch : function(message){
-            _handlers[message.type](message.data);
+        route: function(message) {
+            if (message instanceof ArrayBuffer){
+                _handlers["brogue"](message);
+            }
+
+            if (_handlers[message.type]) {
+                _handlers[message.type](message.data);
+            }
         }
     };
     
     
-    return dispatcher;
+    return router;
 });
 
 
