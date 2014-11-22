@@ -83,10 +83,10 @@ var Router = require("./controllers/router");
 
 wss.on("connection", function(ws) {
 
-    var router = new Router();
+    var currentUser = {};
 
-    var brogue = new BrogueController(ws);
-    
+    var router = new Router();
+    var brogue = new BrogueController(ws, currentUser);
     router.registerControllers([
         brogue
     ]);

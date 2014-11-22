@@ -1,7 +1,7 @@
 
 function Controller(){
     this.controllerName;
-    this.handleMessage = function(){};
+    this.handleIncomingMessage = function(){};
     
     this.prepareDataForSending = function(messageType, messageData){
         var messageObject = {

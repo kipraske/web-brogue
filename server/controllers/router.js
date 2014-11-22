@@ -18,7 +18,9 @@ Router.prototype = {
         return JSON.parse(rawMessage);
     },
     route : function(message){
-        this.routeCollection[message.controller].handleMessage(message);
+        if (this.routeCollection[message.controller]) {
+            this.routeCollection[message.controller].handleIncomingMessage(message);
+        }
     }
 };
 
