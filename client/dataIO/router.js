@@ -14,23 +14,23 @@ define ([
             _.extend(_handlers, handlerCollection);
         },
         prepareIncomingData : function(data){
-            var message;
             if (data instanceof ArrayBuffer){
-                message = {
-                    type : "brogue",
-                    data : data
-                };
+                return data;
             }
             else {
                 // TODO - may wish eventually to gzip the incoming JSON, will have to decompress here then
                 
-                message = JSON.parse(data);
+                return JSON.parse(data);
             }
             
             return message;
         },
         route: function(message) {
-            if (_handlers[message.type]) {
+            if (message instanceof ArrayBuffer){
+                _handlers["brogue"](message);
+            }
+            
+            if (message.type && message.data && _handlers[message.type]) {
                 _handlers[message.type](message.data);
             }
         }

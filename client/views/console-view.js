@@ -22,87 +22,82 @@ define([
     var _consoleCellAspectRatio = 0.53;  //TODO: set this via options model, reset via resize function
 
     var Console = Backbone.View.extend({
-        el : "#console",
-        
+        el: "#console",
         events: {},
         initialize: function() {
-            
+
             //TODO: set console size based on options that are set
             // For now we will use the full settings
-            
+
             this.$el.addClass("full-width");
             this.$el.addClass("partial-height");
-            
+
             this.calculateConsoleSize();
             this.calculateConsoleCellSize();
-            
+
             this.initializeConsoleCells();
         },
         initializeConsoleCells: function() {
-            for (var j = 0; j < _CONSOLE_ROWS; j++) {     
-                var row = [];       
-                for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+                var column = [];
+                for (var j = 0; j < _CONSOLE_ROWS; j++) {
                     var cellModel = new CellModel({
-                        x : i,
-                        y : j,
-                        widthPercent : _consoleCellWidthPercent,
-                        heightPercent : _consoleCellHeightPercent,
-                        charSizePx : _consoleCellCharSizePx,
-                        charPaddingPx : _consoleCellCharPaddingPx,
-                        topOffsetPercent : _consoleCellTopOffsetPercent
+                        x: i,
+                        y: j,
+                        widthPercent: _consoleCellWidthPercent,
+                        heightPercent: _consoleCellHeightPercent,
+                        charSizePx: _consoleCellCharSizePx,
+                        charPaddingPx: _consoleCellCharPaddingPx,
+                        topOffsetPercent: _consoleCellTopOffsetPercent
                     });
-                    
+
                     var cellView = new ConsoleCellView({
-                        model : cellModel,
-                        id : "console-cell-" + i + "-" + j
+                        model: cellModel,
+                        id: "console-cell-" + i + "-" + j
                     });
 
                     this.$el.append(cellView.render().el);
-                    row.push(cellView);                  
-                }          
-                _consoleCells.push(row);
+                    column.push(cellView);
+                }
+                _consoleCells.push(column);
             }
         },
-        
-        calculateConsoleSize : function(){
+        calculateConsoleSize: function() {
             _consoleWidth = this.$el.width();
             _consoleHeight = this.$el.height();
         },
-        
-        calculateConsoleCellSize : function(){
+        calculateConsoleCellSize: function() {
             _consoleCellWidthPercent = 100 / _CONSOLE_COLUMNS;
-            
+
             // Cell Aspect Ratio
             var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
             var cellPixelHeight = cellPixelWidth / _consoleCellAspectRatio;
-            
+
             //If this height will make the console go off screen, ignore the aspect ratio and just use the full height
-            if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight){
+            if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight) {
                 _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
                 _consoleCellTopOffsetPercent = 0;
-                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;        
+                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;
             }
-            else{
+            else {
                 _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
-                
+
                 // sweet sweet vertical centering
                 var topOffSetPx = (_consoleHeight - cellPixelHeight * _CONSOLE_ROWS) / 2;
                 _consoleCellTopOffsetPercent = topOffSetPx / _consoleHeight * 100;
             }
-            
+
             // Cell Character Positioning
             _consoleCellCharSizePx = cellPixelHeight * 3 / 5;
-            _consoleCellCharPaddingPx = cellPixelHeight / 5; 
+            _consoleCellCharPaddingPx = cellPixelHeight / 5;
         },
-
-        render : function(){
-            for (var i = 0; i < _CONSOLE_ROWS; i++) {          
-                for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
+        render: function() {
+            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+                for (var j = 0; j < _CONSOLE_ROWS; j++) {
                     _consoleCells[i][j].render();
-                }          
+                }
             }
         },
-        
         updateCellModelData: function(data) {
             var dataArray = new Uint8Array(data);
             var dIndex = 0;
@@ -121,25 +116,24 @@ define([
 
             _consoleCells[dataXCoord][dataYCoord].render();
         },
-        
-        resize : function(){
+        resize: function() {
             this.calculateConsoleSize();
             this.calculateConsoleCellSize();
-            for (var i = 0; i < _CONSOLE_ROWS; i++) {           
-                for (var j = 0; j < _CONSOLE_COLUMNS; j++) {
+            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+                for (var j = 0; j < _CONSOLE_ROWS; j++) {
                     _consoleCells[i][j].model.set({
-                        widthPercent : _consoleCellWidthPercent,
-                        heightPercent : _consoleCellHeightPercent,
-                        charSizePx : _consoleCellCharSizePx,
-                        charPaddingPx : _consoleCellCharPaddingPx,
-                        topOffsetPercent : _consoleCellTopOffsetPercent
+                        widthPercent: _consoleCellWidthPercent,
+                        heightPercent: _consoleCellHeightPercent,
+                        charSizePx: _consoleCellCharSizePx,
+                        charPaddingPx: _consoleCellCharPaddingPx,
+                        topOffsetPercent: _consoleCellTopOffsetPercent
                     });
                     _consoleCells[i][j].model.calculatePositionAttributes();
                     _consoleCells[i][j].applySize();
                 }
             }
         }
-        
+
     });
 
     return Console;
