@@ -19,11 +19,17 @@ function BrogueController(ws, user) {
                 this.spawnChildProcess([]);
                 this.attachChildEvents();
                 break;
-
-                //TODO: there will be many more - keypress, mouseclick, end etc.
+            case "key" : 
+                // TODO: this is a test case, will have to process a bit more strongly
+                if (self.brogueChild) {
+                    self.brogueChild.stdin.write(message.data + "\n");
+                }
+                break;
+            // ...
+            //TODO: there will be many more - keypress, mouseclick, end etc.
 
             default :
-                var errorMessage = this.prepareDataForSending("error", "invalid message recieved" + JSON.stringify(message));
+                var errorMessage = this.prepareDataForSending("error", "invalid message recieved: " + JSON.stringify(message));
                 ws.send(errorMessage);
         }
     };
@@ -33,7 +39,7 @@ function BrogueController(ws, user) {
 
         //TODO get this path in some sort of global thing - clean this up to be more generic;  Not going to be using the test instance forever after all;
         var path = require('path');
-        var BROGUE_PATH = path.normalize(__dirname + "\\..\\tests\\fauxbrogue.js");
+        var BROGUE_PATH = path.normalize(__dirname + "\\..\\tests\\mock-brogue-process.js");
         console.log(BROGUE_PATH);
         args = [BROGUE_PATH];
         self.brogueChild = childProcess.spawn("node", args, options);
