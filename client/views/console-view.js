@@ -3,9 +3,10 @@ define([
     "underscore",
     "backbone",
     'dataIO/router',
+    'dataIO/socket',
     "views/console-cell-view",
     "models/console-cell"
-], function($, _, Backbone, router, ConsoleCellView, CellModel) {
+], function($, _, Backbone, router, ws, ConsoleCellView, CellModel) {
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;
@@ -23,7 +24,9 @@ define([
 
     var Console = Backbone.View.extend({
         el: "#console",
-        events: {},
+        events: {
+            "keypress" : "handleKeypress"
+        },
         initialize: function() {
 
             //TODO: set console size based on options that are set
@@ -98,6 +101,25 @@ define([
                 }
             }
         },
+
+        resize: function() {
+            this.calculateConsoleSize();
+            this.calculateConsoleCellSize();
+            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+                for (var j = 0; j < _CONSOLE_ROWS; j++) {
+                    _consoleCells[i][j].model.set({
+                        widthPercent: _consoleCellWidthPercent,
+                        heightPercent: _consoleCellHeightPercent,
+                        charSizePx: _consoleCellCharSizePx,
+                        charPaddingPx: _consoleCellCharPaddingPx,
+                        topOffsetPercent: _consoleCellTopOffsetPercent
+                    });
+                    _consoleCells[i][j].model.calculatePositionAttributes();
+                    _consoleCells[i][j].applySize();
+                }
+            }
+        },
+        
         updateCellModelData: function(data) {
             var dataArray = new Uint8Array(data);
             var dIndex = 0;
@@ -116,22 +138,17 @@ define([
 
             _consoleCells[dataXCoord][dataYCoord].render();
         },
-        resize: function() {
-            this.calculateConsoleSize();
-            this.calculateConsoleCellSize();
-            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
-                for (var j = 0; j < _CONSOLE_ROWS; j++) {
-                    _consoleCells[i][j].model.set({
-                        widthPercent: _consoleCellWidthPercent,
-                        heightPercent: _consoleCellHeightPercent,
-                        charSizePx: _consoleCellCharSizePx,
-                        charPaddingPx: _consoleCellCharPaddingPx,
-                        topOffsetPercent: _consoleCellTopOffsetPercent
-                    });
-                    _consoleCells[i][j].model.calculatePositionAttributes();
-                    _consoleCells[i][j].applySize();
-                }
-            }
+        
+        handleKeypress : function(event){    
+            var data = {
+                keyCode : event.keyCode,
+                shift : event.shiftKey,
+                ctrl : event.ctrlKey,
+                cmd : event.metaKey
+            };
+            
+            var message = router.prepareOutgoingData("brogue", "key", data);
+            ws.send(message);
         }
 
     });

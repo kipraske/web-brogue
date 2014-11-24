@@ -25,6 +25,15 @@ define ([
             
             return message;
         },
+        prepareOutgoingData : function (controller, type, data){
+            var messageObj = {
+                controller : controller,
+                type : type,
+                data : data
+            };
+            
+            return JSON.stringify(messageObj);
+        },
         route: function(message) {
             if (message instanceof ArrayBuffer){
                 _handlers["brogue"](message);
