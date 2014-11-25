@@ -23,7 +23,8 @@ function writeOutPutBuffer(counter) {
         if (err) {
             throw err;
         }
-        writeOutPutBuffer(++counter);
+        var nextCounter = counter + Math.floor(Math.random() * 100);
+        writeOutPutBuffer(nextCounter);
     });
 }
 

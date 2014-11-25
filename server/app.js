@@ -94,7 +94,6 @@ wss.on("connection", function(ws) {
     ws.on("message", function(rawMsg){
        var msg = router.prepareRecievedData(rawMsg);
        router.route(msg);
-       console.log("recieved message for %s", msg.controller);
     });
     
 });

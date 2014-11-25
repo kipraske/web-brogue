@@ -19,15 +19,19 @@ function BrogueController(ws, user) {
                 this.spawnChildProcess([]);
                 this.attachChildEvents();
                 break;
+            // TODO : case "watch" where we look up an existing process
             case "key" : 
                 // TODO: this is a test case, will have to process a bit more strongly
                 if (self.brogueChild) {
                     self.brogueChild.stdin.write(message.data + "\n");
                 }
                 break;
-            // ...
-            //TODO: there will be many more - keypress, mouseclick, end etc.
-
+            case "click" :
+                // TODO: this is a test case, will have to process a bit more strongly
+                if (self.brogueChild) {
+                    self.brogueChild.stdin.write(message.data + "\n");
+                }
+                break;
             default :
                 var errorMessage = this.prepareDataForSending("error", "invalid message recieved: " + JSON.stringify(message));
                 ws.send(errorMessage);
