@@ -3,12 +3,17 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dataIO/router",
+    "dataIO/socket",
     "models/console-cell"
-], function($, _, Backbone, CellModel) {
+], function($, _, Backbone, router, ws, CellModel) {
 
     var ConsoleCellView = Backbone.View.extend({
         tagName: "div",
         className: "console-cell",
+        events : {
+            "click" : "handleClick"
+        },
         
         initialize: function() {
             this.applySize();
@@ -38,6 +43,17 @@ define([
             this.el.style.top = this.model.get("topPositionPercent") + "%";
             this.el.style.fontSize = this.model.get("charSizePx") + "px";
             this.el.style.paddingTop = this.model.get("charPaddingPx") + "px";
+        },
+        
+        handleClick : function(event){
+            var data = {
+                x : this.model.get("x"),
+                y : this.model.get("y"),
+                ctrl : event.ctrlKey
+            };
+            
+            var message = router.prepareOutgoingData("brogue", "click", data);
+            ws.send(message);
         }
     });
 
