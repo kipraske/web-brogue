@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var config = require('../config');
 var childProcess = require('child_process');
 
 var router = require('./router');
@@ -40,12 +41,9 @@ function BrogueController(ws, user) {
 
     this.spawnChildProcess = function(args) {
         var options = {};
-
-        //TODO get this path in some sort of global thing - clean this up to be more generic;  Not going to be using the test instance forever after all;
-        var path = require('path');
-        var BROGUE_PATH = path.normalize(__dirname + "\\..\\tests\\mock-brogue-process.js");
-        console.log(BROGUE_PATH);
-        args = [BROGUE_PATH];
+        args = [config.BROGUE_PATH];
+        console.log("should be after this");
+        console.log[config.BROGUE_PATH];
         self.brogueChild = childProcess.spawn("node", args, options);
     };
 

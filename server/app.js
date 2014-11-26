@@ -1,4 +1,4 @@
-var path = require("path");
+var config = require("./config");
 
 var express = require("express");
 var app = express();
@@ -28,12 +28,11 @@ passport.use(new LocalStrategy(
 
 
 // Http Server Configuration
-var clientPath = path.normalize(__dirname + "/../client");
-app.use(express.static(clientPath));
+app.use(express.static(config.CLIENT_PATH));
 
 //routes
 app.get("/", function(req, res){
-    res.sendFile(clientPath + "/index.html");
+    res.sendFile(config.CLIENT_PATH + "/index.html");
 });
 
 app.post("/login", function(req, res, next) {
