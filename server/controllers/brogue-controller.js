@@ -42,8 +42,6 @@ function BrogueController(ws, user) {
     this.spawnChildProcess = function(args) {
         var options = {};
         args = [config.BROGUE_PATH];
-        console.log("should be after this");
-        console.log[config.BROGUE_PATH];
         self.brogueChild = childProcess.spawn("node", args, options);
     };
 
