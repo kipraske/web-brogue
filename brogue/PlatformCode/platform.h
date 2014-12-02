@@ -19,6 +19,10 @@ extern struct brogueConsole tcodConsole;
 extern struct brogueConsole cursesConsole;
 #endif
 
+#ifdef BROGUE_WEB
+extern struct brogueConsole webConsole;
+#endif
+
 extern struct brogueConsole currentConsole;
 extern boolean serverMode;
 extern boolean noMenu;

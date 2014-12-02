@@ -1,6 +1,6 @@
 LIBTCODDIR=libtcod-1.5.1
 SDLDIR=SDL-1.2.14
-CFLAGS=$(FLAGS) -I$(LIBTCODDIR)/include -I$(SDLDIR)/include -IBrogueCode -IPlatformCode -DBROGUE_TCOD -Wall
+CFLAGS=$(FLAGS) -IBrogueCode -IPlatformCode -DBROGUE_WEB -Wall
 
 %.o : %.c
 	gcc $(CFLAGS) -O2 -s -o $@ -c $< 
@@ -21,7 +21,7 @@ OBJS=BrogueCode/Architect.o \
 	BrogueCode/Recordings.o \
 	PlatformCode/main.o \
 	PlatformCode/platformdependent.o \
-	PlatformCode/tcod-platform.o 
+	PlatformCode/web-platform.o 
 
 all : brogue
 

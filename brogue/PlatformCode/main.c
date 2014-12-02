@@ -12,6 +12,8 @@ short brogueFontSize = -1;
 # else
 #  define BROGUE_TARGET_STRING "tcod"
 # endif
+#elif BROGUE_WEB
+# define BROGUE_TARGET_STRING "web"
 #else
 # define BROGUE_TARGET_STRING "curses"
 #endif
@@ -73,6 +75,8 @@ int main(int argc, char *argv[])
 {
 #ifdef BROGUE_TCOD
 		currentConsole = tcodConsole;
+#elif BROGUE_WEB
+                currentConsole = webConsole;
 #else
 		currentConsole = cursesConsole;
 #endif
