@@ -29,4 +29,4 @@ brogue-icon.o : brogue-icon.ico icon.rc
 	windres icon.rc brogue-icon.o
 
 brogue : ${OBJS} brogue-icon.o 
-	g++ -o brogue.exe ${OBJS} brogue-icon.o -L. -static-libgcc -static-libstdc++ -mwindows
+	g++ -o brogue.exe ${OBJS} brogue-icon.o -L. -static-libgcc -static-libstdc++
