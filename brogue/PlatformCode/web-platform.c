@@ -1,4 +1,7 @@
 //#ifdef BROGUE_TCOD
+
+#define OUTPUT_SIZE             9
+
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -20,7 +23,20 @@ static void web_plotChar(uchar inputChar,
 			  short xLoc, short yLoc,
 			  short foreRed, short foreGreen, short foreBlue,
 			  short backRed, short backGreen, short backBlue) {
-	// TODO - build a char buffer for export and send via Stdout
+    // just pack up the output and ship it off to the webserver
+    char outputBuffer[OUTPUT_SIZE];
+    
+    outputBuffer[0] = (char) xLoc;
+    outputBuffer[1] = (char) yLoc;
+    outputBuffer[2] = inputChar;
+    outputBuffer[3] = (char) foreRed;
+    outputBuffer[4] = (char) foreGreen;
+    outputBuffer[5] = (char) foreBlue;
+    outputBuffer[6] = (char) backRed;
+    outputBuffer[7] = (char) backGreen;
+    outputBuffer[8] = (char) backBlue;
+    
+    fwrite(outputBuffer, sizeof(char), sizeof(outputBuffer), stdout);
 }
 
 static boolean web_pauseForMilliseconds(short milliseconds)
@@ -29,7 +45,7 @@ static boolean web_pauseForMilliseconds(short milliseconds)
     return false;
 }
 
-static web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
+static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
     // TODO - wait by reading from Stdin and process simple character imput into rogueEvents
 }
