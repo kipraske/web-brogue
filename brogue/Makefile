@@ -1,5 +1,3 @@
-LIBTCODDIR=libtcod-1.5.1
-SDLDIR=SDL-1.2.14
 CFLAGS=$(FLAGS) -IBrogueCode -IPlatformCode -DBROGUE_WEB -Wall
 
 %.o : %.c
@@ -11,6 +9,8 @@ OBJS=BrogueCode/Architect.o \
 	BrogueCode/Globals.o \
 	BrogueCode/IO.o \
 	BrogueCode/Buttons.o \
+	BrogueCode/Grid.o \
+	BrogueCode/Time.o \
 	BrogueCode/MainMenu.o \
 	BrogueCode/Items.o \
 	BrogueCode/Light.o \
@@ -29,4 +29,4 @@ brogue-icon.o : brogue-icon.ico icon.rc
 	windres icon.rc brogue-icon.o
 
 brogue : ${OBJS} brogue-icon.o 
-	g++ -o brogue.exe ${OBJS} brogue-icon.o -L. -ltcod-mingw -lSDL -L$(LIBTCODDIR)/ -static-libgcc -static-libstdc++ -mwindows
+	g++ -o brogue.exe ${OBJS} brogue-icon.o -L. -static-libgcc -static-libstdc++ -mwindows

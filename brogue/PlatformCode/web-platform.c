@@ -41,10 +41,6 @@ static void web_remap(const char *input_name, const char *output_name) {
 static boolean modifier_held(int modifier) {
 	rogueEvent tempEvent;
 
-	getModifiers(&tempEvent);
-	if (modifier == 0) return tempEvent.shiftKey;
-	if (modifier == 1) return tempEvent.controlKey;
-
 	return 0;
 }
 
