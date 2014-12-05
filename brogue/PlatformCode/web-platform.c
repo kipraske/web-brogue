@@ -1,5 +1,5 @@
 //#ifdef BROGUE_TCOD
-
+#define _GNU_SOURCE
 #define OUTPUT_SIZE             9
 
 #include <stdio.h>
@@ -41,13 +41,31 @@ static void web_plotChar(uchar inputChar,
 
 static boolean web_pauseForMilliseconds(short milliseconds)
 {
-    // TODO - can we even miss a mouse event in this model?
-    return false;
+    // rather than polling for key events while paused, we will just wait an read them in when needed in nextKeyOrMouseEvent
+    return true;
 }
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
-    // TODO - wait by reading from Stdin and process simple character imput into rogueEvents
+    // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
+    colorsDance = false;
+    
+    // Okay so it turns out that getline is a GNU c function only and won't work on my windows platform, lets use something more generic.
+    
+    // I was so worried about overflow buffers, but honestly I can have the node server sanitize input so we don't overflow this here or do anything wierd.  May not be as efficent but I stay in my comfort zone.  Commiting this comment so I can keep it.
+    
+    /*
+    char *inputBuffer = NULL;
+    size_t bufferLength = 0;
+    ssize_t read;
+    
+    while (read = getline(&inputBuffer, &bufferLength, stdin) != -1 ){
+        printf("Retrieved line of length %zu :\n", read);
+        printf("%s", inputBuffer);
+    }
+    
+    free(inputBuffer);
+    */
 }
 
 static void web_remap(const char *input_name, const char *output_name) {
