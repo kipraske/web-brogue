@@ -50,22 +50,6 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
     
-    // Okay so it turns out that getline is a GNU c function only and won't work on my windows platform, lets use something more generic.
-    
-    // I was so worried about overflow buffers, but honestly I can have the node server sanitize input so we don't overflow this here or do anything wierd.  May not be as efficent but I stay in my comfort zone.  Commiting this comment so I can keep it.
-    
-    /*
-    char *inputBuffer = NULL;
-    size_t bufferLength = 0;
-    ssize_t read;
-    
-    while (read = getline(&inputBuffer, &bufferLength, stdin) != -1 ){
-        printf("Retrieved line of length %zu :\n", read);
-        printf("%s", inputBuffer);
-    }
-    
-    free(inputBuffer);
-    */
 }
 
 static void web_remap(const char *input_name, const char *output_name) {
