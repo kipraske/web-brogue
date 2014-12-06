@@ -50,6 +50,15 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
     
+    int c;
+    
+    do {
+        c = getchar();
+        putchar(c);
+    } while (c != EOF && c != '\n');
+    
+    returnEvent->eventType = MOUSE_UP;
+    
 }
 
 static void web_remap(const char *input_name, const char *output_name) {
