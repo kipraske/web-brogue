@@ -1,7 +1,6 @@
 define ([
-    "underscore",
-    "dataIO/socket"
-], function( _, socket ){
+    "underscore"
+], function( _ ){
     
     var _handlers = {};
     

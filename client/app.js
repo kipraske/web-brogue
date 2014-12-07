@@ -12,8 +12,9 @@ require([
     "backbone",
     "tests/debug-mode",
     "dataIO/router",
+    "dataIO/socket",
     "views/console-view"
-], function( $, _, Backbone, debugMode, router, Console){
+], function( $, _, Backbone, debugMode, router, ws, Console){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
