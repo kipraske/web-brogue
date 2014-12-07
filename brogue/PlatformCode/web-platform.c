@@ -37,20 +37,19 @@ static void web_plotChar(uchar inputChar,
 			  short backRed, short backGreen, short backBlue) {
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
-    
-    // TODO these colors are scaled incorrectly - need to do * 255 / 100 to get in the right scale
-    
+        
     outputBuffer[0] = (char) xLoc;
     outputBuffer[1] = (char) yLoc;
     outputBuffer[2] = inputChar;
-    outputBuffer[3] = (char) foreRed;
-    outputBuffer[4] = (char) foreGreen;
-    outputBuffer[5] = (char) foreBlue;
-    outputBuffer[6] = (char) backRed;
-    outputBuffer[7] = (char) backGreen;
-    outputBuffer[8] = (char) backBlue;
+    outputBuffer[3] = (char) foreRed * 255 / 100;
+    outputBuffer[4] = (char) foreGreen * 255 / 100;
+    outputBuffer[5] = (char) foreBlue * 255 / 100;
+    outputBuffer[6] = (char) backRed * 255 / 100;
+    outputBuffer[7] = (char) backGreen * 255 / 100;
+    outputBuffer[8] = (char) backBlue * 255 / 100;
     
-    fwrite(outputBuffer, sizeof(char), OUTPUT_SIZE, stdout);
+    fwrite(outputBuffer, sizeof(char), OUTPUT_SIZE, stdout)
+            
 }
 
 static boolean web_pauseForMilliseconds(short milliseconds)
