@@ -28,11 +28,11 @@ passport.use(new LocalStrategy(
 
 
 // Http Server Configuration
-app.use(express.static(config.CLIENT_PATH));
+app.use(express.static(config.CLIENT_DIR));
 
 //routes
 app.get("/", function(req, res){
-    res.sendFile(config.CLIENT_PATH + "/index.html");
+    res.sendFile(config.CLIENT_DIR + "/index.html");
 });
 
 app.post("/login", function(req, res, next) {
