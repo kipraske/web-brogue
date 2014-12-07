@@ -5,6 +5,8 @@ var childProcess = require('child_process');
 var router = require('./router');
 var Controller = require('./controller-base');
 
+var CELL_MESSAGE_SIZE = 9;
+
 // The model will keep track of the brogue data for the particular socket
 
 function BrogueController(ws, user) {
@@ -34,7 +36,7 @@ function BrogueController(ws, user) {
                 }
                 break;
             default :
-                var errorMessage = this.prepareDataForSending("error", "invalid message recieved: " + JSON.stringify(message));
+                var errorMessage = self.prepareDataForSending("error", "invalid message recieved: " + JSON.stringify(message));
                 ws.send(errorMessage);
         }
     };
@@ -46,9 +48,15 @@ function BrogueController(ws, user) {
     };
 
     this.attachChildEvents = function() {
-        self.brogueChild.stdout.on('data', function(chunk) {
-            ws.send(chunk, {binary: true});
+        
+        self.brogueChild.stdout.on('readable', function() { 
+            var chunk = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE);
+            while (chunk !== null) {
+                ws.send(chunk, {binary: true});
+                chunk = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE);
+            }         
         });
+        
     };
 }
 
