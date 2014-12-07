@@ -26,6 +26,8 @@ static void web_plotChar(uchar inputChar,
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
     
+    // TODO these colors are scaled incorrectly - need to do * 255 / 100 to get in the right scale
+    
     outputBuffer[0] = (char) xLoc;
     outputBuffer[1] = (char) yLoc;
     outputBuffer[2] = inputChar;
