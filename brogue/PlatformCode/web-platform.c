@@ -54,7 +54,6 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     
     do {
         c = getchar();
-        putchar(c);
     } while (c != EOF && c != '\n');
     
     returnEvent->eventType = MOUSE_UP;

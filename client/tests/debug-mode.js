@@ -10,7 +10,13 @@ define([
     //override socket onmessage to log all incoming messages
     ws.onmessage = function(event){
         var message = router.prepareIncomingData(event.data);
-        console.log(message);
+        if (message instanceof ArrayBuffer){
+            var messageArray = new Uint8Array(message);
+            console.log(messageArray);
+        }
+        else{
+            console.log(message);
+        }
         router.route(message);
     };
 
