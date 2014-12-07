@@ -7,6 +7,11 @@
 #include <time.h>
 #include "platform.h"
 
+#ifdef WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
+
 extern playerCharacter rogue;
 
 struct mouseState {int x, y, lmb, rmb;};
@@ -16,7 +21,14 @@ static struct mouseState missedMouse = {-1, -1, 0, 0};
 
 static void gameLoop()
 {
-	rogueMain();
+    
+// It turns out on windows platforms it will convert any /n to /r/n in our stdout stream.  We don't want any of our coordinates accidentally adding bytes into the raw output.
+#ifdef WIN32
+    setmode(fileno(stdout), O_BINARY);
+    setmode(fileno(stdin), O_BINARY);
+#endif
+    
+    rogueMain();
 }
 
 static void web_plotChar(uchar inputChar,
@@ -38,7 +50,7 @@ static void web_plotChar(uchar inputChar,
     outputBuffer[7] = (char) backGreen;
     outputBuffer[8] = (char) backBlue;
     
-    fwrite(outputBuffer, sizeof(char), sizeof(outputBuffer), stdout);
+    fwrite(outputBuffer, sizeof(char), OUTPUT_SIZE, stdout);
 }
 
 static boolean web_pauseForMilliseconds(short milliseconds)
