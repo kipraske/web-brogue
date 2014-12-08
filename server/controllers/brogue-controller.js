@@ -13,7 +13,9 @@ function BrogueController(ws, user) {
     var self = this;
     this.controllerName = "brogue";
 
-    this.brogueChild;
+    this.brogueChild;  // child process
+    this.dataAccumulator; // buffer
+    this.dataRemainder = new Buffer(0);  
 
     this.handleIncomingMessage = function(message) {
         switch (message.type) {
@@ -48,7 +50,28 @@ function BrogueController(ws, user) {
     };
 
     this.attachChildEvents = function() {
+
+        self.brogueChild.stdout.on('data', function(data) {
+            
+            var dataLength = data.length;
+            var remainderLength = self.dataRemainder.length;
+            var numberOfCellsToSend = dataLength + remainderLength / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor, so we use that here though it is not so easy to read.
+            var sizeOfCellsToSend = numberOfCellsToSend * CELL_MESSAGE_SIZE;
+            var newReminderLength = dataLength + remainderLength - sizeOfCellsToSend;
+              
+            //fill the data to send 
+            self.dataAccumulator = new Buffer(sizeOfCellsToSend);
+            self.dataRemainder.copy(self.dataAccumulator);
+            data.copy(self.dataAccumulator, remainderLength, 0, dataLength - newReminderLength);
+            
+            //save the remaining data for next time
+            self.dataRemainder = new Buffer(newReminderLength);
+            data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
+            
+            ws.send(self.dataAccumulator, {binary: true});     
+        });
         
+        /*
         self.brogueChild.stdout.on('readable', function() { 
             var chunk = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE);
             while (chunk !== null) {
@@ -56,7 +79,7 @@ function BrogueController(ws, user) {
                 chunk = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE);
             }         
         });
-        
+        */
     };
 }
 
