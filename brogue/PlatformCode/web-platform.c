@@ -48,7 +48,7 @@ static void web_plotChar(uchar inputChar,
     outputBuffer[7] = (char) backGreen * 255 / 100;
     outputBuffer[8] = (char) backBlue * 255 / 100;
     
-    fwrite(outputBuffer, sizeof(char), OUTPUT_SIZE, stdout)
+    fwrite(outputBuffer, sizeof(char), OUTPUT_SIZE, stdout);
             
 }
 
