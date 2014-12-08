@@ -51,14 +51,20 @@ function BrogueController(ws, user) {
 
     this.attachChildEvents = function() {
 
+        console.log("expected total bytes: 30600");
+
         self.brogueChild.stdout.on('data', function(data) {
+            
+            console.log("data event started");
             
             var dataLength = data.length;
             var remainderLength = self.dataRemainder.length;
-            var numberOfCellsToSend = dataLength + remainderLength / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor, so we use that here though it is not so easy to read.
+            var numberOfCellsToSend = (dataLength + remainderLength) / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor, so we use that here though it is not so easy to read.
             var sizeOfCellsToSend = numberOfCellsToSend * CELL_MESSAGE_SIZE;
             var newReminderLength = dataLength + remainderLength - sizeOfCellsToSend;
-              
+            
+            console.log("dataLength: %s\n remainderLength: %s\n numberOfCells: %s\n sizeOfCells: %s\n newRemainder: %s\n", dataLength, remainderLength,numberOfCellsToSend, sizeOfCellsToSend, newReminderLength);
+            
             //fill the data to send 
             self.dataAccumulator = new Buffer(sizeOfCellsToSend);
             self.dataRemainder.copy(self.dataAccumulator);
