@@ -120,23 +120,27 @@ define([
             }
         },
         
-        updateCellModelData: function(data) {
+        updateCellModelData: function (data) {
             var dataArray = new Uint8Array(data);
+            var dataLength = dataArray.length;
             var dIndex = 0;
-            var dataXCoord = dataArray[dIndex++];
-            var dataYCoord = dataArray[dIndex++];
 
-            _consoleCells[dataXCoord][dataYCoord].model.set({
-                char: dataArray[dIndex++],
-                foregroundRed: dataArray[dIndex++],
-                foregroundGreen: dataArray[dIndex++],
-                foregroundBlue: dataArray[dIndex++],
-                backgroundRed: dataArray[dIndex++],
-                backgroundGreen: dataArray[dIndex++],
-                backgroundBlue: dataArray[dIndex++]
-            });
+            while (dIndex < dataLength) {
+                var dataXCoord = dataArray[dIndex++];
+                var dataYCoord = dataArray[dIndex++];
 
-            _consoleCells[dataXCoord][dataYCoord].render();
+                _consoleCells[dataXCoord][dataYCoord].model.set({
+                    char: dataArray[dIndex++],
+                    foregroundRed: dataArray[dIndex++],
+                    foregroundGreen: dataArray[dIndex++],
+                    foregroundBlue: dataArray[dIndex++],
+                    backgroundRed: dataArray[dIndex++],
+                    backgroundGreen: dataArray[dIndex++],
+                    backgroundBlue: dataArray[dIndex++]
+                });
+
+                _consoleCells[dataXCoord][dataYCoord].render();
+            }
         },
         
         handleKeypress : function(event){    
