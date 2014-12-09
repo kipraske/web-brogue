@@ -54,6 +54,9 @@ static void web_plotChar(uchar inputChar,
 
 static boolean web_pauseForMilliseconds(short milliseconds)
 {
+    // ensure entire stream is written out before getting input
+    fflush(stdout);
+    
     // rather than polling for key events while paused, we will just wait an read them in when needed in nextKeyOrMouseEvent
     return true;
 }
