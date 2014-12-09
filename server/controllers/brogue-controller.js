@@ -54,6 +54,7 @@ function BrogueController(ws, user) {
         self.brogueChild.stdout.on('data', function(data) {
             
             // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
+            // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
             var dataLength = data.length;
             var remainderLength = self.dataRemainder.length;
             var numberOfCellsToSend = (dataLength + remainderLength) / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor or parseInt
