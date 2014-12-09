@@ -53,6 +53,35 @@ function BrogueController(ws, user) {
 
         console.log("expected total bytes: 30600");
 
+        self.brogueChild.stdout.on('readable', function() {
+            
+            console.log("data event started");
+            
+            var initialData;
+            var remainingAvailableData;
+            
+            if ( (initialData = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE)) === null) {
+                return;
+            }
+            
+            remainingAvailableData = self.brogueChild.stdout.read();
+            
+            var data = Buffer.concat([initialData, remainingAvailableData]);
+            var dataLength = data.length; 
+            var numberOfCellsToSend = dataLength / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor, so we use that here though it is not so easy to read.
+            var sizeOfCellsToSend = numberOfCellsToSend * CELL_MESSAGE_SIZE;
+            
+            console.log("dataLength: %s\n numberOfCells: %s\n sizeOfCells: %s\n newRemainder: %s\n", dataLength, numberOfCellsToSend, sizeOfCellsToSend,  dataLength - sizeOfCellsToSend);
+            
+            var dataToSend = data.slice(0, sizeOfCellsToSend);
+            var dataRemainder = data.slice(sizeOfCellsToSend);
+            
+            self.brogueChild.stdout.unshift(dataRemainder);
+            
+            ws.send(dataToSend, {binary: true});
+        });
+
+/*
         self.brogueChild.stdout.on('data', function(data) {
             
             console.log("data event started");
@@ -76,16 +105,8 @@ function BrogueController(ws, user) {
             
             ws.send(self.dataAccumulator, {binary: true});     
         });
-        
-        /*
-        self.brogueChild.stdout.on('readable', function() { 
-            var chunk = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE);
-            while (chunk !== null) {
-                ws.send(chunk, {binary: true});
-                chunk = self.brogueChild.stdout.read(CELL_MESSAGE_SIZE);
-            }         
-        });
         */
+
     };
 }
 
