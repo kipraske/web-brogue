@@ -28,13 +28,13 @@ function BrogueController(ws, user) {
             case "key" : 
                 // TODO: this is a test case, will have to process a bit more strongly
                 if (self.brogueChild) {
-                    self.brogueChild.stdin.write(message.data + "\n");
+                    self.brogueChild.stdin.write(message.data);
                 }
                 break;
             case "click" :
                 // TODO: this is a test case, will have to process a bit more strongly
                 if (self.brogueChild) {
-                    self.brogueChild.stdin.write(message.data + "\n");
+                    self.brogueChild.stdin.write(message.data);
                 }
                 break;
             default :

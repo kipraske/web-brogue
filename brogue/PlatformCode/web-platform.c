@@ -1,6 +1,7 @@
 //#ifdef BROGUE_TCOD
 #define _GNU_SOURCE
 #define OUTPUT_SIZE             9
+#define MAX_INPUT_SIZE          5
 
 #include <stdio.h>
 #include <string.h>
@@ -66,12 +67,17 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
     
-    int c;
+    char inputBuffer[9];
     
+    fread(inputBuffer, sizeof(char), 9, stdin);
+    
+    fwrite(inputBuffer, sizeof(char), 9, stdout);
+    
+    /*
     do {
         c = getchar();
     } while (c != EOF && c != '\n');
-    
+    */
     returnEvent->eventType = MOUSE_UP;
     
 }
