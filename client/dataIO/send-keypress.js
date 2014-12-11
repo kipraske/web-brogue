@@ -3,7 +3,17 @@
 
 // Here will be enums and maps and stuff for minimal processing on the c side
 
-// See PlatformCode/webplaform.c for how these are ultimately used
-// See BrogueCode/rogue.h for all event definitions
-var KEYPRESS_EVENT_CHAR = 0;
 
+// See BrogueCode/rogue.h for all event definitions
+
+define(['dataIO/socket'], function(ws){
+    
+    // See PlatformCode/webplaform.c for how these are ultimately used
+    
+    function send(controlChar, keyCode, ctrlKey, shiftKey){
+        console.log("key-pressed: " + keyCode);
+    }
+    
+    return send;
+    
+});

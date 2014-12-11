@@ -2,11 +2,10 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    'dataIO/router',
-    'dataIO/socket',
+    'dataIO/send-keypress',
     "views/console-cell-view",
     "models/console-cell"
-], function($, _, Backbone, router, ws, ConsoleCellView, CellModel) {
+], function($, _, Backbone, sendKeypressEvent, ConsoleCellView, CellModel) {
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;
@@ -20,7 +19,10 @@ define([
     var _consoleCellHeightPercent;
     var _consoleCellCharSizePx;
     var _consoleCellCharPaddingPx;
-    var _consoleCellAspectRatio = 0.53;  //TODO: set this via options model, reset via resize function
+    var _consoleCellAspectRatio = 0.53;  //TODO: set this via options model, reset via resize function, may wish to have an option to keep fixed size even if it means we have to drag it about
+
+    // See BrogueCode/rogue.h for all brogue event definitions
+    var KEYPRESS_EVENT_CHAR = 0;
 
     var Console = Backbone.View.extend({
         el: "#console",
@@ -144,15 +146,7 @@ define([
         },
         
         handleKeypress : function(event){    
-            var data = {
-                keyCode : event.keyCode,
-                shift : event.shiftKey,
-                ctrl : event.ctrlKey,
-                cmd : event.metaKey
-            };
-            
-            var message = router.prepareOutgoingData("brogue", "key", data);
-            ws.send(message);
+            sendKeypressEvent(KEYPRESS_EVENT_CHAR, event.keyCode, event.ctrlKey, event.shiftKey);
         }
 
     });

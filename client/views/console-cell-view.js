@@ -1,12 +1,17 @@
-
 define([
     "jquery",
     "underscore",
     "backbone",
-    "dataIO/router",
-    "dataIO/socket",
+    "dataIO/send-mouse",
     "models/console-cell"
-], function($, _, Backbone, router, ws, CellModel) {
+], function($, _, Backbone, sendMouseEvent, CellModel) {
+
+    // See BrogueCode/rogue.h for all brogue event definitions
+    var MOUSE_UP_EVENT_CHAR = 1;
+    var MOUSE_DOWN_EVENT_CHAR = 2;
+    var RIGHT_MOUSE_DOWN_EVENT_CHAR = 3;
+    var RIGHT_MOUSE_UP_EVENT_CHAR = 4;
+    var MOUSE_HOVER_EVENT_CHAR = 5;
 
     var ConsoleCellView = Backbone.View.extend({
         tagName: "div",
@@ -45,15 +50,14 @@ define([
             this.el.style.paddingTop = this.model.get("charPaddingPx") + "px";
         },
         
-        handleClick : function(event){
-            var data = {
-                x : this.model.get("x"),
-                y : this.model.get("y"),
-                ctrl : event.ctrlKey
-            };
-            
-            var message = router.prepareOutgoingData("brogue", "click", data);
-            ws.send(message);
+        handleClick : function(event){        
+            sendMouseEvent(
+                MOUSE_UP_EVENT_CHAR, 
+                this.model.get("x"), 
+                this.model.get("y"), 
+                event.ctrlKey, 
+                event.shiftKey
+            );
         }
     });
 
