@@ -11,7 +11,15 @@ define(['dataIO/socket'], function(ws){
     // See PlatformCode/webplaform.c for how these are ultimately used
     
     function send(controlChar, keyCode, ctrlKey, shiftKey){
-        console.log("key-pressed: " + keyCode);
+        
+        var messageArray = new Uint8ClampedArray(4);
+        
+        messageArray[0] = controlChar;
+        messageArray[1] = keyCode;
+        messageArray[2] = ctrlKey;
+        messageArray[3] = shiftKey;
+        
+        ws.send(messageArray.buffer);
     }
     
     return send;

@@ -7,10 +7,12 @@ var Controller = require('./controller-base');
 
 var CELL_MESSAGE_SIZE = 9;
 
-// The model will keep track of the brogue data for the particular socket
+// Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
-function BrogueController(ws, user) {
+function BrogueController(ws, user, error) {
     var self = this;
+    this.ws = ws;
+    this.user = user;
     this.controllerName = "brogue";
 
     this.brogueChild;  // child process
@@ -18,6 +20,11 @@ function BrogueController(ws, user) {
     this.dataRemainder = new Buffer(0);  
 
     this.handleIncomingMessage = function(message) {
+        
+        if (message instanceof ArrayBuffer){
+            this.handleIncomingBinaryMessage();
+        }
+        
         switch (message.type) {
             case "play" :
                 //if user status is authenticated TODO else don't do nuthin
@@ -38,8 +45,7 @@ function BrogueController(ws, user) {
                 }
                 break;
             default :
-                var errorMessage = self.prepareDataForSending("error", "invalid message recieved: " + JSON.stringify(message));
-                ws.send(errorMessage);
+                error.send("Invalid message recieved: " + JSON.stringify(message));
         }
     };
 

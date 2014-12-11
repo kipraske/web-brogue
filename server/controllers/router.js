@@ -1,5 +1,6 @@
 
 var _ = require('underscore');
+var error = require('./error-controller');
 
 function Router(){
     this.routeCollection = {};
@@ -17,7 +18,20 @@ Router.prototype = {
         // TODO - compress data?
         return JSON.parse(rawMessage);
     },
-    route : function(message){
+    route : function(rawMessage){
+        
+        if (rawMessage instanceof ArrayBuffer && this.routeCollection["brogue"]){
+            this.routeCollection["brogue"].handleIncomingMessage(rawMessage);
+        }
+        
+        try{
+            var message = JSON.parse(rawMessage);
+        }
+        catch(ex){
+            error.send("Invalid message recieved: " + rawMessage);
+            return;
+        }
+        
         if (this.routeCollection[message.controller]) {
             this.routeCollection[message.controller].handleIncomingMessage(message);
         }

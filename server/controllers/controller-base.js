@@ -1,16 +1,16 @@
-
 function Controller(){
     this.controllerName;
     this.handleIncomingMessage = function(){};
     
-    this.prepareDataForSending = function(messageType, messageData){
+    this.sendMessage = function(messageType, messageData){
         var messageObject = {
-            "controller" : this.controllerName,
             "type" : messageType,
             "data" : messageData
         };
 
-        return JSON.stringify(messageObject);
+        var message = JSON.stringify(messageObject);
+        
+        this.ws.send(message);
     };
 }
 
