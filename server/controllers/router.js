@@ -27,11 +27,7 @@ Router.prototype = {
             var message = JSON.parse(rawMessage);
         }
         catch(ex){
-            
-            // TODO : this will not work since this error has no access to the ws instance which sent the message
-            // need to do this.routeCollection["error"].handleIncomingMessage(rawMessage) and define that in errors
-            
-            error.send("Invalid message recieved: " + rawMessage);
+            this.routeCollection["error"].handleIncomingMessage(rawMessage);
             return;
         }
         
