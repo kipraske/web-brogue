@@ -1,7 +1,9 @@
 //#ifdef BROGUE_TCOD
 #define _GNU_SOURCE
 #define OUTPUT_SIZE             9
-#define MAX_INPUT_SIZE          5
+#define MAX_INPUT_SIZE          4
+#define MOUSE_INPUT_SIZE        4
+#define KEY_INPUT_SIZE          3
 
 #include <stdio.h>
 #include <string.h>
@@ -67,18 +69,26 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
     
-    char inputBuffer[9];
+    char controlBuffer[1];
+    char inputBuffer[MAX_INPUT_SIZE];
     
-    fread(inputBuffer, sizeof(char), 9, stdin);
+    fread(controlBuffer, sizeof(char), 1, stdin);
+    returnEvent->eventType = controlBuffer[0]; 
     
-    fwrite(inputBuffer, sizeof(char), 9, stdout);
-    
-    /*
-    do {
-        c = getchar();
-    } while (c != EOF && c != '\n');
-    */
-    returnEvent->eventType = MOUSE_UP;
+    if (returnEvent->eventType == KEYSTROKE){
+        fread(inputBuffer, sizeof(char), KEY_INPUT_SIZE, stdin);
+        returnEvent->param1 = inputBuffer[0];  //key character
+        returnEvent->controlKey = inputBuffer[1];
+        returnEvent->shiftKey = inputBuffer[2];
+    }
+    else // it is a mouseEvent
+    {
+        fread(inputBuffer, sizeof(char), MOUSE_INPUT_SIZE, stdin);
+        returnEvent->param1 = inputBuffer[0];  //x coord
+        returnEvent->param2 = inputBuffer[1];  //y coord
+        returnEvent->controlKey = inputBuffer[2];
+        returnEvent->shiftKey = inputBuffer[3];
+    }
     
 }
 
