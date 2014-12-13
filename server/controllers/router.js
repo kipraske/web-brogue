@@ -19,7 +19,7 @@ Router.prototype = {
     },
     route : function(rawMessage){
                 
-        if (rawMessage instanceof Buffer && this.routeCollection["brogue"]){
+        if (rawMessage instanceof Buffer){
             this.routeCollection["brogue"].handleIncomingMessage(rawMessage);
             return;
         }
