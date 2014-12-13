@@ -18,8 +18,8 @@ Router.prototype = {
         return JSON.parse(rawMessage);
     },
     route : function(rawMessage){
-        
-        if (rawMessage instanceof ArrayBuffer && this.routeCollection["brogue"]){
+                
+        if (rawMessage instanceof Buffer && this.routeCollection["brogue"]){
             this.routeCollection["brogue"].handleIncomingMessage(rawMessage);
             return;
         }
@@ -27,7 +27,7 @@ Router.prototype = {
         try{
             var message = JSON.parse(rawMessage);
         }
-        catch(ex){
+        catch(ex){ 
             this.routeCollection["error"].handleIncomingMessage(rawMessage);
             return;
         }

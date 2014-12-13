@@ -25,7 +25,7 @@ _.extend(BrogueController.prototype, {
     controllerName: "brogue",
     handleIncomingMessage: function (message) {
         var self = this;
-        if (message instanceof ArrayBuffer) {
+        if (message instanceof Buffer) {
             self.handleIncomingBinaryMessage(message);
         }
         else
