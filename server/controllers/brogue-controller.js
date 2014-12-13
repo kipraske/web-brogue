@@ -32,10 +32,9 @@ _.extend(BrogueController.prototype, {
         }
     },
     handleIncomingBinaryMessage : function(message){
-        
         // TODO - validate incoming data before passing in
         
-        console.log("binary message recieved");
+        this.brogueChild.stdin.write(message);
     },
     
     handleIncomingJSONMessage: function (message) {
