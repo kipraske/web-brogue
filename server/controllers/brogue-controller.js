@@ -10,7 +10,6 @@ var CELL_MESSAGE_SIZE = 9;
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
 function BrogueController(ws, user, error) {
-    var self = this;
     this.ws = ws;
     this.user = user;
     this.error = error;
@@ -24,49 +23,52 @@ BrogueController.prototype = new Controller();
 _.extend(BrogueController.prototype, {
     controllerName: "brogue",
     handleIncomingMessage: function (message) {
-        var self = this;
         if (message instanceof Buffer) {
-            self.handleIncomingBinaryMessage(message);
+            this.handleIncomingBinaryMessage(message);
         }
         else
         {
-            self.handleIncomingJSONMessage(message);
+            this.handleIncomingJSONMessage(message);
         }
     },
     handleIncomingBinaryMessage : function(message){
+        
+        // TODO - validate incoming data before passing in
+        
         console.log("binary message recieved");
     },
     
     handleIncomingJSONMessage: function (message) {
-        var self = this;
+        
+        //TODO - validate data when needed - like message.data
+        
         switch (message.type) {
             case "play" :
                 //if user status is authenticated TODO else don't do nuthin
-                self.spawnChildProcess([]);
-                self.attachChildEvents();
+                this.spawnChildProcess(message.data);
+                this.attachChildEvents();
                 break;
                 // TODO : case "watch" where we look up an existing process
             case "key" :
                 // TODO: this is a test case, will have to process a bit more strongly
-                if (self.brogueChild) {
-                    self.brogueChild.stdin.write(message.data);
+                if (this.brogueChild) {
+                    this.brogueChild.stdin.write(message.data);
                 }
                 break;
             case "click" :
                 // TODO: this is a test case, will have to process a bit more strongly
-                if (self.brogueChild) {
-                    self.brogueChild.stdin.write(message.data);
+                if (this.brogueChild) {
+                    this.brogueChild.stdin.write(message.data);
                 }
                 break;
             default :
-                self.error.send("Invalid message recieved: " + JSON.stringify(message));
+                this.error.send("Message type incorrectly set: " + JSON.stringify(message));
         }
     },
     spawnChildProcess: function (args) {
-        var self = this;
         var options = {};
         args = [];
-        self.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+        this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
     },
     attachChildEvents: function () {
         var self = this;
