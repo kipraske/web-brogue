@@ -21,6 +21,7 @@ Router.prototype = {
         
         if (rawMessage instanceof ArrayBuffer && this.routeCollection["brogue"]){
             this.routeCollection["brogue"].handleIncomingMessage(rawMessage);
+            return;
         }
         
         try{
