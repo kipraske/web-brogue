@@ -56,10 +56,7 @@ static void web_plotChar(uchar inputChar,
 }
 
 static boolean web_pauseForMilliseconds(short milliseconds)
-{
-    // ensure entire stream is written out before getting input
-    fflush(stdout);
-    
+{    
     // rather than polling for key events while paused, we will just wait an read them in when needed in nextKeyOrMouseEvent
     return true;
 }
@@ -68,6 +65,9 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
 {
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
+    
+    // ensure entire stream is written out before getting input
+    fflush(stdout);
     
     char controlBuffer[1];
     char inputBuffer[MAX_INPUT_SIZE];

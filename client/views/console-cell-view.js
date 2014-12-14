@@ -50,7 +50,14 @@ define([
             this.el.style.paddingTop = this.model.get("charPaddingPx") + "px";
         },
         
-        handleClick : function(event){        
+        handleClick : function(event){
+            sendMouseEvent(
+                MOUSE_DOWN_EVENT_CHAR, 
+                this.model.get("x"), 
+                this.model.get("y"), 
+                event.ctrlKey, 
+                event.shiftKey
+            );
             sendMouseEvent(
                 MOUSE_UP_EVENT_CHAR, 
                 this.model.get("x"), 
