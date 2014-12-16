@@ -1,31 +1,20 @@
 var config = require("./config");
+var setupAuthentication = require("./user/setup-auth");
+var authenticateUser = require("./user/authenticate");
 
 var express = require("express");
 var app = express();
-var cookieParser = require("cookie-parser");
-var session = require("express-session");
+
+
+var mongoose = require("mongoose");
+mongoose.connect(config.db.url);
 
 // TODO: set up the authentication parts in a different file
 // something like require(./auth)(app, passport);
 
+setupAuthentication(app);
+
 // may want to do something similar for session configuration.  First things first - websocket
-
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-passport.use(new LocalStrategy(
-    //TODO - you know actually authenticate against the DB here
-    //for now just use this test user
-    function(username, password, done) {
-        var user = {
-            userName: "not-implemented-yet"
-        };
-        done(null, user);
-    }));
-
-// need to store user stuff in session so we can pass the info to the websocket connection... not quite sure how yet.
-// app.use(cookieParser());
-// app.use(session({secret: '1234567890QWERTY'}));
-
 
 // Http Server Configuration
 app.use(express.static(config.CLIENT_DIR));
@@ -35,30 +24,7 @@ app.get("/", function(req, res){
     res.sendFile(config.CLIENT_DIR + "/index.html");
 });
 
-app.post("/login", function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.write('login failed');
-        }
-        req.logIn(user, function(err) {
-            if (err) {
-                return next(err);
-            }
-            /*
-            users[user.userName] = {
-                status : "connected",
-                viewing : "lobby",
-                broguePID : -1
-            };
-            */
-           
-            return res.write('login success');
-        });
-    })(req, res, next);
-});
+app.post("/login", authenticateUser);
 
 app.post("/register", function(req, res){
     res.write("request for new user recieved");
