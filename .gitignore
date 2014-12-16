@@ -4,6 +4,7 @@
 
 ## Node.js
 /server/node_modules
+/server/db
 *.log
 
 # C things
