@@ -2,7 +2,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
-var bCrypt = require("bcrypt-nodejs");
 var User = require("./usermodel");
 
 function setupAuthentication(app) {
@@ -10,8 +9,6 @@ function setupAuthentication(app) {
     app.use(session({secret: 'brogueSecretKey'}));
     app.use(passport.initialize());
     app.use(passport.session());
-
-// TODO - these may not be configured correctly, but we need them to read the session ID from the cookie - more research needed
 
     passport.serializeUser(function (user, done) {
         done(null, user.id);
@@ -23,14 +20,7 @@ function setupAuthentication(app) {
         });
     });
 
-    // hash encryption helpers
-    function isValidPassword(user, password) {
-        return bCrypt.compareSync(password, user.password);
-    }
-
-    function createHash(password) {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-    }
+// TODO - I don't think we will need flash messages - um, but maybe we do.  Need more research.
 
     passport.use('login', new LocalStrategy({
         passReqToCallback: true
@@ -49,7 +39,7 @@ function setupAuthentication(app) {
                         req.flash('message', 'User Not found.'));
             }
             // User exists but wrong password, log the error 
-            if (!isValidPassword(user, password)) {
+            if (user.isValidPassword(password)) {
                 console.log('Invalid Password');
                 return done(null, false,
                         req.flash('message', 'Invalid Password'));
@@ -84,7 +74,7 @@ function setupAuthentication(app) {
                     var newUser = new User();
                     // set the user's local credentials
                     newUser.username = username;
-                    newUser.password = createHash(password);
+                    newUser.password = newUser.createHash(password);
                     // save the user
                     newUser.save(function (err) {
                         if (err) {
