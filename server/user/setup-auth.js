@@ -2,6 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
+var User = require("./usermodel");
 
 function setupAuthentication(app){
 
