@@ -1,5 +1,5 @@
 function Controller(){
-    this.controllerName;
+    this.controllerName = "";
     this.handleIncomingMessage = function(){};
     
     this.sendMessage = function(messageType, messageData){

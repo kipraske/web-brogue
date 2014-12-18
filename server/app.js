@@ -24,12 +24,6 @@ app.get("/", function(req, res){
     res.sendFile(config.CLIENT_DIR + "/index.html");
 });
 
-app.post("/login", authenticateUser);
-
-app.post("/register", function(req, res){
-    res.write("request for new user recieved");
-});
-
 server = app.listen(80, function(){
     
 var port = server.address().port;
@@ -45,6 +39,7 @@ var wss = new WebSocketServer({port: wsPort}, function(){
 });
 var ErrorController = require("./controllers/error-controller");
 var BrogueController = require("./controllers/brogue-controller");
+var AuthController = require("./controllers/authentication-controller");
 
 var Router = require("./controllers/router");
 
@@ -55,9 +50,11 @@ wss.on("connection", function(ws) {
     var router = new Router();
     var clientError = new ErrorController(ws, currentUser);
     var brogue = new BrogueController(ws, currentUser, clientError);
+    var auth = new AuthController(ws, currentUser, brogue);
     router.registerControllers([
         clientError,
-        brogue
+        brogue,
+        auth
     ]);
     
     ws.on("message", function(message){

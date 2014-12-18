@@ -41,6 +41,9 @@ _.extend(BrogueController.prototype, {
         
         //TODO - validate data when needed - like message.data
         
+        // TODO - it will probably be better if we set up handlers for these types similar to how we did the router - but just here in the controller
+        // it can just be a simple mapping like "start" : "startBrogueInstance"
+        
         switch (message.type) {
             case "play" :
                 //if user status is authenticated TODO else don't do nuthin
