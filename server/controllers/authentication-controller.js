@@ -16,39 +16,47 @@ _.extend(AuthController.prototype, {
     controllerName: "auth",
     handlerCollection: {
         login: function (data) {
+            var self = this;
             User.findOne({'username': data.username},
             function (err, user) {
                 if (err) {
-                    this.error.send(JSON.stringify(err));
+                    self.error.send(JSON.stringify(err));
+                    return;
                 }
+                
                 if (!user) {
-                    this.error.send("user not found");
+                    self.error.send("user not found");
+                    return;
                 }
+                
                 if (user.isValidPassword(data.password)) {
-                    this.user = user;
+                    self.user = user;
                     console.log("login success!");
                 }
                 else {
-                    this.error.send("username password does not match");
+                    self.error.send("username password does not match");
                 }
             }
             );
         },
         register: function (data) {
+            var self = this;
             User.findOne({'username': username}, function (err, user) {
                 if (err) {
-                    this.error.send(JSON.stringify(err));
+                    self.error.send(JSON.stringify(err));
+                    return;
                 }
                 // already exists
                 if (user) {
-                    this.error.send("user already exists");
+                    self.error.send("user already exists");
+                    return;
                 } else {
                     var newUser = new User();
                     newUser.username = data.username;
                     newUser.password = newUser.createHash(data.password);
                     newUser.save(function (err) {
                         if (err) {
-                            this.error.send(JSON.stringify(err));
+                            self.error.send(JSON.stringify(err));
                         }
                         console.log('User Registration succesful');
                         // should probably do something then now uh...                        
@@ -62,7 +70,7 @@ _.extend(AuthController.prototype, {
         }
     },
     handleIncomingMessage: function (message) {
-        this.handlerCollection[message.type](message.data);
+        this.handlerCollection[message.type].call(this, message.data);
     }
 });
 

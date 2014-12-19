@@ -1,6 +1,4 @@
 var config = require("./config");
-var setupAuthentication = require("./user/setup-auth");
-var authenticateUser = require("./user/authenticate");
 
 var express = require("express");
 var app = express();
@@ -8,11 +6,6 @@ var app = express();
 
 var mongoose = require("mongoose");
 mongoose.connect(config.db.url);
-
-// TODO: set up the authentication parts in a different file
-// something like require(./auth)(app, passport);
-
-setupAuthentication(app);
 
 // may want to do something similar for session configuration.  First things first - websocket
 
