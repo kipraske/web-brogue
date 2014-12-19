@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var util = require('util');
 var Controller = require('./controller-base');
 
 // Controller for propigating errors back to the client console for debugging purposes
@@ -16,11 +17,12 @@ _.extend(ErrorController.prototype, {
         this.send("Message is not valid JSON: " + message);
     },
     
-    send : function(errorMessage){
+    send : function(message){
         
-        // TODO - make a better error logging system
+        // TODO - make a better error logging system - say in a file rather than out to the console
+        var errorMessage = "Server Error: " + message;
         
-        console.log("error: " + errorMessage);
+        util.log(errorMessage);
         this.sendMessage("error", errorMessage);
     }
 });
