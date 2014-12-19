@@ -19,6 +19,8 @@ define ([
             else {
                 // TODO - may wish eventually to gzip the incoming JSON, will have to decompress here then
                 
+                // TODO - may just want to include this in our routing to clean things up a bit
+                
                 return JSON.parse(data);
             }
             

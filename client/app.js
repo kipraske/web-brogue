@@ -12,29 +12,29 @@ require([
     "backbone",
     "tests/debug-mode",
     "dataIO/router",
-    "dataIO/socket",
     "views/console-view"
-], function( $, _, Backbone, debugMode, router, ws, Console){
+], function( $, _, Backbone, debugMode, router, ConsoleView){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
     
     // initialize each view
-    var console = new Console();
+    var consoleView = new ConsoleView();
     
     // set up routes for the websocket connection
     router.registerHandlers({
-        "brogue" : console.updateCellModelData
+        "error" : console.error.bind(console), //'this' must be 'console' when you call console
+        "brogue" : consoleView.updateCellModelData
     });
     
     // clean up application
     $(document).on("unload", function(){
-        console.save();
+        consoleView.save();
     });
     
     // responsive resizing
     var throttledResize = _.debounce(function(){
-            console.resize();
+            consoleView.resize();
         }, 100);
     $(window).resize(throttledResize);
     
