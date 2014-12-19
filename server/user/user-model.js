@@ -4,8 +4,7 @@ var bCrypt = require('bcrypt-nodejs');
 var userSchema = mongoose.Schema({
     username: String,
     password: String
-},
-{collection: 'brogue'});
+});
 
 userSchema.methods.isValidPassword = function (password) {
     return bCrypt.compareSync(password, this.local.password);
