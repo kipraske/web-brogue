@@ -50,7 +50,7 @@ wss.on("connection", function(ws) {
     var router = new Router();
     var clientError = new ErrorController(ws, currentUser);
     var brogue = new BrogueController(ws, currentUser, clientError);
-    var auth = new AuthController(ws, currentUser, brogue);
+    var auth = new AuthController(ws, currentUser, clientError, brogue);
     router.registerControllers([
         clientError,
         brogue,
