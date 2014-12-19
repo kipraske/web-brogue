@@ -32,42 +32,36 @@ _.extend(BrogueController.prototype, {
         }
     },
     handleIncomingBinaryMessage : function(message){
-        // TODO - validate incoming data before passing in
+        // TODO - validate incoming data before passing in   
         if (this.brogueChild) {
             this.brogueChild.stdin.write(message);
         }
     },
     
     handleIncomingJSONMessage: function (message) {
-        
-        //TODO - validate data when needed - like message.data
-        
-        // TODO - it will probably be better if we set up handlers for these types similar to how we did the router - but just here in the controller
-        // it can just be a simple mapping like "start" : "startBrogueInstance"
-        
-        switch (message.type) {
-            case "play" :
-                //if user status is authenticated TODO else don't do nuthin
-                this.spawnChildProcess(message.data);
-                this.attachChildEvents();
-                break;
-                // TODO : case "watch" where we look up an existing process
-            case "key" :
-                // TODO: this is a test case, will have to process a bit more strongly
-                if (this.brogueChild) {
-                    this.brogueChild.stdin.write(message.data);
-                }
-                break;
-            case "click" :
-                // TODO: this is a test case, will have to process a bit more strongly
-                if (this.brogueChild) {
-                    this.brogueChild.stdin.write(message.data);
-                }
-                break;
-            default :
-                this.error.send("Message type incorrectly set: " + JSON.stringify(message));
+        if (this.handlerCollection[message.type]) {
+            this.handlerCollection[message.type].call(this, message.data);
+        }
+        else {
+            this.error.send("Message type incorrectly set: " + JSON.stringify(message));
         }
     },
+    handlerCollection: {
+        //TODO - validate data when needed
+
+        // TODO - it will probably be better if we set up handlers for these types similar to how we did the router - but just here in the controller
+        // it can just be a simple mapping like "start" : "startBrogueInstance"
+
+        start : function (data) {
+            this.spawnChildProcess(data);
+            this.attachChildEvents();
+        },
+        stop : function (data) {
+            // TODO - kill the child
+
+        }
+    },
+    
     spawnChildProcess: function (args) {
         var options = {};
         args = [];

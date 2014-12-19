@@ -1,7 +1,7 @@
 function Controller() {
-    this.ws = null;
-    this.user = null;
-    this.error = null;
+    this.ws;
+    this.user;
+    this.error;
     this.controllerName = "";
     
     this.handlerCollection = {};  // collection of handlername : function
