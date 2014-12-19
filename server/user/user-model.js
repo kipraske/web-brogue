@@ -7,7 +7,7 @@ var userSchema = mongoose.Schema({
 });
 
 userSchema.methods.isValidPassword = function (password) {
-    return bCrypt.compareSync(password, this.local.password);
+    return bCrypt.compareSync(password, this.password);
 };
 
 userSchema.methods.createHash = function (password) {
