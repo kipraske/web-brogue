@@ -41,7 +41,7 @@ _.extend(AuthController.prototype, {
         },
         register: function (data) {
             var self = this;
-            User.findOne({'username': username}, function (err, user) {
+            User.findOne({'username': data.username}, function (err, user) {
                 if (err) {
                     self.error.send(JSON.stringify(err));
                     return;
