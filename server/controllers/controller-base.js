@@ -1,6 +1,19 @@
-function Controller(){
+function Controller() {
+    this.ws = null;
+    this.user = null;
+    this.error = null;
     this.controllerName = "";
-    this.handleIncomingMessage = function(){};
+    
+    this.handlerCollection = {};  // collection of handlername : function
+    
+    this.handleIncomingMessage = function (message) {
+        if (this.handlerCollection[message.type]) {
+            this.handlerCollection[message.type].call(this, message.data);
+        }
+        else {
+            this.error.send("Message type incorrectly set: " + JSON.stringify(message));
+        }
+    };
     
     this.sendMessage = function(messageType, messageData){
         var messageObject = {

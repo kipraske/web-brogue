@@ -68,9 +68,6 @@ _.extend(AuthController.prototype, {
             this.user = null;
             // todo - kill child process in the brogue controller - if you are not logged in you are not allowed to have a process
         }
-    },
-    handleIncomingMessage: function (message) {
-        this.handlerCollection[message.type].call(this, message.data);
     }
 });
 
