@@ -3,7 +3,6 @@ var config = require("./config");
 var express = require("express");
 var app = express();
 
-
 var mongoose = require("mongoose");
 mongoose.connect(config.db.url);
 
@@ -45,7 +44,7 @@ wss.on("connection", function(ws) {
     });
     var auth = new AuthController(ws, {
         error : clientError, 
-        brogueController : brogue
+        brogue : brogue
     });
     
     var router = new Router([
@@ -53,6 +52,8 @@ wss.on("connection", function(ws) {
         brogue,
         auth
     ]);
+    
+    // TODO - make sure that the server is cleaned up when the socket is closed - well or not it depends. on "close"
     
     ws.on("message", function(message){
        router.route(message);

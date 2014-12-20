@@ -48,16 +48,28 @@ _.extend(BrogueController.prototype, {
     handlerCollection: {
         //TODO - validate data when needed
 
-        // TODO - it will probably be better if we set up handlers for these types similar to how we did the router - but just here in the controller
-        // it can just be a simple mapping like "start" : "startBrogueInstance"
+        start: function (data) {
 
-        start : function (data) {
+            // TODO - only allow child to spawn if authenticated
+
+            if (this.brogueChild){
+                return;
+            }
+
             this.spawnChildProcess(data);
             this.attachChildEvents();
         },
-        stop : function (data) {
-            // TODO - kill the child
-
+        clean: function (data) {
+            
+            // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
+            this.handlerCollection.kill.call(this, data);
+        },
+        kill: function (data) {
+            if (! this.brogueChild){
+                return;
+            }
+            this.brogueChild.kill('SIGINT');
+            this.brogueChild = null;
         }
     },
     

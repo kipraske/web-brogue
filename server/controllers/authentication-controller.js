@@ -79,8 +79,9 @@ _.extend(AuthController.prototype, {
             });
         },    
         logout: function (data) {
+            allUsers.removeUser(this.currentUser);
             this.currentUser = {};
-            // todo - kill child process in the brogue controller - if you are not logged in you are not allowed to have a process
+            this.brogue.handlerCollection.clean.call(this.brogue, null);
         }
     }
 });
