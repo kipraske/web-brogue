@@ -39,13 +39,16 @@ wss.on("connection", function(ws) {
 
     // Initialize Controllers - each controller needs this specific websocket instance and access to any other controller that it may need to communicate with.
     var clientError = new ErrorController(ws);
+    
     var brogue = new BrogueController(ws, {
         error : clientError
     });
+    
     var auth = new AuthController(ws, {
         error : clientError, 
         brogue : brogue
     });
+    brogue.auth = auth; // added manually due to circular dependency
     
     var router = new Router([
         clientError,

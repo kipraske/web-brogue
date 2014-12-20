@@ -12,6 +12,7 @@ var CELL_MESSAGE_SIZE = 9;
 function BrogueController(ws, sharedControllers) {
     this.ws = ws;
     this.error = sharedControllers.error;
+    this.auth = null; // because of cross dependency, we will set this manually
 
     this.brogueChild;  // child process
     this.dataAccumulator; // buffer
@@ -51,12 +52,16 @@ _.extend(BrogueController.prototype, {
         start: function (data) {
 
             // TODO - only allow child to spawn if authenticated
+            var currentUserName = this.auth.currentUserName;
 
-            if (this.brogueChild){
+            if (!currentUserName || this.brogueChild){
                 return;
             }
 
-            this.spawnChildProcess(data);
+            var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
+            console.log(childWorkingDir)
+
+            this.spawnChildProcess(data, childWorkingDir);
             this.attachChildEvents();
         },
         clean: function (data) {
@@ -73,8 +78,10 @@ _.extend(BrogueController.prototype, {
         }
     },
     
-    spawnChildProcess: function (args) {
-        var options = {};
+    spawnChildProcess: function (args, childWorkingDir) {
+        var options = {            
+            cwd : childWorkingDir
+        };
         args = [];
         this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
     },

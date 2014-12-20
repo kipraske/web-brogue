@@ -1,0 +1,6 @@
+# This directory is for saved games and recordings from the brogue processes.
+# As such I want to include this directory in the repository, but I don't want to save anything that may be put here
+
+*
+
+!.gitignore

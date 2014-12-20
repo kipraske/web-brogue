@@ -7,7 +7,8 @@ var allUsers = require('../user/all-users');
 
 function AuthController(ws, sharedControllers) {
     this.ws = ws;
-    this.currentUser = {};
+    this.currentUserName = "";
+    this.currentUserData = {};
     this.error = sharedControllers.error;
     this.brogue = sharedControllers.brogue;
 }
@@ -37,15 +38,14 @@ _.extend(AuthController.prototype, {
                 
                 if (user.isValidPassword(data.password)) {
                     
-                    console.log(self.currentUser);
-                    
-                    if (self.currentUser.sessionID){
+                    if (self.currentUserData.sessionID){
                         self.error.send("You are already logged in!");
                         return;
                     }
                     
                     allUsers.addUser(data.username);
-                    self.currentUser = allUsers.getUser(data.username);
+                    self.currentUserName = data.username;
+                    self.currentUserData = allUsers.getUser(data.username);
                 }
                 else {
                     self.error.send("username password does not match");
@@ -79,8 +79,9 @@ _.extend(AuthController.prototype, {
             });
         },    
         logout: function (data) {
-            allUsers.removeUser(this.currentUser);
-            this.currentUser = {};
+            allUsers.removeUser(this.currentUserName);
+            this.currentUserName = "";
+            this.currentUserData = {};
             this.brogue.handlerCollection.clean.call(this.brogue, null);
         }
     }
