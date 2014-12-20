@@ -18,6 +18,11 @@ _.extend(AuthController.prototype, {
     handlerCollection: {
         login: function (data) {
             var self = this;
+            
+            if (data.username == null || data.password == null){
+                self.error.send("Invalid authentication data sent: " + data);
+            }
+            
             User.findOne({'username': data.username},
             function (err, user) {
                 if (err) {
@@ -31,8 +36,16 @@ _.extend(AuthController.prototype, {
                 }
                 
                 if (user.isValidPassword(data.password)) {
-                    self.user = user;
-                    console.log("login success!");
+                    
+                    console.log(self.currentUser);
+                    
+                    if (self.currentUser.sessionID){
+                        self.error.send("You are already logged in!");
+                        return;
+                    }
+                    
+                    allUsers.addUser(data.username);
+                    self.currentUser = allUsers.getUser(data.username);
                 }
                 else {
                     self.error.send("username password does not match");

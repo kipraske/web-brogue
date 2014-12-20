@@ -8,5 +8,24 @@
     lobby : Object // information to display in the lobby
  }
  */
+var bCrypt = require('bcrypt-nodejs');
 
-module.exports = {};
+var userCount = 0;
+
+module.exports = {
+    users : {},
+    addUser : function(userName){
+        userCount++;
+        this.users[userName] = {
+            sessionID : userCount + bCrypt.hashSync(userName, bCrypt.genSaltSync(10)),
+            brogueProcess : null,
+            lobbyData : {}
+        };
+    },
+    removeUser : function(userName){
+        this.users[userName] = null;
+    },
+    getUser : function(userName){
+        return this.users[userName];
+    }
+};
