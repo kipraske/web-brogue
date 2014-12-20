@@ -11,7 +11,7 @@ userSchema.methods.isValidPassword = function (password) {
 };
 
 userSchema.methods.createHash = function (password) {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10));
 };
 
 module.exports = mongoose.model('User', userSchema);
