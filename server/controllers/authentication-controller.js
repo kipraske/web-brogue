@@ -5,11 +5,11 @@ var allUsers = require('../user/all-users');
 
 // Controller for propigating errors back to the client console for debugging purposes
 
-function AuthController(ws, currentUser, error, brogueController) {
+function AuthController(ws, sharedControllers) {
     this.ws = ws;
-    this.currentUser = currentUser;
-    this.error = error;
-    this.brogue = brogueController;
+    this.currentUser = {};
+    this.error = sharedControllers.error;
+    this.brogue = sharedControllers.brogue;
 }
 
 AuthController.prototype = new Controller();

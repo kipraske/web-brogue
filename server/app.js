@@ -38,13 +38,17 @@ var Router = require("./controllers/router");
 
 wss.on("connection", function(ws) {
 
-    var currentUser = {};
-
-    var router = new Router();
-    var clientError = new ErrorController(ws, currentUser);
-    var brogue = new BrogueController(ws, currentUser, clientError);
-    var auth = new AuthController(ws, currentUser, clientError, brogue);
-    router.registerControllers([
+    // Initialize Controllers - each controller needs this specific websocket instance and access to any other controller that it may need to communicate with.
+    var clientError = new ErrorController(ws);
+    var brogue = new BrogueController(ws, {
+        error : clientError
+    });
+    var auth = new AuthController(ws, {
+        error : clientError, 
+        brogueController : brogue
+    });
+    
+    var router = new Router([
         clientError,
         brogue,
         auth

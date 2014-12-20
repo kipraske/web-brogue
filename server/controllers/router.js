@@ -1,8 +1,9 @@
 
 var _ = require('underscore');
 
-function Router(){
+function Router(initialControllers){
     this.routeCollection = {};
+    this.registerControllers(initialControllers);
 }
 
 Router.prototype = {

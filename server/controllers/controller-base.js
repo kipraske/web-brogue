@@ -1,7 +1,6 @@
 function Controller() {
     this.ws;
-    this.currentUser;
-    this.error;
+    this.sharedControllers;
     this.controllerName = "";
     
     this.handlerCollection = {};  // collection of handlername : function
