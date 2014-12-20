@@ -1,12 +1,13 @@
 var _ = require('underscore');
 var Controller = require('./controller-base');
 var User = require('../user/user-model');
+var allUsers = require('../user/all-users');
 
 // Controller for propigating errors back to the client console for debugging purposes
 
-function AuthController(ws, user, error, brogueController) {
+function AuthController(ws, currentUser, error, brogueController) {
     this.ws = ws;
-    this.user = user;
+    this.currentUser = currentUser;
     this.error = error;
     this.brogue = brogueController;
 }
@@ -65,7 +66,7 @@ _.extend(AuthController.prototype, {
             });
         },    
         logout: function (data) {
-            this.user = null;
+            this.currentUser = {};
             // todo - kill child process in the brogue controller - if you are not logged in you are not allowed to have a process
         }
     }

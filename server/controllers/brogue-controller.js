@@ -9,9 +9,9 @@ var CELL_MESSAGE_SIZE = 9;
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
-function BrogueController(ws, user, error) {
+function BrogueController(ws, currentUser, error) {
     this.ws = ws;
-    this.user = user;
+    this.currentUser = currentUser;
     this.error = error;
 
     this.brogueChild;  // child process

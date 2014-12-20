@@ -1,6 +1,6 @@
 function Controller() {
     this.ws;
-    this.user;
+    this.currentUser;
     this.error;
     this.controllerName = "";
     

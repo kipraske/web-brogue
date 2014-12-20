@@ -4,9 +4,9 @@ var Controller = require('./controller-base');
 
 // Controller for propigating errors back to the client console for debugging purposes
 
-function ErrorController(ws, user) {
+function ErrorController(ws, currentUser) {
     this.ws = ws;
-    this.user = user;
+    this.currentUser = currentUser;
 }
 
 ErrorController.prototype = new Controller();
