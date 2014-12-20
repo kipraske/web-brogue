@@ -16,8 +16,9 @@ module.exports = {
     users : {},
     addUser : function(userName){
         userCount++;
+        var hiddenSalt = bCrypt.genSaltSync(8);
         this.users[userName] = {
-            sessionID : userCount + bCrypt.hashSync(userName, bCrypt.genSaltSync(10)),
+            sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
             brogueProcess : null,
             lobbyData : {}
         };
