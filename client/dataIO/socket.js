@@ -8,8 +8,7 @@ define(['dataIO/router'], function(router){
     // TODO : set up onerror, onclose all that stuff
     
     socket.onopen = function(){
-        console.log("test socket open");
-        // TODO - probably need to do more than this
+        console.log("Web Socket Connection Open");
     };
     
     socket.onmessage = function(event){
