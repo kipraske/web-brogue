@@ -10,9 +10,9 @@ define([
         el : "#auth-play",
         model : new AuthenticationAndPlayModel(),
         events : {
-            "#login-button" : "handleClick",
-            "#register-button" : "handleClick",
-            "#play" : "handleClick"
+            "click #login-button" : "handleClick",
+            "click #register-button" : "handleClick",
+            "click #play" : "handleClick"
         },
         
         templates : {
@@ -30,7 +30,7 @@ define([
         },
         
         handleClick : function(event){
-            console.log("clicked bitches");
+            console.log("clicks working now");
         }
     });
 
