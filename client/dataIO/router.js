@@ -12,24 +12,12 @@ define ([
         registerHandlers : function(handlerCollection){  
             _.extend(_handlers, handlerCollection);
         },
-        prepareIncomingData : function(data){
-            if (data instanceof ArrayBuffer){
-                return data;
-            }
-            else {
-                // TODO - may wish eventually to gzip the incoming JSON, will have to decompress here then
-                
-                // TODO - may just want to include this in our routing to clean things up a bit
-                
-                return JSON.parse(data);
+        route: function(rawMessage) {
+            if (message instanceof ArrayBuffer){
+                _handlers["brogue"](rawMessage);
             }
             
-            return message;
-        },
-        route: function(message) {
-            if (message instanceof ArrayBuffer){
-                _handlers["brogue"](message);
-            }
+            var message = JSON.parse(rawMessage);
             
             if (message.type && message.data && _handlers[message.type]) {
                 _handlers[message.type](message.data);

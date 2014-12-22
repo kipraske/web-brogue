@@ -12,8 +12,7 @@ define(['dataIO/router'], function(router){
     };
     
     socket.onmessage = function(event){
-        var message = router.prepareIncomingData(event.data);
-        router.route(message);
+        router.route(event.data);
     };
    
    return socket;
