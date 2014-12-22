@@ -26,7 +26,8 @@ require([
     // set up routes for the websocket connection
     router.registerHandlers({
         "error" : console.error.bind(console), //'this' must be 'console' when you call console
-        "brogue" : consoleView.updateCellModelData
+        "brogue" : consoleView.updateCellModelData,
+        "auth" : authenticationAndPlayView.handleMessage
     });
     
     // clean up application
