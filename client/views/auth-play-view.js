@@ -2,17 +2,17 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    "dataIO/send-mouse",
+    "dataIO/send-generic",
     "models/auth-play"
-], function($, _, Backbone, sendMouseEvent, AuthenticationAndPlayModel) {
+], function($, _, Backbone, send, AuthenticationAndPlayModel) {
 
     var AuthenticationAndPlayView = Backbone.View.extend({
         el : "#auth-play",
         model : new AuthenticationAndPlayModel(),
         events : {
-            "click #login-button" : "handleClick",
-            "click #register-button" : "handleClick",
-            "click #play" : "handleClick"
+            "click #login-button" : "loginSubmit",
+            "click #register-button" : "registerSubmit",
+            "click #play" : "playBrogue"
         },
         
         templates : {
@@ -22,6 +22,9 @@ define([
         },
         
         initialize: function() {
+            
+            // TODO - if we are already logged on via cookie than we can render the other one
+            
             this.render(this.templates.login);
         },
         
@@ -29,8 +32,25 @@ define([
             this.$el.html(template(this.model.toJSON()));
         },
         
-        handleClick : function(event){
-            console.log("clicks working now");
+        loginSubmit: function (event) {
+            var loginData = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+            send("auth", "login", loginData);
+        },
+        
+        registerSubmit : function(event){
+            var registerData = {
+                username: $('#username').val(),
+                password: $('#password').val(),
+                repeat: $('#repeat-password').val()
+            };
+            send("auth", "login", registerData);
+        },
+        
+        playBrogue : function(event){
+            
         }
     });
 

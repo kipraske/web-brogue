@@ -66,7 +66,12 @@ _.extend(AuthController.prototype, {
                 if (user) {
                     self.error.send("user already exists");
                     return;
-                } else {
+                }
+                else if (data.password !== data.repeat){
+                    self.error.send("password fields do not match");
+                    return;
+                }
+                else {
                     var newUser = new User();
                     newUser.username = data.username;
                     newUser.password = newUser.createHash(data.password);
