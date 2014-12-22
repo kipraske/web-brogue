@@ -6,7 +6,7 @@ define([
     "models/auth-play"
 ], function ($, _, Backbone, send, AuthenticationAndPlayModel) {
 
-    var AuthenticationAndPlayView = Backbone.View.extend({
+    var AuthenticationView = Backbone.View.extend({
         el: "#auth-play",
         model: new AuthenticationAndPlayModel(),
         events: {
@@ -75,6 +75,6 @@ define([
         }
     });
 
-    return AuthenticationAndPlayView;
+    return AuthenticationView;
 
 });

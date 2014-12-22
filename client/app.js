@@ -12,22 +12,23 @@ require([
     "backbone",
     "tests/debug-mode",
     "dataIO/router",
-    "views/auth-play-view",
+    "views/auth-view",
     "views/console-view"
-], function( $, _, Backbone, debugMode, router, AuthenticationAndPlayView, ConsoleView){
+], function( $, _, Backbone, debugMode, router, AuthView, ConsoleView){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
     
     // initialize each view
-    var authenticationAndPlayView = new AuthenticationAndPlayView();
+    var authView = new AuthView();
     var consoleView = new ConsoleView();
     
     // set up routes for the websocket connection
     router.registerHandlers({
-        "error" : console.error.bind(console), //'this' must be 'console' when you call console
-        "brogue" : consoleView.updateCellModelData,
-        "auth" : authenticationAndPlayView.handleMessage
+        //Must bind 'this' to the scope of the view so we can use the internal view functions
+        "error" : console.error.bind(console), 
+        "brogue" : consoleView.updateCellModelData.bind(consoleView),
+        "auth" : authView.handleMessage.bind(authView)
     });
     
     // clean up application

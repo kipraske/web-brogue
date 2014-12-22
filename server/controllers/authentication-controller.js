@@ -21,36 +21,50 @@ _.extend(AuthController.prototype, {
     handlerCollection: {
         login: function (data) {
             var self = this;
-            
-            if (data.username == null || data.password == null){
+
+            if (data.username == null || data.password == null) {
                 self.error.send("Invalid authentication data sent: " + data);
             }
-            
+
             User.findOne({'username': data.username},
             function (err, user) {
                 if (err) {
                     self.error.send(JSON.stringify(err));
                     return;
                 }
-                
+
                 if (!user) {
-                    self.error.send("user not found");
+                    self.sendMessage("auth", {
+                        result: "fail",
+                        data: "Username and password combination not found"
+                    });
                     return;
                 }
-                
+
                 if (user.isValidPassword(data.password)) {
-                    
-                    if (self.currentUserData.sessionID){
-                        self.error.send("You are already logged in!");
+
+                    if (self.currentUserData.sessionID) {
+                        self.sendMessage("auth", {
+                            result: "fail",
+                            data: "You are already logged in"
+                        });
                         return;
                     }
-                    
+
                     allUsers.addUser(data.username);
                     self.currentUserName = data.username;
                     self.currentUserData = allUsers.getUser(data.username);
+
+                    self.sendMessage("auth", {
+                        result: "success",
+                        data: "logged-in"
+                    });
                 }
                 else {
-                    self.error.send("username password does not match");
+                    self.sendMessage("auth", {
+                        result: "fail",
+                        data: "Username and password combination not found"
+                    });
                 }
             }
             );
@@ -64,11 +78,17 @@ _.extend(AuthController.prototype, {
                 }
                 // already exists
                 if (user) {
-                    self.error.send("user already exists");
+                    self.sendMessage("auth", {
+                        result: "fail",
+                        data: "Sorry that username is already taken"
+                    });
                     return;
                 }
-                else if (data.password !== data.repeat){
-                    self.error.send("password fields do not match");
+                else if (data.password !== data.repeat) {
+                    self.sendMessage("auth", {
+                        result: "fail",
+                        data: "Password fields do not match"
+                    });
                     return;
                 }
                 else {
@@ -86,11 +106,17 @@ _.extend(AuthController.prototype, {
                             if (err) {
                                 self.error.send(JSON.stringify(err));
                             }
+
+                            self.sendMessage("auth", {
+                                result: "success",
+                                data: "registered"
+                            });
+
                         });
                     });
                 }
             });
-        },    
+        },
         logout: function (data) {
             allUsers.removeUser(this.currentUserName);
             this.currentUserName = "";
