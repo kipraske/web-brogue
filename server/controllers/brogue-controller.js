@@ -47,11 +47,9 @@ _.extend(BrogueController.prototype, {
         }
     },
     handlerCollection: {
-        //TODO - validate data when needed
+        //TODO - validate data when needed -- I mean we don't want anything crazy getting passed in as arguments and crashing the server
 
         start: function (data) {
-
-            // TODO - only allow child to spawn if authenticated
             var currentUserName = this.auth.currentUserName;
 
             if (!currentUserName || this.brogueChild){
@@ -59,16 +57,16 @@ _.extend(BrogueController.prototype, {
             }
 
             var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
-            console.log(childWorkingDir)
-
             this.spawnChildProcess(data, childWorkingDir);
             this.attachChildEvents();
         },
+        
         clean: function (data) {
             
             // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
             this.handlerCollection.kill.call(this, data);
         },
+        
         kill: function (data) {
             if (! this.brogueChild){
                 return;
@@ -78,11 +76,11 @@ _.extend(BrogueController.prototype, {
         }
     },
     
-    spawnChildProcess: function (args, childWorkingDir) {
+    spawnChildProcess: function (data, childWorkingDir) {
         var options = {            
             cwd : childWorkingDir
         };
-        args = [];
+        var args = [];
         this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
     },
     attachChildEvents: function () {

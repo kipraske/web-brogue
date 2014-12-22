@@ -1,4 +1,6 @@
+var config = require('../config');
 var _ = require('underscore');
+var fs = require('fs');
 var Controller = require('./controller-base');
 var User = require('../user/user-model');
 var allUsers = require('../user/all-users');
@@ -68,12 +70,18 @@ _.extend(AuthController.prototype, {
                     var newUser = new User();
                     newUser.username = data.username;
                     newUser.password = newUser.createHash(data.password);
-                    newUser.save(function (err) {
+
+                    // each user needs their own directory for the brogue processes to run in
+                    fs.mkdir(config.GAME_DATA_DIR + data.username, 0755, function (err) {
                         if (err) {
                             self.error.send(JSON.stringify(err));
                         }
-                        console.log('User Registration succesful');
-                        // should probably do something then now uh...                        
+
+                        newUser.save(function (err) {
+                            if (err) {
+                                self.error.send(JSON.stringify(err));
+                            }
+                        });
                     });
                 }
             });
