@@ -5,6 +5,7 @@ Table Of Contents
 0.0 - General
     0.1 - Reset
     0.2 - General
+    0.3 - Control
 1.0 - Header
 2.0 - Main Area
     2.1 - Lobby
@@ -36,13 +37,23 @@ body{
     background-color: #000000;
 }
 
+/* 0.3 Control Styles ---------------*/
+.inactive{
+    display : none;
+}
+
 /* 1.0 Header
 =========================
 */
 
 header {
-    height: 10vh;
+    height: 5vh;
     background-color : grey;
+}
+
+.brogue-icon {
+    height : 5vh;
+    width : 5vh;
 }
 
 /* 2.0 Main
@@ -50,6 +61,11 @@ header {
 */
 
 /* 2.1 - Lobby --------------------*/
+
+.banner {
+    display: block;
+    margin: 0 auto;
+}
 
 /* 2.2 - Console --------------------*/
 
@@ -65,7 +81,7 @@ header {
 }
 
 .console.partial-height {
-    height : 90vh;
+    height : 95vh;
 }
 
 .console.full-width {
