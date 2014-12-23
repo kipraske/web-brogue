@@ -3,12 +3,12 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
-    "models/auth-play"
-], function ($, _, Backbone, send, AuthenticationAndPlayModel) {
+    "models/auth"
+], function ($, _, Backbone, send, AuthenticationModel) {
 
     var AuthenticationView = Backbone.View.extend({
         el: "#auth-play",
-        model: new AuthenticationAndPlayModel(),
+        model: new AuthenticationModel(),
         events: {
             "click #login-button": "loginSubmit",
             "click #register-button": "registerSubmit",
