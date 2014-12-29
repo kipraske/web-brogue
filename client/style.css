@@ -52,8 +52,8 @@ header {
 }
 
 .brogue-icon {
-    height : 5vh;
-    width : 5vh;
+    height : 4.8vh;
+    width : 4.8vh;
 }
 
 /* 2.0 Main
@@ -66,6 +66,35 @@ header {
     display: block;
     margin: 0 auto;
 }
+
+.auth {
+    float: left;
+    box-sizing: border-box;
+    width: 200px;
+    margin: 0 2.5%;
+    color: #ffffff;
+}
+
+.auth label{
+    display: block;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 13px;
+}
+
+.auth input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.auth button{
+    display: block;
+    float: right;
+}
+
+
 
 /* 2.2 - Console --------------------*/
 
