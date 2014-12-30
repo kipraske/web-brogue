@@ -20,21 +20,10 @@ Table Of Contents
 
 /* 0.1 Reset Styles -----------------*/
 
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
-    border: 0;
-    font-family: inherit;
-    font-size: 100%;
-    font-style: inherit;
-    font-weight: inherit;
-    margin: 0;
-    outline: 0;
-    padding: 0;
-    vertical-align: baseline;
-}
-
 /* 0.2 General Styles ---------------*/
 body{
     background-color: #000000;
+    color: #ffffff;
 }
 
 /* 0.3 Control Styles ---------------*/
@@ -67,11 +56,14 @@ header {
     width: 100%;
 }
 
-.auth {
+.auth{
+    margin: 0 2.5%;
+}
+
+.auth form{
     box-sizing: border-box;
     width: 200px;
     margin: 0 auto;
-    color: #ffffff;
 }
 
 .auth label{
@@ -95,13 +87,16 @@ header {
 
 @media screen and (min-width: 600px){
     .banner {
-        display: block;
         width: auto;
         margin: 0 auto;
     }
 
     .auth {
         float: left;
+    }
+    
+    .auth form{
+        margin: 0 10%;
     }
 }
 
