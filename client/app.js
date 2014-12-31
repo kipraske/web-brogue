@@ -24,7 +24,7 @@ require([
     var consoleView = new ConsoleView();
     
     // set up routes for the websocket connection
-    router.registerHandlers({
+    router.ws.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console), 
         "brogue" : consoleView.updateCellModelData.bind(consoleView),
