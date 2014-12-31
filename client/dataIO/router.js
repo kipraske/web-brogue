@@ -1,32 +1,28 @@
-define([
-    "underscore",
-    "backbone"
-], function (_, Backbone) {
-
-    var _socketHandlers = {};
-
-    var Router = Backbone.Router.extend({
-        
-        // WebSocket route handlers and execution
-        ws: {
-            registerHandlers: function (handlerCollection) {
-                _.extend(_socketHandlers, handlerCollection);
-            },
-            route: function (rawMessage) {
-                if (message instanceof ArrayBuffer) {
-                    _socketHandlers["brogue"](rawMessage);
-                }
-
-                var message = JSON.parse(rawMessage);
-
-                if (message.type && message.data && _socketHandlers[message.type]) {
-                    _socketHandlers[message.type](message.data);
-                }
+define ([
+    "underscore"
+], function( _ ){
+    
+    var _handlers = {};
+    
+    var router = {
+        registerHandlers : function(handlerCollection){  
+            _.extend(_handlers, handlerCollection);
+        },
+        route: function(rawMessage) {
+            if (message instanceof ArrayBuffer){
+                _handlers["brogue"](rawMessage);
+            }
+            
+            var message = JSON.parse(rawMessage);
+            
+            if (message.type && message.data && _handlers[message.type]) {
+                _handlers[message.type](message.data);
             }
         }
-    });
-
-    return new Router();
+    };
+    
+    
+    return router;
 });
 
 

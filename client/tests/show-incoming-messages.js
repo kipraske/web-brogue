@@ -14,7 +14,7 @@ define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
             else{
                 console.log(message);
             }
-        router.ws.route(message);
+        router.route(message);
     };
     }
     
