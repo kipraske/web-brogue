@@ -43,7 +43,7 @@ define([
                 password: $('#password').val(),
                 repeat: $('#repeat-password').val()
             };
-            send("auth", "login", registerData);
+            send("auth", "register", registerData);
         },
         changeToRegister: function (event) {
             event.preventDefault();
