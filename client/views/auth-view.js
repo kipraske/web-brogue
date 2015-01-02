@@ -35,6 +35,9 @@ define([
                 username: $('#username').val(),
                 password: $('#password').val()
             };
+            this.model.set({
+                username: loginData.username
+            });
             send("auth", "login", loginData);
         },
         registerSubmit: function (event) {
