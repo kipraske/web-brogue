@@ -3,7 +3,7 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
-    "models/auth-play"
+    "models/auth"
 ], function ($, _, Backbone, send, AuthenticationAndPlayModel) {
 
     var AuthenticationView = Backbone.View.extend({
