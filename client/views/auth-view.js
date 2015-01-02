@@ -41,7 +41,7 @@ define([
             var registerData = {
                 username: $('#username').val(),
                 password: $('#password').val(),
-                repeat: $('#repeat-password').val()
+                repeat: $('#password-repeat').val()
             };
             send("auth", "register", registerData);
         },
