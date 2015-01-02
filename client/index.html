@@ -30,7 +30,7 @@
 			<input type="text" name="username" id="username" />
 			<label for="password">Password: </label>
 			<input type="password" name="password" id="password" />
-                        <a href="#register">Register</a>
+                        <a id="to-register" href="#register">Register</a>
 			<button type="button" id="login-button">Login</button>
 			<div id="auth-message"></div>
 		</form>
@@ -45,14 +45,14 @@
 			<input type="password" name="password" id="password" />
 			<label for="password-repeat">Repeat Password: </label>
 			<input type="password" name="password-repeat" id="password-repeat" />
-                        <a href="#login">Login</a>
+                        <a id="to-login" href="#login">Login</a>
 			<button type="button" id="register-button">Register</button>
 			<div id="auth-message"></div>
 		</form>
 		</script>
 		
-		<script id="play" type="text/template">
-			
+		<script id="welcome" type="text/template">
+			<p>Welcome <%= username %></p>
 		</script>
 		
 		<script id="current-games" type="text/template">
