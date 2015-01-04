@@ -7,7 +7,7 @@ define([
 ], function ($, _, Backbone, send, AuthenticationModel) {
 
     var AuthenticationView = Backbone.View.extend({
-        el: "#auth-play",
+        el: "#auth",
         model: new AuthenticationModel(),
 
         events: {
