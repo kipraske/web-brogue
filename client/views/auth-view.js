@@ -9,46 +9,53 @@ define([
     var AuthenticationView = Backbone.View.extend({
         el: "#auth-play",
         model: new AuthenticationModel(),
+
         events: {
             "click #login-button": "loginSubmit",
             "click #register-button": "registerSubmit",
+            "click #to-register": "changeToRegister",
+            "click #to-login": "changeToLogin",
             "click #play": "playBrogue"
         },
         templates: {
             login: _.template($('#login').html()),
             register: _.template($('#register').html()),
-            play: _.template($('#play').html())
+            welcome: _.template($('#welcome').html())
         },
         initialize: function () {
 
             // TODO - if we are already logged on via cookie than we can render the other one
 
-            this.render(this.templates.login);
+            this.render("login");
         },
-        render: function (template) {
-            this.$el.html(template(this.model.toJSON()));
+        render: function (templateName) {
+            this.$el.html(this.templates[templateName](this.model.toJSON()));
         },
         loginSubmit: function (event) {
             var loginData = {
                 username: $('#username').val(),
                 password: $('#password').val()
             };
+            this.model.set({
+                username: loginData.username
+            });
             send("auth", "login", loginData);
         },
         registerSubmit: function (event) {
             var registerData = {
                 username: $('#username').val(),
                 password: $('#password').val(),
-                repeat: $('#repeat-password').val()
+                repeat: $('#password-repeat').val()
             };
-            send("auth", "login", registerData);
+            send("auth", "register", registerData);
         },
-        playBrogue: function (event) {
-            send("brogue", "start");
-            
-            // TODO - need to switch to active mode and stuff - hrm where to keep that state...
-            
-            
+        changeToRegister: function (event) {
+            event.preventDefault();
+            this.render("register");
+        },
+        changeToLogin: function (event) {
+            event.preventDefault();
+            this.render("login");
         },
         handleMessage: function (message) {
 
@@ -61,10 +68,10 @@ define([
 
             switch (message.data) {
                 case "logged-in" :
-                    this.render(this.templates.play);
+                    this.render("welcome");
                     break;
                 case "registered" :
-                    this.render(this.templates.login);
+                    this.render("login");
                     $('#auth-message')
                             .removeClass()
                             .addClass("success")

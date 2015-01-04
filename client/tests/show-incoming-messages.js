@@ -2,9 +2,11 @@ define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
 
     // Redefine our socket's onmessage event to log all incoming messages in the console.
 
-    function brogueShowMessage() {
+    function showIncomingMessages() {
         ws.onmessage = function(event){
-            var message = router.prepareIncomingData(event.data);
+            
+            var message = event.data;
+            
             if (message instanceof ArrayBuffer){
                 var messageArray = new Uint8Array(message);
                 console.log(messageArray);
@@ -16,7 +18,7 @@ define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
     };
     }
     
-    return brogueShowMessage;
+    return showIncomingMessages;
 });
 
 
