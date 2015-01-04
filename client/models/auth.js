@@ -4,12 +4,12 @@ define([
     'backbone'
 ], function($, _, Backbone) {
 
-    var AuthenticationAndPlayModel = Backbone.Model.extend({
+    var AuthenticataionModel = Backbone.Model.extend({
         defaults: {
             username : ""
         }
     });
 
-    return AuthenticationAndPlayModel;
+    return AuthenticataionModel;
 
 });
