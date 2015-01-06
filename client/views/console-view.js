@@ -28,7 +28,8 @@ define([
     var Console = Backbone.View.extend({
         el: "#console",
         events: {
-            "keypress" : "handleKeypress"
+            "keypress" : "handleKeypress",
+            "keydown" : "handleNonCharacterKeypress"
         },
         initialize: function() {
 
@@ -154,10 +155,26 @@ define([
             }
         },
         
-        handleKeypress : function(event){    
-            sendKeypressEvent(KEYPRESS_EVENT_CHAR, event.keyCode, event.ctrlKey, event.shiftKey);
-        }
+        // For keys that produce a character in the console
+        handleKeypress: function (event) {
+            sendKeypressEvent(KEYPRESS_EVENT_CHAR, event.charCode, event.ctrlKey, event.shiftKey);
+        },
+        // For keys that don't produce a character - for example the escape key
+        handleNonCharacterKeypress: function (event) {
+            
+            var isSpecialChar = false;
+            var specialKeyCode = 0;
 
+            switch (event.keyCode) {
+                case 27 : // ESC_KEY
+                    isSpecialChar = true;
+                    specialKeyCode = 27;
+            }
+
+            if (isSpecialChar) {
+                sendKeypressEvent(KEYPRESS_EVENT_CHAR, specialKeyCode, event.ctrlKey, event.shiftKey);
+            }
+        }
     });
 
     return Console;
