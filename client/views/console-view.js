@@ -15,6 +15,7 @@ define([
     var _consoleWidth;
     var _consoleHeight;
     var _consoleCellTopOffsetPercent;
+    var _consoleCellLeftOffsetPercent;
     var _consoleCellWidthPercent;
     var _consoleCellHeightPercent;
     var _consoleCellCharSizePx;
@@ -53,7 +54,8 @@ define([
                         heightPercent: _consoleCellHeightPercent,
                         charSizePx: _consoleCellCharSizePx,
                         charPaddingPx: _consoleCellCharPaddingPx,
-                        topOffsetPercent: _consoleCellTopOffsetPercent
+                        topOffsetPercent: _consoleCellTopOffsetPercent,
+                        leftOffsetPercent: _consoleCellLeftOffsetPercent
                     });
 
                     var cellView = new ConsoleCellView({
@@ -78,16 +80,22 @@ define([
             var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
             var cellPixelHeight = cellPixelWidth / _consoleCellAspectRatio;
 
-            //If this height will make the console go off screen, ignore the aspect ratio and just use the full height
-            if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight) {
-                _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
-                _consoleCellTopOffsetPercent = 0;
+            //If this height will make the console go off screen, recalculate size and horizontally center instead
+            if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight) {              
                 cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;
+                cellPixelWidth = cellPixelHeight * _consoleCellAspectRatio;
+
+                _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
+                _consoleCellWidthPercent = 100 * cellPixelWidth / _consoleWidth;
+                _consoleCellTopOffsetPercent = 0;
+
+                var leftOffSetPx = (_consoleWidth - cellPixelWidth * _CONSOLE_COLUMNS) / 2;
+                _consoleCellLeftOffsetPercent = leftOffSetPx / _consoleWidth * 100;
             }
             else {
+                // Vertically center the console
                 _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
-
-                // sweet sweet vertical centering
+                _consoleCellLeftOffsetPercent = 0;
                 var topOffSetPx = (_consoleHeight - cellPixelHeight * _CONSOLE_ROWS) / 2;
                 _consoleCellTopOffsetPercent = topOffSetPx / _consoleHeight * 100;
             }
@@ -114,7 +122,8 @@ define([
                         heightPercent: _consoleCellHeightPercent,
                         charSizePx: _consoleCellCharSizePx,
                         charPaddingPx: _consoleCellCharPaddingPx,
-                        topOffsetPercent: _consoleCellTopOffsetPercent
+                        topOffsetPercent: _consoleCellTopOffsetPercent,
+                        leftOffsetPercent: _consoleCellLeftOffsetPercent
                     });
                     _consoleCells[i][j].model.calculatePositionAttributes();
                     _consoleCells[i][j].applySize();
