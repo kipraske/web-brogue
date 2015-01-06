@@ -56,7 +56,8 @@ header {
     width: 100%;
 }
 
-.auth{
+.auth, 
+.play{
     margin: 0 2.5%;
 }
 
@@ -89,10 +90,6 @@ header {
     .banner {
         width: auto;
         margin: 0 auto;
-    }
-
-    .auth {
-        float: left;
     }
     
     .auth form{
