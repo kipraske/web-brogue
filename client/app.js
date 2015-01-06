@@ -13,14 +13,16 @@ require([
     "tests/debug-mode",
     "dataIO/router",
     "views/auth-view",
+    "views/play-view",
     "views/console-view"
-], function( $, _, Backbone, debugMode, router, AuthView, ConsoleView){
+], function( $, _, Backbone, debugMode, router, AuthView, PlayView, ConsoleView){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
     
     // initialize each view
     var authView = new AuthView();
+    var playView = new PlayView();
     var consoleView = new ConsoleView();
     
     // set up routes for the websocket connection

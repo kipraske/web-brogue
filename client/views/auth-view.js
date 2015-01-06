@@ -15,7 +15,6 @@ define([
             "click #register-button": "registerSubmit",
             "click #to-register": "changeToRegister",
             "click #to-login": "changeToLogin",
-            "click #play": "playBrogue"
         },
         templates: {
             login: _.template($('#login').html()),
@@ -69,6 +68,7 @@ define([
             switch (message.data) {
                 case "logged-in" :
                     this.render("welcome");
+                    $('#play').removeClass("inactive");
                     break;
                 case "registered" :
                     this.render("login");
