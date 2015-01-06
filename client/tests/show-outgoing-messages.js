@@ -1,6 +1,6 @@
 define(['dataIO/socket'], function(ws) {
 
-    // Redefine our socket's onmessage event to log all incoming messages in the console.
+    // Redefine the socket send function to log all outgoing messages in the console
 
     var originalSocketSend = ws.send.bind(ws);
 
