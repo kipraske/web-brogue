@@ -38,9 +38,52 @@ static void web_plotChar(uchar inputChar,
 			  short xLoc, short yLoc,
 			  short foreRed, short foreGreen, short foreBlue,
 			  short backRed, short backGreen, short backBlue) {
+    
+    #ifdef USE_UNICODE
+    // because we can't look at unicode and ascii without messing with Rogue.h, reinterpret until some later version comes along:
+    switch (inputChar) {
+    case FLOOR_CHAR: inputChar = '.'; break;
+    case CHASM_CHAR: inputChar = ':'; break;
+    case TRAP_CHAR: inputChar = '%'; break;
+    case FIRE_CHAR: inputChar = '^'; break;
+    case FOLIAGE_CHAR: inputChar = '&'; break;
+    case AMULET_CHAR: inputChar = ','; break;
+    case SCROLL_CHAR: inputChar = '?'; break;
+    case RING_CHAR: inputChar = '='; break;
+    case WEAPON_CHAR: inputChar = '('; break;
+    case GEM_CHAR: inputChar = '+'; break;
+    case TOTEM_CHAR: inputChar = '0'; break;
+    case BAD_MAGIC_CHAR: inputChar = '+'; break;
+    case GOOD_MAGIC_CHAR: inputChar = '$'; break;
+
+    // case UP_ARROW_CHAR: inputChar = '^'; break; // same as WEAPON_CHAR
+    case DOWN_ARROW_CHAR: inputChar = 'v'; break;
+    case LEFT_ARROW_CHAR: inputChar = '<'; break;
+    case RIGHT_ARROW_CHAR: inputChar = '>'; break;
+
+    case UP_TRIANGLE_CHAR: inputChar = '^'; break;
+    case DOWN_TRIANGLE_CHAR: inputChar = 'v'; break;
+
+    case CHARM_CHAR: inputChar = '7'; break;
+
+    case OMEGA_CHAR: inputChar = '<'; break;
+    case THETA_CHAR: inputChar = '0'; break;
+    case LAMDA_CHAR: inputChar = '^'; break;
+    case KOPPA_CHAR: inputChar = '0'; break;
+
+    case LOZENGE_CHAR: inputChar = 'o'; break;
+    case CROSS_PRODUCT_CHAR: inputChar = 'x'; break;
+
+    case STATUE_CHAR: inputChar = '5'; break;
+    case UNICORN_CHAR: inputChar = 'U'; break;
+    }
+    #endif
+
+    if (inputChar < ' ' || inputChar > 127) inputChar = ' ';
+  
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
-        
+    
     outputBuffer[0] = (char) xLoc;
     outputBuffer[1] = (char) yLoc;
     outputBuffer[2] = inputChar;
