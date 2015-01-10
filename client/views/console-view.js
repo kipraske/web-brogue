@@ -9,7 +9,7 @@ define([
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;
-    var _MESSAGE_UPDATE_SIZE = 9;
+    var _MESSAGE_UPDATE_SIZE = 10;
 
     var _consoleCells = [];
     var _consoleWidth;
@@ -141,8 +141,10 @@ define([
                 var dataXCoord = dataArray[dIndex++];
                 var dataYCoord = dataArray[dIndex++];
 
+                var combinedUTF16Char = dataArray[dIndex++] << 8 | dataArray[dIndex++];
+
                 _consoleCells[dataXCoord][dataYCoord].model.set({
-                    char: dataArray[dIndex++],
+                    char: combinedUTF16Char,
                     foregroundRed: dataArray[dIndex++],
                     foregroundGreen: dataArray[dIndex++],
                     foregroundBlue: dataArray[dIndex++],

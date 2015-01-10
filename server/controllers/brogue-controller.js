@@ -5,7 +5,7 @@ var childProcess = require('child_process');
 var router = require('./router');
 var Controller = require('./controller-base');
 
-var CELL_MESSAGE_SIZE = 9;
+var CELL_MESSAGE_SIZE = 10;
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
@@ -106,7 +106,16 @@ _.extend(BrogueController.prototype, {
             data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
 
             self.ws.send(self.dataAccumulator, {binary: true});
+            
+            // The I/O in web-platform.c is blocking, so to get more data we need to feed it more input
+            if (self.dataRemainder.length === 0){
+                self.sendIdleEventToChild();
+            }
         });
+    },
+    
+    sendIdleEventToChild : function(){
+        //this.brogueChild.stdin.write();
     }
 });
 
