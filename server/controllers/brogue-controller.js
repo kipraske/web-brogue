@@ -106,16 +106,7 @@ _.extend(BrogueController.prototype, {
             data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
 
             self.ws.send(self.dataAccumulator, {binary: true});
-            
-            // The I/O in web-platform.c is blocking, so to get more data we need to feed it more input
-            if (self.dataRemainder.length === 0){
-                self.sendIdleEventToChild();
-            }
         });
-    },
-    
-    sendIdleEventToChild : function(){
-        //this.brogueChild.stdin.write();
     }
 });
 
