@@ -52,6 +52,7 @@ CURSES_DEF = -DBROGUE_CURSES
 CURSES_LIB = -lncurses -lm
 
 WEB_DEF = -DBROGUE_WEB
+WEB_LIB = -lm
 
 tcod : DEPENDENCIES += ${TCOD_DEP}
 tcod : DEFINES += ${TCOD_DEF}
@@ -65,6 +66,7 @@ both : DEFINES += ${TCOD_DEF} ${CURSES_DEF}
 both : LIBRARIES += ${TCOD_LIB} ${CURSES_LIB}
 	
 web : DEFINES += ${WEB_DEF}
+web : LIBRARIES += ${WEB_LIB}
 
 ifeq (${LASTTARGET},both)
 both : bin/brogue
