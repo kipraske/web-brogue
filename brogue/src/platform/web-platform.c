@@ -1,14 +1,14 @@
-//#ifdef BROGUE_TCOD
-#define _GNU_SOURCE
-#define OUTPUT_SIZE             10
-#define MAX_INPUT_SIZE          4
-#define MOUSE_INPUT_SIZE        4
-#define KEY_INPUT_SIZE          3
+#ifdef BROGUE_WEB
 
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include "platform.h"
+
+#define OUTPUT_SIZE             10
+#define MAX_INPUT_SIZE          4
+#define MOUSE_INPUT_SIZE        4
+#define KEY_INPUT_SIZE          3
 
 #ifdef WIN32
 #include <io.h>
@@ -116,4 +116,4 @@ struct brogueConsole webConsole = {
 	modifier_held
 };
 
-//#endif
+#endif
