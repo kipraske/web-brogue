@@ -6,6 +6,8 @@ RELEASENAME=brogue-1.7.4
 LASTTARGET := $(shell ./brogue --target)
 CC ?= gcc
 
+ifeq (${LASTTARGET}, web)
+all : web
 ifeq (${LASTTARGET},both)
 all : both
 else ifeq (${LASTTARGET},curses)
@@ -39,7 +41,8 @@ BROGUEFILES=src/brogue/Architect.o \
 	src/platform/platformdependent.o \
 	src/platform/curses-platform.o \
 	src/platform/tcod-platform.o \
-	src/platform/term.o
+	src/platform/term.o \
+	src/platform/web-platform.o
 
 TCOD_DEF = -DBROGUE_TCOD -I$(LIBTCODDIR)/include
 TCOD_DEP = ${LIBTCODDIR}
@@ -48,6 +51,7 @@ TCOD_LIB = -L. -L${LIBTCODDIR} ${SDL_FLAGS} -ltcod -Wl,-rpath,.
 CURSES_DEF = -DBROGUE_CURSES
 CURSES_LIB = -lncurses -lm
 
+WEB_DEF = -DBROGUE_WEB
 
 tcod : DEPENDENCIES += ${TCOD_DEP}
 tcod : DEFINES += ${TCOD_DEF}
@@ -59,6 +63,8 @@ curses : LIBRARIES = ${CURSES_LIB}
 both : DEPENDENCIES += ${TCOD_DEP}
 both : DEFINES += ${TCOD_DEF} ${CURSES_DEF}
 both : LIBRARIES += ${TCOD_LIB} ${CURSES_LIB}
+	
+web : DEPENDENCIES += ${DBROGUE_WEB}
 
 ifeq (${LASTTARGET},both)
 both : bin/brogue
