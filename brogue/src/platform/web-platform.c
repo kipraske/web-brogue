@@ -2,7 +2,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #include "platform.h"
 
 #define OUTPUT_SIZE             10
@@ -10,27 +11,8 @@
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          3
 
-#ifdef WIN32
-#include <io.h>
-#include <fcntl.h>
-#endif
-
-extern playerCharacter rogue;
-
-struct mouseState {int x, y, lmb, rmb;};
-//static TCOD_key_t bufferedKey = {TCODK_NONE};
-static struct mouseState brogueMouse = {0, 0, 0, 0};
-static struct mouseState missedMouse = {-1, -1, 0, 0};
-
 static void gameLoop()
-{
-    
-// It turns out on windows platforms it will convert any /n to /r/n in our stdout stream.  We don't want any of our coordinates accidentally adding bytes into the raw output.
-#ifdef WIN32
-    setmode(fileno(stdout), O_BINARY);
-    setmode(fileno(stdin), O_BINARY);
-#endif
-    
+{    
     rogueMain();
 }
 
@@ -62,8 +44,24 @@ static void web_plotChar(uchar inputChar,
 
 static boolean web_pauseForMilliseconds(short milliseconds)
 {    
-    // rather than polling for key events while paused, we will just wait an read them in when needed in nextKeyOrMouseEvent
-    return true;
+
+    if (milliseconds < 50){
+        return true;
+    }
+    
+  fd_set set;
+  struct timeval timeout;
+
+  /* Initialize the file descriptor set. */
+  FD_ZERO (&set);
+  FD_SET (fileno(stdin), &set);
+  
+  /* Initialize the timeout data structure. */
+  timeout.tv_sec = 0;
+  timeout.tv_usec = milliseconds;
+
+  /* select returns 0 if timeout, the number of ready file descriptors, -1 if error. */
+  return (select (FD_SETSIZE, &set, NULL, NULL, &timeout) > 0);
 }
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
@@ -98,12 +96,11 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
 }
 
 static void web_remap(const char *input_name, const char *output_name) {
-    // TODO - translate web input to brogue characters
+    // Not needed
 }
 
 static boolean modifier_held(int modifier) {
-	rogueEvent tempEvent;
-
+    // Not needed, I am passing in the modifiers directly with the event data
 	return 0;
 }
 
