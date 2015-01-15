@@ -2,14 +2,17 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/time.h>
-#include <sys/types.h>
+#include <poll.h>
 #include "platform.h"
 
+#define STDIN                   0
+#define NUM_POLL_FIELDS         1
 #define OUTPUT_SIZE             10
 #define MAX_INPUT_SIZE          4
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          3
+
+static struct pollfd fds[NUM_POLL_FIELDS];
 
 static void gameLoop()
 {    
@@ -44,24 +47,17 @@ static void web_plotChar(uchar inputChar,
 
 static boolean web_pauseForMilliseconds(short milliseconds)
 {    
-
-    if (milliseconds < 50){
+  
+    if (milliseconds < 100){
         return true;
     }
+
+    fds[0].fd = STDIN;
+    fds[0].events = POLLIN | POLLPRI;
+    fds[0].revents = 0;
     
-  fd_set set;
-  struct timeval timeout;
-
-  /* Initialize the file descriptor set. */
-  FD_ZERO (&set);
-  FD_SET (fileno(stdin), &set);
+    return (poll(fds, NUM_POLL_FIELDS, milliseconds) > 0);
   
-  /* Initialize the timeout data structure. */
-  timeout.tv_sec = 0;
-  timeout.tv_usec = milliseconds;
-
-  /* select returns 0 if timeout, the number of ready file descriptors, -1 if error. */
-  return (select (FD_SETSIZE, &set, NULL, NULL, &timeout) > 0);
 }
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
