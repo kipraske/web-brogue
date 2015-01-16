@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <poll.h>
+#include <unistd.h>
 #include "platform.h"
 
-#define STDIN                   0
 #define NUM_POLL_FIELDS         1
+#define RETURN_POLL_NOW         0
 #define OUTPUT_SIZE             10
 #define MAX_INPUT_SIZE          4
 #define MOUSE_INPUT_SIZE        4
@@ -47,17 +48,29 @@ static void web_plotChar(uchar inputChar,
 
 static boolean web_pauseForMilliseconds(short milliseconds)
 {    
-  
-    if (milliseconds < 100){
+    
+    usleep(milliseconds);
+    
+/*
+    if (milliseconds <= 50){
         return true;
     }
+*/
+    
+    static int homepagePassthrough = 1;
+    if (homepagePassthrough){
+        homepagePassthrough = 0;
+        return true;
+    }
+    
+    
 
-    fds[0].fd = STDIN;
+    fds[0].fd = STDIN_FILENO;
     fds[0].events = POLLIN | POLLPRI;
     fds[0].revents = 0;
     
-    return (poll(fds, NUM_POLL_FIELDS, milliseconds) > 0);
-  
+    return (poll(fds, NUM_POLL_FIELDS, RETURN_POLL_NOW) > 0);
+ 
 }
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
