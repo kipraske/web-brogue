@@ -18,6 +18,15 @@ define([
             send("brogue", "start");
             $("#console").removeClass("inactive");
             $("#lobby").addClass("inactive");
+        },
+        
+        goToConsole : function(){
+            // TODO - move the above swapping to this function
+        },
+        
+        goToLobby: function(){
+            $("#lobby").removeClass("inactive");
+            $("#console").addClass("inactive");
         }
     });
     

@@ -86,6 +86,15 @@ _.extend(BrogueController.prototype, {
     attachChildEvents: function () {
         var self = this;
 
+        self.brogueChild.on('exit', function(code){
+            // go back to lobby in the event something happens to the child process
+            self.sendMessage("lobby", "back");
+        });
+
+        self.brogueChild.on('error', function(err){
+            self.error.send('Message could not be sent to brogue process - Error: ' + err);
+        });
+
         self.brogueChild.stdout.on('data', function (data) {
 
             // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
