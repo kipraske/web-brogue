@@ -47,23 +47,11 @@ static void web_plotChar(uchar inputChar,
 }
 
 static boolean web_pauseForMilliseconds(short milliseconds)
-{    
+{   
     
-    usleep(milliseconds);
+    // This function serves the purpose of both pausing the game for milliseconds but also for seeing if there is input available for things like traveling.  As such we can't just poll for milliseconds.
     
-/*
-    if (milliseconds <= 50){
-        return true;
-    }
-*/
-    
-    static int homepagePassthrough = 1;
-    if (homepagePassthrough){
-        homepagePassthrough = 0;
-        return true;
-    }
-    
-    
+    usleep(milliseconds);   
 
     fds[0].fd = STDIN_FILENO;
     fds[0].events = POLLIN | POLLPRI;
