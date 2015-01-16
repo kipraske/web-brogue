@@ -80,7 +80,7 @@ _.extend(BrogueController.prototype, {
         var options = {            
             cwd : childWorkingDir
         };
-        var args = [];
+        var args = ["--no-menu"];
         this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
     },
     attachChildEvents: function () {
