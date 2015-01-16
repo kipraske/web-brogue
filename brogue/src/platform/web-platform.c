@@ -13,6 +13,7 @@
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          3
 
+extern playerCharacter rogue;
 static struct pollfd fds[NUM_POLL_FIELDS];
 
 static void gameLoop()
@@ -46,10 +47,13 @@ static void web_plotChar(uchar inputChar,
             
 }
 
+// This function is used both for checking input and pausing
 static boolean web_pauseForMilliseconds(short milliseconds)
 {   
-    
-    // This function serves the purpose of both pausing the game for milliseconds but also for seeing if there is input available for things like traveling.  As such we can't just poll for milliseconds.
+    // We MUST avoid the menu loop - it will crash the client since it sends so much data
+    if (rogue.nextGame == NG_NOTHING){
+        return true;
+    }
     
     usleep(milliseconds);   
 
