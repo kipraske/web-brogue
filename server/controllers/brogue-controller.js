@@ -88,6 +88,7 @@ _.extend(BrogueController.prototype, {
 
         self.brogueChild.on('exit', function(code){
             // go back to lobby in the event something happens to the child process
+            self.brogueChild = null;
             self.sendMessage("lobby", "back");
         });
 
