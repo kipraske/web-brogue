@@ -32,6 +32,7 @@ var wss = new WebSocketServer({port: wsPort}, function(){
 var ErrorController = require("./controllers/error-controller");
 var BrogueController = require("./controllers/brogue-controller");
 var AuthController = require("./controllers/authentication-controller");
+var LobbyController = require("./controllers/lobby-controller");
 
 var Router = require("./controllers/router");
 
@@ -49,6 +50,10 @@ wss.on("connection", function(ws) {
         brogue : brogue
     });
     brogue.auth = auth; // added manually due to circular dependency
+    
+    var lobby = new LobbyController(ws, {
+        error : clientError
+    });
     
     var router = new Router([
         clientError,
