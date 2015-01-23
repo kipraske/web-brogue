@@ -32,7 +32,6 @@ var wss = new WebSocketServer({port: wsPort}, function(){
 var ErrorController = require("./controllers/error-controller");
 var BrogueController = require("./controllers/brogue-controller");
 var AuthController = require("./controllers/authentication-controller");
-var LobbyController = require("./controllers/lobby-controller");
 
 var Router = require("./controllers/router");
 
@@ -51,22 +50,13 @@ wss.on("connection", function(ws) {
     });
     brogue.auth = auth; // added manually due to circular dependency
     
-    var lobby = new LobbyController(ws, {
-       error : clientError,
-       brogue: brogue,
-       auth : auth
-    });
-    
     var router = new Router([
         clientError,
         brogue,
-        auth,
-        lobby
+        auth
     ]);
     
     // TODO - make sure that the server is cleaned up when the socket is closed - well or not it depends. on "close"
-    
-    // TODO - set up other events - I bet there is an on error.
     
     ws.on("message", function(message){
        router.route(message);
