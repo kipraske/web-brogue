@@ -20,7 +20,14 @@ module.exports = {
         this.users[userName] = {
             sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
             brogueProcess : null,
-            lobbyData : {}
+            lobbyData : {
+                idle : 0,
+                deepestLevel : 0,
+                seed : 0,
+                gold : 0,
+                cheatMode : false,
+                amulet : false
+            }
         };
     },
     removeUser : function(userName){
