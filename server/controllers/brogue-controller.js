@@ -6,6 +6,13 @@ var router = require('./router');
 var Controller = require('./controller-base');
 
 var CELL_MESSAGE_SIZE = 10;
+var brogueStates = {
+    INACTIVE : 0,
+    PLAYING : 1,
+    WATCHING : 2
+};
+
+// TODO - hook up these brogueStates to the current playing and disconnect events - will be needed if we are watching - need these states so people only get sent stuff when in INACTIVE state
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
@@ -13,7 +20,8 @@ function BrogueController(ws, sharedControllers) {
     this.ws = ws;
     this.error = sharedControllers.error;
     this.auth = null; // because of cross dependency, we will set this manually
-
+    
+    this.currentState = brogueStates.INACTIVE;
     this.brogueChild;  // child process
     this.dataAccumulator; // buffer
     this.dataRemainder = new Buffer(0);
