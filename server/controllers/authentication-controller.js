@@ -5,7 +5,7 @@ var Controller = require('./controller-base');
 var User = require('../user/user-model');
 var allUsers = require('../user/all-users');
 
-// Controller for propigating errors back to the client console for debugging purposes
+// Controller for handling user authentication over the web socket
 
 function AuthController(ws, sharedControllers) {
     this.ws = ws;
