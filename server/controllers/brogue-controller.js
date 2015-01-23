@@ -4,13 +4,9 @@ var childProcess = require('child_process');
 
 var router = require('./router');
 var Controller = require('./controller-base');
+var brogueState = require('../enum/brogue-state');
 
 var CELL_MESSAGE_SIZE = 10;
-var brogueStates = {
-    INACTIVE : 0,
-    PLAYING : 1,
-    WATCHING : 2
-};
 
 // TODO - hook up these brogueStates to the current playing and disconnect events - will be needed if we are watching - need these states so people only get sent stuff when in INACTIVE state
 
@@ -21,7 +17,7 @@ function BrogueController(ws, sharedControllers) {
     this.error = sharedControllers.error;
     this.auth = null; // because of cross dependency, we will set this manually
     
-    this.currentState = brogueStates.INACTIVE;
+    this.currentState = brogueState.INACTIVE;
     this.brogueChild;  // child process
     this.dataAccumulator; // buffer
     this.dataRemainder = new Buffer(0);

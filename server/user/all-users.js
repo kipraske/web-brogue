@@ -9,6 +9,7 @@
  }
  */
 var bCrypt = require('bcrypt-nodejs');
+var brogueState = require('../enum/brogue-state');
 
 var userCount = 0;
 
@@ -19,6 +20,7 @@ module.exports = {
         var hiddenSalt = bCrypt.genSaltSync(8);
         this.users[userName] = {
             sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
+            brogueState : brogueState.INACTIVE,
             brogueProcess : null,
             lobbyData : {
                 idle : 0,
@@ -32,6 +34,7 @@ module.exports = {
     },
     removeUser : function(userName){
         this.users[userName] = null;
+        userCount--;
     },
     getUser : function(userName){
         return this.users[userName];
