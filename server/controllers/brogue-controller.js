@@ -84,7 +84,7 @@ _.extend(BrogueController.prototype, {
         var options = {            
             cwd : childWorkingDir
         };
-        var args = [];
+        var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
         this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
     },
     attachChildEvents: function () {

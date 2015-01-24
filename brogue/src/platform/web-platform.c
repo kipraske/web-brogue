@@ -48,13 +48,8 @@ static void web_plotChar(uchar inputChar,
 }
 
 // This function is used both for checking input and pausing
-static boolean web_pauseForMilliseconds(short milliseconds)
-{   
-    // We MUST avoid the menu loop - it will crash the client since it sends so much data
-    if (rogue.nextGame == NG_NOTHING){
-        return true;
-    }
-    
+    static boolean web_pauseForMilliseconds(short milliseconds)
+{       
     usleep(milliseconds);   
 
     fds[0].fd = STDIN_FILENO;
@@ -62,13 +57,15 @@ static boolean web_pauseForMilliseconds(short milliseconds)
     fds[0].revents = 0;
     
     return (poll(fds, NUM_POLL_FIELDS, RETURN_POLL_NOW) > 0);
- 
 }
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
+    
+    // We must avoid the main menu, so we spawn this process with noMenu, and quit instead of going to the menu
+    if (noMenu && rogue.nextGame == NG_NOTHING) rogue.nextGame = NG_QUIT;
     
     // ensure entire stream is written out before getting input
     fflush(stdout);
