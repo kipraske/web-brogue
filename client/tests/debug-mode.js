@@ -6,8 +6,9 @@ define([
     'tests/show-outgoing-messages',
     'dataIO/send-generic',
     'dataIO/send-keypress',
-    'dataIO/send-mouse'
-], function(brogueFullRandMsg, brogueFewRandMsg, brogueUpdateCell, showIncomingMessages, showOutgoingMessages, customMessage, customKeyMessage, customMouseMessage) {
+    'dataIO/send-mouse',
+    'dataIO/send-status-request',
+], function(brogueFullRandMsg, brogueFewRandMsg, brogueUpdateCell, showIncomingMessages, showOutgoingMessages, customMessage, customKeyMessage, customMouseMessage, customStatusRequest) {
 
     // Eventually we should set up unit test assertions based on these functions, but for now these are just a collection of utility functions that we can use from the client to test the views and the socket commands.
 
@@ -20,7 +21,8 @@ define([
             showOutgoingMessages : showOutgoingMessages,
             send : customMessage,
             sendKey : customKeyMessage,
-            sendMouse : customMouseMessage
+            sendMouse : customMouseMessage,
+            statusRequst : customStatusRequest
         };
     }
 
