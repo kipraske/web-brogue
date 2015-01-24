@@ -41,12 +41,13 @@ _.extend(LobbyController.prototype, {
     },
     sendAllUserData: function(overrideState){
 
-        for (user in allUsers.users){
+        for (userName in allUsers.users){
             // Normally we would only want to get this data if we were not playing, but I am putting in an override so we can request this data whenever we want if needed
-            if (user.brogueState === brogueState.INACTIVE || overrideState){
+            if (allUsers.users[userName].brogueState === brogueState.INACTIVE || overrideState){
                 
                 // TODO - the logic here
-                console.log(user.sessionID);    
+                console.log(userName + ":");
+                console.log(allUsers.users[userName].lobbyData);    
             }
         }
         
