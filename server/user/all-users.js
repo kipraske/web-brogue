@@ -14,11 +14,11 @@ var bCrypt = require('bcrypt-nodejs');
 var brogueState = require('../enum/brogue-state');
 var brogueStatus = require('../enum/brogue-status-types');
 
-var brogueEnumMapping = {};
-brogueEnumMapping[brogueStatus.DEEPEST_LEVEL] = "deepestLevel";
-brogueEnumMapping[brogueStatus.GOLD] = "gold";
-brogueEnumMapping[brogueStatus.SEED] = "seed";
-brogueEnumMapping[brogueStatus.CHEAT_MODE] = "cheetMode";
+var brogueStatusMap = {};
+brogueStatusMap[brogueStatus.DEEPEST_LEVEL] = "deepestLevel";
+brogueStatusMap[brogueStatus.GOLD] = "gold";
+brogueStatusMap[brogueStatus.SEED] = "seed";
+brogueStatusMap[brogueStatus.CHEAT_MODE] = "cheetMode";
 
 var userCount = 0;
 
@@ -48,12 +48,12 @@ module.exports = {
         return this.users[userName];
     },
     updateUser : function(userName, data){
-        var oldUserObject = getUser(userName);
-        this.users[userName] = _.extend(oldUserObject, data);   
+        var oldUserObject = this.getUser(userName);
+        this.users[userName] = _.extend(oldUserObject, data);
     },
     
     updateLobbyStatus : function(userName, updateFlag, updateValue) {
-        var lobbyItem = brogueEnumMapping[updateFlag];
+        var lobbyItem = brogueStatusMap[updateFlag];
         this.users[userName].lobbyData[lobbyItem] = updateValue;
     }
 };

@@ -20,16 +20,30 @@ function LobbyController(ws, sharedControllers) {
 LobbyController.prototype = new Controller();
 _.extend(LobbyController.prototype, {
     controllerName: "lobby",
+    // The lobby would not normally get user requests, but I am adding this so we can test these functions
+    handlerCollection : {
+        requestSingleUserData : function(username){
+            console.log(allUsers.users[username].lobbyData);
+        },
+        requestAllUserData : function(overrideState){
+            if (!overrideState){
+                overrideState = true;
+            }
+            this.sendAllUserData(overrideState);
+        }
+    },
+    
     broadcastListen : function(){
-        this.broadcastInterval = setInterval(this.sendData, UPDATE_INTERVAL_TIME);
+        this.broadcastInterval = setInterval(this.sendAllUserData, UPDATE_INTERVAL_TIME);
     },
     stopbroadcastListen: function(){
         clearInterval(this.broadcastInterval);
     },
-    sendData: function(){
-        
+    sendAllUserData: function(overrideState){
+
         for (user in allUsers.users){
-            if (user.brogueState === brogueState.INACTIVE){
+            // Normally we would only want to get this data if we were not playing, but I am putting in an override so we can request this data whenever we want if needed
+            if (user.brogueState === brogueState.INACTIVE || overrideState){
                 
                 // TODO - the logic here
                 console.log(user.sessionID);    
