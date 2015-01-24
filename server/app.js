@@ -59,7 +59,8 @@ wss.on("connection", function(ws) {
     var router = new Router([
         clientError,
         brogue,
-        auth
+        auth,
+        lobby
     ]);
     
     // TODO - make sure that the server is cleaned up when the socket is closed - well or not it depends. on "close"
