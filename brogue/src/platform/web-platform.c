@@ -8,10 +8,19 @@
 
 #define NUM_POLL_FIELDS         1
 #define RETURN_POLL_NOW         0
+
 #define OUTPUT_SIZE             10
 #define MAX_INPUT_SIZE          4
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          3
+
+enum StatusTypes {
+    DEEPEST_LEVEL_STATUS,
+    GOLD_STATUS,
+    SEED_STATUS,
+    EASY_MODE_STATUS,
+    STATUS_TYPES_NUMBER
+};
 
 extern playerCharacter rogue;
 static struct pollfd fds[NUM_POLL_FIELDS];
@@ -47,6 +56,31 @@ static void web_plotChar(uchar inputChar,
             
 }
 
+static void sendStatusUpdate(){
+    
+    char statusMarkerOutputBuffer[2] = {255, 255};
+    char statusTypeOutputBuffer[1];
+    char statusFillerOutputBuffer[3] = {0, 0, 0};
+    unsigned long statusValueOutputBuffer[1];
+    unsigned long statusValues[STATUS_TYPES_NUMBER];
+    
+    statusValues[DEEPEST_LEVEL_STATUS] = rogue.deepestLevel;
+    statusValues[GOLD_STATUS] = rogue.gold;
+    statusValues[SEED_STATUS] = rogue.seed;
+    statusValues[EASY_MODE_STATUS] = rogue.easyMode;
+    
+    int i;
+    for (i = 0; i < STATUS_TYPES_NUMBER; i++){
+        statusTypeOutputBuffer[0] = i;
+        statusValueOutputBuffer[0] = statusValues[i];
+        
+        fwrite(statusMarkerOutputBuffer, sizeof(char), 2, stdout);
+        fwrite(statusTypeOutputBuffer, sizeof(char), 1, stdout);
+        fwrite(statusValueOutputBuffer, sizeof(long), 1, stdout);
+        fwrite(statusFillerOutputBuffer, sizeof(char), 3, stdout);
+    }
+}
+
 // This function is used both for checking input and pausing
     static boolean web_pauseForMilliseconds(short milliseconds)
 {       
@@ -74,9 +108,12 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     char inputBuffer[MAX_INPUT_SIZE];
     
     fread(controlBuffer, sizeof(char), 1, stdin);
-    returnEvent->eventType = controlBuffer[0]; 
     
-    if (returnEvent->eventType == KEYSTROKE){
+    if (controlBuffer[0] == RNG_CHECK){
+        sendStatusUpdate();
+    }
+    else if (controlBuffer[0] == KEYSTROKE){
+        returnEvent->eventType = KEYSTROKE;
         fread(inputBuffer, sizeof(char), KEY_INPUT_SIZE, stdin);
         returnEvent->param1 = inputBuffer[0];  //key character
         returnEvent->controlKey = inputBuffer[1];
@@ -84,6 +121,7 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     }
     else // it is a mouseEvent
     {
+        returnEvent->eventType = controlBuffer[0];
         fread(inputBuffer, sizeof(char), MOUSE_INPUT_SIZE, stdin);
         returnEvent->param1 = inputBuffer[0];  //x coord
         returnEvent->param2 = inputBuffer[1];  //y coord

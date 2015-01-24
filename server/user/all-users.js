@@ -18,7 +18,7 @@ var brogueStatusMap = {};
 brogueStatusMap[brogueStatus.DEEPEST_LEVEL] = "deepestLevel";
 brogueStatusMap[brogueStatus.GOLD] = "gold";
 brogueStatusMap[brogueStatus.SEED] = "seed";
-brogueStatusMap[brogueStatus.CHEAT_MODE] = "cheetMode";
+brogueStatusMap[brogueStatus.EASY_MODE] = "cheetMode";
 
 var userCount = 0;
 
