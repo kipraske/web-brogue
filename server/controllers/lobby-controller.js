@@ -20,10 +20,10 @@ function LobbyController(ws, sharedControllers) {
 LobbyController.prototype = new Controller();
 _.extend(LobbyController.prototype, {
     controllerName: "lobby",
-    startUpdates : function(){
+    broadcastListen : function(){
         this.broadcastInterval = setInterval(this.sendData, UPDATE_INTERVAL_TIME);
     },
-    stopUpdates: function(){
+    stopbroadcastListen: function(){
         clearInterval(this.broadcastInterval);
     },
     sendData: function(){

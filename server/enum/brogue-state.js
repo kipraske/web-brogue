@@ -3,5 +3,3 @@ module.exports = {
     PLAYING : 1,
     WATCHING : 2
 };
-
-

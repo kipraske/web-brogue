@@ -5,8 +5,14 @@ var childProcess = require('child_process');
 var router = require('./router');
 var Controller = require('./controller-base');
 var brogueState = require('../enum/brogue-state');
+var allUsers = require('../user/all-users');
 
 var CELL_MESSAGE_SIZE = 10;
+
+var STATUS_MESSAGE_NUMBER = 4;
+var STATUS_MESSAGE_SIZE = STATUS_MESSAGE_NUMBER * CELL_MESSAGE_SIZE;
+var STATUS_BYTE_FLAG = 255;
+var STATUS_DATA_OFFSET = 2;
 
 // TODO - hook up these brogueStates to the current playing and disconnect events - will be needed if we are watching - need these states so people only get sent stuff when in INACTIVE state
 
@@ -15,6 +21,7 @@ var CELL_MESSAGE_SIZE = 10;
 function BrogueController(ws, sharedControllers) {
     this.ws = ws;
     this.error = sharedControllers.error;
+    this.lobby = sharedControllers.lobby;
     this.auth = null; // because of cross dependency, we will set this manually
     
     this.currentState = brogueState.INACTIVE;
@@ -118,6 +125,25 @@ _.extend(BrogueController.prototype, {
             //save the remaining data for next time
             self.dataRemainder = new Buffer(newReminderLength);
             data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
+
+            //check for status updates in data and send to the lobby. These should all be next to each other so grab that many updates
+            for (var i = 0; i < sizeOfCellsToSend; i += CELL_MESSAGE_SIZE){
+                if (self.dataAccumulator[i] === STATUS_BYTE_FLAG){
+                    var updateFlag = self.dataAccumulator[i + STATUS_DATA_OFFSET];
+                    
+                    // We need to send 4 bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
+                    var updateValue = 
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 1] * 256 +
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 2] * 64 +
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 8 +
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 4]
+                    
+                    allUsers.updateLobbyStatus(
+                            self.auth.currentUserName,
+                            updateFlag,
+                            updateValue);
+                }
+            }
 
             self.ws.send(self.dataAccumulator, {binary: true});
         });
