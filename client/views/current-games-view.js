@@ -3,7 +3,7 @@ define([
     "underscore",
     "backbone",
     "models/current-games"
-], function ($, _, Backbone) {
+], function ($, _, Backbone, CurrentGamesModel) {
 
     var CurrentGamesView = Backbone.View.extend({
         el: "#current-games",
