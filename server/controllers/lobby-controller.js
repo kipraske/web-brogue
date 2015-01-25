@@ -25,11 +25,8 @@ _.extend(LobbyController.prototype, {
         requestSingleUserData : function(username){
             console.log(allUsers.users[username].lobbyData);
         },
-        requestAllUserData : function(overrideState){
-            if (!overrideState){
-                overrideState = true;
-            }
-            this.sendAllUserData(overrideState);
+        requestAllUserData : function(includeEveryone){
+            this.sendAllUserData(includeEveryone);
         }
     },
     
@@ -39,20 +36,25 @@ _.extend(LobbyController.prototype, {
     stopbroadcastListen: function(){
         clearInterval(this.broadcastInterval);
     },
-    sendAllUserData: function(overrideState){
+    sendAllUserData: function(includeEveryone){
 
-        for (userName in allUsers.users){
-            // Normally we would only want to get this data if we were not playing, but I am putting in an override so we can request this data whenever we want if needed
-            if (allUsers.users[userName].brogueState === brogueState.INACTIVE || overrideState){
-                
-                // TODO - the logic here
-                console.log(userName + ":");
-                console.log(allUsers.users[userName].lobbyData);    
+        var returnLobbyData;
+
+        for (var userName in allUsers.users){
+            // Only send data to the lobby of the users who are actually playing a game
+            if (allUsers.users[userName].brogueState === brogueState.PLAYING || includeEveryone){              
+                if (!returnLobbyData) {
+                    returnLobbyData = {};
+                }
+                returnLobbyData[userName] = allUsers.users[userName].lobbyData;  
             }
         }
         
-        // TODO - parse all users and send an update object to the lobby - if there is a time I need to figure out how to gzip this is it.
+        // TODO - only send to user if they are currently in the inactive state - will need to get the brogue controller in here afterall
         
+        if (returnLobbyData){
+            this.sendMessage("lobby", returnLobbyData);
+        }        
     }
 });
 
