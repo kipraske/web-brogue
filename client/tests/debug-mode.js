@@ -22,7 +22,7 @@ define([
             send : customMessage,
             sendKey : customKeyMessage,
             sendMouse : customMouseMessage,
-            statusRequst : customStatusRequest
+            requestStatus : customStatusRequest
         };
     }
 
