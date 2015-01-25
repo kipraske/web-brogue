@@ -112,6 +112,9 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     // We must avoid the main menu, so we spawn this process with noMenu, and quit instead of going to the menu
     if (noMenu && rogue.nextGame == NG_NOTHING) rogue.nextGame = NG_QUIT;
     
+    // Send a status update of game variables we want on the client
+    sendStatusUpdate();
+    
     // ensure entire stream is written out before getting input
     fflush(stdout);
     
@@ -119,17 +122,9 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     char inputBuffer[MAX_INPUT_SIZE];
     
     fread(controlBuffer, sizeof(char), 1, stdin);
+    returnEvent->eventType = controlBuffer[0]; 
     
-    if (controlBuffer[0] == RNG_CHECK){
-        sendStatusUpdate();
-        
-        // This function is expecting a mouse or keystroke, so let's click outside of the window rather than return empty handed
-        returnEvent->eventType = MOUSE_UP;
-        returnEvent->param1 = 255; //x coord
-        returnEvent->param2 = 255;  //y coord
-    }
-    else if (controlBuffer[0] == KEYSTROKE){
-        returnEvent->eventType = KEYSTROKE;
+    if (returnEvent->eventType == KEYSTROKE){
         fread(inputBuffer, sizeof(char), KEY_INPUT_SIZE, stdin);
         returnEvent->param1 = inputBuffer[0];  //key character
         returnEvent->controlKey = inputBuffer[1];
@@ -137,7 +132,6 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     }
     else // it is a mouseEvent
     {
-        returnEvent->eventType = controlBuffer[0];
         fread(inputBuffer, sizeof(char), MOUSE_INPUT_SIZE, stdin);
         returnEvent->param1 = inputBuffer[0];  //x coord
         returnEvent->param2 = inputBuffer[1];  //y coord
