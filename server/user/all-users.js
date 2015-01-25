@@ -18,7 +18,7 @@ var brogueStatusMap = {};
 brogueStatusMap[brogueStatus.DEEPEST_LEVEL] = "deepestLevel";
 brogueStatusMap[brogueStatus.GOLD] = "gold";
 brogueStatusMap[brogueStatus.SEED] = "seed";
-brogueStatusMap[brogueStatus.EASY_MODE] = "cheetMode";
+brogueStatusMap[brogueStatus.EASY_MODE] = "easyMode";
 
 var userCount = 0;
 
@@ -36,7 +36,7 @@ module.exports = {
                 deepestLevel : 0,
                 seed : 0,
                 gold : 0,
-                cheatMode : false,
+                easyMode : false,
             }
         };
     },
