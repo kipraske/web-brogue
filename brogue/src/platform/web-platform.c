@@ -122,6 +122,11 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     
     if (controlBuffer[0] == RNG_CHECK){
         sendStatusUpdate();
+        
+        // This function is expecting a mouse or keystroke, so let's click outside of the window rather than return empty handed
+        returnEvent->eventType = MOUSE_UP;
+        returnEvent->param1 = 255; //x coord
+        returnEvent->param2 = 255;  //y coord
     }
     else if (controlBuffer[0] == KEYSTROKE){
         returnEvent->eventType = KEYSTROKE;
