@@ -15,6 +15,10 @@ function LobbyController(ws, sharedControllers) {
     this.brogue = sharedControllers.brogue;
     
     this.broadcastInterval = null;
+    
+    // App starts in the lobby - start listening for updates
+    this.sendAllUserData();
+    this.userDataListen();
 }
 
 LobbyController.prototype = new Controller();
@@ -30,10 +34,10 @@ _.extend(LobbyController.prototype, {
         }
     },
     
-    broadcastListen : function(){
+    userDataListen : function(){
         this.broadcastInterval = setInterval(this.sendAllUserData, UPDATE_INTERVAL_TIME);
     },
-    stopbroadcastListen: function(){
+    stopuserDataListen: function(){
         clearInterval(this.broadcastInterval);
     },
     sendAllUserData: function(includeEveryone){
