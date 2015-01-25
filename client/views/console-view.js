@@ -141,6 +141,12 @@ define([
                 var dataXCoord = dataArray[dIndex++];
                 var dataYCoord = dataArray[dIndex++];
 
+                // Status updates have coords (255,255). For now ignore these, eventually we may find a UI use for them
+                if (dataXCoord === 255 && dataYCoord === 255){
+                    dIndex += _MESSAGE_UPDATE_SIZE - 2;
+                    continue;
+                }
+
                 var combinedUTF16Char = dataArray[dIndex++] << 8 | dataArray[dIndex++];
 
                 _consoleCells[dataXCoord][dataYCoord].model.set({
