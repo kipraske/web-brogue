@@ -30,7 +30,7 @@ require([
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console),
         "brogue" : consoleView.updateCellModelData.bind(consoleView),
-        "lobby" : playView.goToLobby.bind(playView),
+        "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView)
     });
     

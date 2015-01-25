@@ -100,7 +100,7 @@ _.extend(BrogueController.prototype, {
         self.brogueChild.on('exit', function(code){
             // go back to lobby in the event something happens to the child process
             self.brogueChild = null;
-            self.sendMessage("lobby", "back");
+            self.sendMessage("quit", true);
         });
 
         self.brogueChild.on('error', function(err){
@@ -126,7 +126,7 @@ _.extend(BrogueController.prototype, {
             self.dataRemainder = new Buffer(newReminderLength);
             data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
 
-            //check for status updates in data and send to the lobby. These should all be next to each other so grab that many updates
+            //check for status updates in data and update user object.
             for (var i = 0; i < sizeOfCellsToSend; i += CELL_MESSAGE_SIZE){
                 if (self.dataAccumulator[i] === STATUS_BYTE_FLAG){
                     var updateFlag = self.dataAccumulator[i + STATUS_DATA_OFFSET];
