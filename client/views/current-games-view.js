@@ -2,15 +2,14 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    "models/current-games"
-], function ($, _, Backbone, CurrentGamesModel) {
+    "models/current-games-row"
+], function ($, _, Backbone, CurrentGamesRowModel) {
 
     var CurrentGamesView = Backbone.View.extend({
         el: "#current-games",
-        model: new CurrentGamesModel(),
         
         initialize: function(){
-            
+
         },
         
         render: function(){
