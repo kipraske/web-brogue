@@ -58,26 +58,37 @@ static void web_plotChar(uchar inputChar,
 
 static void sendStatusUpdate(){
     
-    char statusMarkerOutputBuffer[2] = {255, 255};
-    char statusTypeOutputBuffer[1];
-    char statusFillerOutputBuffer[3] = {0, 0, 0};
-    unsigned long statusValueOutputBuffer[1];
-    unsigned long statusValues[STATUS_TYPES_NUMBER];
+    char statusOutputBuffer[STATUS_TYPES_NUMBER * OUTPUT_SIZE];
     
+    unsigned long statusValues[STATUS_TYPES_NUMBER]; 
     statusValues[DEEPEST_LEVEL_STATUS] = rogue.deepestLevel;
     statusValues[GOLD_STATUS] = rogue.gold;
     statusValues[SEED_STATUS] = rogue.seed;
     statusValues[EASY_MODE_STATUS] = rogue.easyMode;
     
     int i;
+    int j;
     for (i = 0; i < STATUS_TYPES_NUMBER; i++){
-        statusTypeOutputBuffer[0] = i;
-        statusValueOutputBuffer[0] = statusValues[i];
         
-        fwrite(statusMarkerOutputBuffer, sizeof(char), 2, stdout);
-        fwrite(statusTypeOutputBuffer, sizeof(char), 1, stdout);
-        fwrite(statusValueOutputBuffer, sizeof(long), 1, stdout);
-        fwrite(statusFillerOutputBuffer, sizeof(char), 3, stdout);
+        // Coordinates of (255, 255) will let the server and client know that this is a status update rather than a cell update 
+        statusOutputBuffer[0] = 255;
+        statusOutputBuffer[1] = 255;
+        
+        // The status type
+        statusOutputBuffer[2] = i;
+        
+        // I am just going to explicitly send the status big-endian so we can be consistent on the client and server
+        statusOutputBuffer[3] = statusValues[i] >> 24 & 0xff;
+        statusOutputBuffer[4] = statusValues[i] >> 16 & 0xff;
+        statusOutputBuffer[5] = statusValues[i] >> 8 & 0xff;
+        statusOutputBuffer[6] = statusValues[i];
+        
+        // The rest is filler so we keep consistent output size
+        for (j = 7; j < OUTPUT_SIZE; j++){
+            statusOutputBuffer[j] = 0;
+        }
+        
+        fwrite(statusOutputBuffer, sizeof(char), OUTPUT_SIZE, stdout);
     }
 }
 
