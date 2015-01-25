@@ -133,9 +133,9 @@ _.extend(BrogueController.prototype, {
                     
                     // We need to send 4 bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
                     var updateValue = 
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 1] * 256 +
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 2] * 64 +
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 8 +
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 1] * 16777216 +
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 2] * 65536 +
+                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 256 +
                             self.dataAccumulator[i + STATUS_DATA_OFFSET + 4]
                     
                     allUsers.updateLobbyStatus(
