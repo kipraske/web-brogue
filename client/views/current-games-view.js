@@ -11,6 +11,11 @@ define([
     var CurrentGamesView = Backbone.View.extend({
         el: "#current-games",
         
+        initialize : function(){
+            // This is static, but it looks better if it comes out with the rest of the views
+            this.$el.append("<h2>Current Games</h2>");
+        },
+        
         render: function(){ 
             for (var userName in rowViewCollection){
                 rowViewCollection[userName].render();
