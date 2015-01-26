@@ -12,24 +12,33 @@ define([
         el: "#current-games",
         
         render: function(){ 
-            console.log(rowCollection);
-            // TODO - if the rowView render is NOT called remove it from the collection hrm... can one self-destruct in js?
+            for (var userName in rowViewCollection){
+                rowViewCollection[userName].render();
+            }
         },
         
         updateUserData: function(data){
-            for (var userName in data){              
-                var update = data[userName];
+            // render incoming user data
+            for (var incomingUserName in data){              
+                var update = data[incomingUserName];
                 
-                if (!rowCollection[userName]) {
+                if (!rowViewCollection[incomingUserName]) {
                     var rowModel = new CurrentGamesRowModel(update);
-                    rowCollection[userName] = new CurrentGamesRowView(rowModel);          
+                    rowViewCollection[incomingUserName] = new CurrentGamesRowView(rowModel);
                 }
                 else {
-                    rowCollection[userName].model.set(update);
+                    rowViewCollection[incomingUserName].model.set(update);
                 }
+                
+                rowViewCollection[incomingUserName].render();
             }
             
-            this.render();
+            // clean up stale users
+            for (var existingUserName in rowViewCollection){
+                if (! data[existingUserName]){
+                    delete rowViewCollection[existingUserName];
+                }
+            }
         }
     });
     
