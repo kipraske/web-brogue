@@ -1,7 +1,29 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+define([
+    "jquery",
+    "underscore",
+    "backbone"
+], function($, _, Backbone) {
+
+    var CurrentGamesRowView = Backbone.View.extend({
+        tagName: "div",
+        className: "game-row",
+        events : {
+        },
+        
+        initialize: function() {
+            this.$currentGamesEl.append(this.$el);
+        },
+        
+        render: function() {
+            this.el.html("Got this row! " + this.model.get("seed"));
+        }
+        
+
+    });
+
+    return CurrentGamesRowView;
+
+});
+
 
 

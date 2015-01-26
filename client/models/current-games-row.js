@@ -6,7 +6,11 @@ define([
 
     var CurrentGamesRow = Backbone.Model.extend({
         defaults: {
-            // TODO - yeah model
+            idle : 0,
+            deepestLevel : 0,
+            seed : 0,
+            gold : 0,
+            easyMode : false
         }
     });
 

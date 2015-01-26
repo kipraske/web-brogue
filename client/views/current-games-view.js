@@ -24,7 +24,11 @@ define([
                 
                 if (!rowViewCollection[incomingUserName]) {
                     var rowModel = new CurrentGamesRowModel(update);
-                    rowViewCollection[incomingUserName] = new CurrentGamesRowView(rowModel);
+                    rowViewCollection[incomingUserName] = new CurrentGamesRowView({
+                        model : rowModel,
+                        id : "game-row-" + incomingUserName,
+                        $currentGamesEl : this.$el
+                    });
                 }
                 else {
                     rowViewCollection[incomingUserName].model.set(update);
@@ -36,6 +40,7 @@ define([
             // clean up stale users
             for (var existingUserName in rowViewCollection){
                 if (! data[existingUserName]){
+                    rowViewCollection[existingUserName].remove();
                     delete rowViewCollection[existingUserName];
                 }
             }
