@@ -56,11 +56,8 @@ _.extend(LobbyController.prototype, {
             }
         }
         
-        // TODO - only send to user if they are currently in the inactive state - will need to get the brogue controller in here afterall
-        
-        if (returnLobbyData){
-            this.sendMessage("lobby", returnLobbyData);
-        }        
+        this.sendMessage("lobby", returnLobbyData);
+
     }
 });
 
