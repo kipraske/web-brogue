@@ -22,7 +22,9 @@ function BrogueController(ws, sharedControllers) {
     this.ws = ws;
     this.error = sharedControllers.error;
     this.lobby = sharedControllers.lobby;
-    this.auth = null; // because of cross dependency, we will set this manually
+    
+    // Set this after instantiation due to circular dependency
+    this.auth = null;
     
     this.currentState = brogueState.INACTIVE;
     this.brogueChild;  // child process
@@ -70,6 +72,8 @@ _.extend(BrogueController.prototype, {
             var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
             this.spawnChildProcess(data, childWorkingDir);
             this.attachChildEvents();
+            this.lobby.stopUserDataListen();
+            this.setState(brogueState.PLAYING);
         },
         
         clean: function (data) {
@@ -87,6 +91,11 @@ _.extend(BrogueController.prototype, {
         }
     },
     
+    setState : function(state){
+        this.currentState = state;
+        allUsers.users[this.auth.currentUserName].brogueState = state;
+    },
+    
     spawnChildProcess: function (data, childWorkingDir) {
         var options = {            
             cwd : childWorkingDir
@@ -101,6 +110,9 @@ _.extend(BrogueController.prototype, {
             // go back to lobby in the event something happens to the child process
             self.brogueChild = null;
             self.sendMessage("quit", true);
+            self.lobby.sendAllUserData(false);
+            self.lobby.userDataListen();
+            self.setState(brogueState.INACTIVE);
         });
 
         self.brogueChild.on('error', function(err){

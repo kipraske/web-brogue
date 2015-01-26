@@ -12,7 +12,6 @@ var UPDATE_INTERVAL_TIME = 10000;
 function LobbyController(ws, sharedControllers) {
     this.ws = ws;
     this.error = sharedControllers.error;
-    this.brogue = sharedControllers.brogue;
     
     this.broadcastInterval = null;
     
@@ -35,9 +34,12 @@ _.extend(LobbyController.prototype, {
     },
     
     userDataListen : function(){
-        this.broadcastInterval = setInterval(this.sendAllUserData, UPDATE_INTERVAL_TIME);
+        var self = this;
+        this.broadcastInterval = setInterval(function(){
+            self.sendAllUserData(false);
+        }, UPDATE_INTERVAL_TIME);
     },
-    stopuserDataListen: function(){
+    stopUserDataListen: function(){
         clearInterval(this.broadcastInterval);
     },
     sendAllUserData: function(includeEveryone){

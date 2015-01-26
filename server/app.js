@@ -54,8 +54,8 @@ wss.on("connection", function(ws) {
         error : clientError, 
         brogue : brogue
     });
-    brogue.auth = auth; // circular dependency
-       
+    brogue.auth = auth; //circular dependency
+ 
     var router = new Router([
         clientError,
         brogue,
