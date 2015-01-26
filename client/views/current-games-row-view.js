@@ -11,11 +11,12 @@ define([
         },
         
         initialize: function() {
-            this.$currentGamesEl.append(this.$el);
+            console.log("new view created")
         },
         
         render: function() {
-            this.el.html("Got this row! " + this.model.get("seed"));
+            this.$el.html("Got this row! " + this.model.get("seed"));
+            return this;
         }
         
 
