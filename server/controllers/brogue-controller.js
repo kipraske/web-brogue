@@ -157,7 +157,7 @@ _.extend(BrogueController.prototype, {
                 }
             }
 
-            self.ws.send(self.dataAccumulator, {binary: true});
+            self.ws.send(self.dataAccumulator, {binary: true}, self.defaultSendCallback);
         });
     }
 });

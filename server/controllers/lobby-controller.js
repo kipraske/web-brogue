@@ -43,7 +43,8 @@ _.extend(LobbyController.prototype, {
         clearInterval(this.broadcastInterval);
     },
     sendAllUserData: function(includeEveryone){
-
+        
+        var self = this;
         var returnLobbyData;
 
         for (var userName in allUsers.users){
@@ -56,7 +57,16 @@ _.extend(LobbyController.prototype, {
             }
         }
         
-        this.sendMessage("lobby", returnLobbyData);
+        // TODO - probably should think of a better way to handle this since this error will happen any time someone closes window from the lobby - good to have a fallback though.
+        
+        this.sendMessage("lobby", returnLobbyData, function(err){
+            if (!err){
+                return;
+            }
+            
+            self.stopUserDataListen();
+            self.defaultSendCallback(err);
+        });
 
     }
 });

@@ -3,6 +3,14 @@ function Controller() {
     this.sharedControllers;
     this.controllerName = "";
     
+    this.defaultSendCallback = function(err){
+        if (!err){
+            return;
+        }
+        
+        this.error.log("Server Error: There is a problem with the socket that prevented sending: " + err);
+    };
+    
     this.handlerCollection = {};  // collection of handlername : function
     
     this.handleIncomingMessage = function (message) {
@@ -14,7 +22,12 @@ function Controller() {
         }
     };
     
-    this.sendMessage = function(messageType, messageData){
+    this.sendMessage = function(messageType, messageData, callback){
+        
+        if (!callback){
+            callback = this.defaultSendCallback;
+        }
+        
         var messageObject = {
             "type" : messageType,
             "data" : messageData
@@ -22,7 +35,7 @@ function Controller() {
 
         var message = JSON.stringify(messageObject);
         
-        this.ws.send(message);
+        this.ws.send(message, callback);
     };
 }
 

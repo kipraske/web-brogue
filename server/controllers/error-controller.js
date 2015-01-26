@@ -17,12 +17,13 @@ _.extend(ErrorController.prototype, {
         this.send("Message is not valid JSON: " + message);
     },
     
+    log : function(message){
+        util.log(message);
+    },
+    
     send : function(message){
-        
-        // TODO - make a better error logging system - say in a file rather than out to the console
         var errorMessage = "Server Error: " + message;
-        
-        util.log(errorMessage);
+        this.log(errorMessage);
         this.sendMessage("error", errorMessage);
     }
 });
