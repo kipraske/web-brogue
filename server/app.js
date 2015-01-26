@@ -24,6 +24,7 @@ var port = server.address().port;
 
 // Web Socket Server
 var wsPort = 8080;
+var cleanUp = require("./controllers/cleanup-controllers.js");
 var WebSocketServer = require("ws").Server;
 var wss = new WebSocketServer({port: wsPort}, function(){
     console.log("ws server listening on port %s", wsPort);
@@ -63,10 +64,16 @@ wss.on("connection", function(ws) {
         lobby
     ]);
     
-    // TODO - make sure that the server is cleaned up when the socket is closed - well or not it depends. on "close"
-    
     ws.on("message", function(message){
        router.route(message);
     });
+    
+    ws.on("close", function(code, message){
+        cleanUp({
+            auth : auth,
+            brogue : brogue,
+            lobby : lobby
+        })
+    })
     
 });

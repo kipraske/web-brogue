@@ -11,12 +11,13 @@ require([
     "underscore",
     "backbone",
     "tests/debug-mode",
+    "dataIO/socket",
     "dataIO/router",
     "views/auth-view",
     "views/play-view",
     "views/current-games-view",
     "views/console-view"
-], function( $, _, Backbone, debugMode, router, AuthView, PlayView, CurrentGamesView, ConsoleView){
+], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, CurrentGamesView, ConsoleView){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
@@ -38,8 +39,8 @@ require([
     });
     
     // clean up application
-    $(document).on("unload", function(){
-        consoleView.save();
+    $(window).on("unload", function(){
+        socket.close();
     });
     
     // responsive resizing
