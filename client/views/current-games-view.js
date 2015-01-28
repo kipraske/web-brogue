@@ -12,6 +12,7 @@ define([
 
     var CurrentGamesView = Backbone.View.extend({
         el: "#current-games",
+        $tableElement : null,
         
         initialize : function(){
             this.renderHeading();
@@ -30,6 +31,10 @@ define([
             if (isEmpty !== oldIsEmpty) {
                 this.renderHeading();
                 oldIsEmpty = isEmpty;
+                
+                if (!isEmpty) {
+                    this.$tableElement = this.$el.find('#current-games-table');
+                }
             }
         },
         
@@ -45,12 +50,16 @@ define([
                 var update = data[incomingUserName];
                 
                 if (!rowViewCollection[incomingUserName]) {
-                    var rowModel = new CurrentGamesRowModel(update);
+                    var rowData = _.extend(update, {
+                        userName: incomingUserName
+                    });
+                    
+                    var rowModel = new CurrentGamesRowModel(rowData);
                     var newRowView = rowViewCollection[incomingUserName] = new CurrentGamesRowView({
                         model : rowModel,
                         id : "game-row-" + incomingUserName,
                     });
-                    this.$el.append(newRowView.render().el);
+                    this.$tableElement.append(newRowView.render().el);
                 }
                 else {
                     rowViewCollection[incomingUserName].model.set(update);

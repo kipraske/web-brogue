@@ -6,6 +6,7 @@ define([
 
     var CurrentGamesRow = Backbone.Model.extend({
         defaults: {
+            userName : "",
             idle : 0,
             deepestLevel : 0,
             seed : 0,

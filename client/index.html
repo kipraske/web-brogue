@@ -64,12 +64,22 @@
                     <% if (isEmpty) { %>
                         <p> There are no other users playing at this time</p>'
                     <% } else { %>
-                        <table id="current-games-table"></table>
+                        <table id="current-games-table">
+                            <tr>
+                                <th>User</th>
+                                <th>Idle</th>
+                                <th>Level</th>
+                                <th>Gold</th>
+                                <th>Seed</th>
+                            </tr>
+                        </table>
                     <% } %>
                 </script>
                 
 		<script id="current-games-row" type="text/template">
                     <tr>
+                        <td><%= userName %></td>
+                        <td><%= idle %></td>
                         <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
                         <td><%= gold %></td>
                         <td><%= seed %></td>
