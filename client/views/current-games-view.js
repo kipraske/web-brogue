@@ -7,28 +7,41 @@ define([
 ], function ($, _, Backbone, CurrentGamesRowView, CurrentGamesRowModel) {
 
     var rowViewCollection = {};
+    var isEmpty = true;
+    var oldIsEmpty = true;
 
     var CurrentGamesView = Backbone.View.extend({
         el: "#current-games",
         
         initialize : function(){
-            // This is static, but it looks better if it comes out with the rest of the views
-            this.$el.append("<h2>Current Games</h2>");
+            this.renderHeading();
         },
         
-        render: function(){ 
-            for (var userName in rowViewCollection){
-                rowViewCollection[userName].render();
-            }
-        },
+        headingTemplate : _.template($('#current-games-heading').html()),
         
+        renderHeading : function(){
+            this.$el.html(this.headingTemplate({isEmpty : isEmpty}));
+        },
+
         // TODO - handle case where returned data is empty - also need a table element around these guys...
         
         // TODO - it would perhaps be more performant to append these to a document fragment then render the fragment
+        renderHeadingOnEmptyChange: function () {
+            if (isEmpty !== oldIsEmpty) {
+                this.renderHeading();
+                oldIsEmpty = isEmpty;
+            }
+        },
         
-        updateUserData: function(data){
-            // render incoming user data
-            for (var incomingUserName in data){              
+        
+        updateRowModelData: function(data){
+            isEmpty = true;
+            // handle incoming user data
+            for (var incomingUserName in data){
+                isEmpty = false;
+                // were there no user rows but now there is?
+                this.renderHeadingOnEmptyChange();
+                
                 var update = data[incomingUserName];
                 
                 if (!rowViewCollection[incomingUserName]) {
@@ -52,6 +65,8 @@ define([
                     delete rowViewCollection[existingUserName];
                 }
             }
+            // were there user rows before now there is not?
+            this.renderHeadingOnEmptyChange();
         }
     });
     

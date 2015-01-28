@@ -59,6 +59,15 @@
 			<p>Welcome <%= username %></p>
 		</script>
 		
+                <script id="current-games-heading" type ="text/template">
+                    <h2>Current Games</h2>
+                    <% if (isEmpty) { %>
+                        <p> There are no other users playing at this time</p>'
+                    <% } else { %>
+                        <table id="current-games-table"></table>
+                    <% } %>
+                </script>
+                
 		<script id="current-games-row" type="text/template">
                     <tr>
                         <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
