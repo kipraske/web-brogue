@@ -6,16 +6,14 @@ define([
 
     var CurrentGamesRowView = Backbone.View.extend({
         tagName: "div",
-        className: "game-row",
+        className: "games-row",
         events : {
         },
         
-        initialize: function() {
-            console.log("new view created")
-        },
+        template : _.template($('#current-games-row').html()),
         
         render: function() {
-            this.$el.html("Got this row! " + this.model.get("seed"));
+            this.$el.html(this.template(this.model.toJSON()));
             return this;
         }
         

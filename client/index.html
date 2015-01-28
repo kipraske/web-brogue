@@ -60,7 +60,11 @@
 		</script>
 		
 		<script id="current-games-row" type="text/template">
-		
+                    <tr>
+                        <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
+                        <td><%= gold %></td>
+                        <td><%= seed %></td>
+                    </tr>
 		</script>
 		
 		

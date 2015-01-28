@@ -22,6 +22,10 @@ define([
             }
         },
         
+        // TODO - handle case where returned data is empty - also need a table element around these guys...
+        
+        // TODO - it would perhaps be more performant to append these to a document fragment then render the fragment
+        
         updateUserData: function(data){
             // render incoming user data
             for (var incomingUserName in data){              
