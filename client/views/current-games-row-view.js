@@ -5,7 +5,7 @@ define([
 ], function($, _, Backbone) {
 
     var CurrentGamesRowView = Backbone.View.extend({
-        tagName: "div",
+        tagName: "tr",
         className: "games-row",
         events : {
         },
