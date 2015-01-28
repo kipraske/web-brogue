@@ -5,8 +5,6 @@ var Controller = require('./controller-base');
 var allUsers = require('../user/all-users');
 var brogueState = require('../enum/brogue-state');
 
-var UPDATE_INTERVAL_TIME = 10000;
-
 // Controller for broadcasting lobby updates to all users who are currently in the lobby
 
 function LobbyController(ws, sharedControllers) {
@@ -16,7 +14,6 @@ function LobbyController(ws, sharedControllers) {
     this.broadcastInterval = null;
     
     // App starts in the lobby - start listening for updates
-    this.sendAllUserData();
     this.userDataListen();
 }
 
@@ -37,7 +34,7 @@ _.extend(LobbyController.prototype, {
         var self = this;
         this.broadcastInterval = setInterval(function(){
             self.sendAllUserData(false);
-        }, UPDATE_INTERVAL_TIME);
+        }, config.LOBBY_UPDATE_INTERVAL);
     },
     stopUserDataListen: function(){
         clearInterval(this.broadcastInterval);
