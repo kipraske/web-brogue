@@ -2,9 +2,10 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dataIO/send-generic",
     "views/current-games-row-view",
     "models/current-games-row",
-], function ($, _, Backbone, CurrentGamesRowView, CurrentGamesRowModel) {
+], function ($, _, Backbone, send, CurrentGamesRowView, CurrentGamesRowModel) {
 
     var rowViewCollection = {};
     var isEmpty = true;
@@ -16,6 +17,7 @@ define([
         
         initialize : function(){
             this.renderHeading();
+            send("lobby", "requestAllUserData");
         },
         
         headingTemplate : _.template($('#current-games-heading').html()),
@@ -24,9 +26,6 @@ define([
             this.$el.html(this.headingTemplate({isEmpty : isEmpty}));
         },
 
-        // TODO - handle case where returned data is empty - also need a table element around these guys...
-        
-        // TODO - it would perhaps be more performant to append these to a document fragment then render the fragment
         renderHeadingOnEmptyChange: function () {
             if (isEmpty !== oldIsEmpty) {
                 this.renderHeading();
