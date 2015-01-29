@@ -13,6 +13,7 @@ define([
         template : _.template($('#current-games-row').html()),
         
         render: function() {
+            this.model.calculateFormattedIdleTime();
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         }
