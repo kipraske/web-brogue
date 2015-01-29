@@ -50,7 +50,13 @@ _.extend(LobbyController.prototype, {
                 if (!returnLobbyData) {
                     returnLobbyData = {};
                 }
-                returnLobbyData[userName] = allUsers.users[userName].lobbyData;  
+                
+                var userEntry = allUsers.users[userName];
+                returnLobbyData[userName] = userEntry.lobbyData;
+                
+                // update idle time
+                var timeDiff = process.hrtime(userEntry.lastUpdateTime)[0];
+                returnLobbyData[userName]["idle"] = timeDiff;
             }
         }
         

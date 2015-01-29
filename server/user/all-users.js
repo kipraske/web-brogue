@@ -31,6 +31,7 @@ module.exports = {
             sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
             brogueState : brogueState.INACTIVE,
             brogueProcess : null,
+            lastUpdateTime : process.hrtime(),
             lobbyData : {
                 idle : 0,
                 deepestLevel : 0,
@@ -53,6 +54,11 @@ module.exports = {
     },
     
     updateLobbyStatus : function(userName, updateFlag, updateValue) {
+        if (updateFlag === brogueStatus.SEED){
+            // just need to report update once per push
+            this.users[userName].lastUpdateTime = process.hrtime();
+        }
+        
         var lobbyItem = brogueStatusMap[updateFlag];
         this.users[userName].lobbyData[lobbyItem] = updateValue;
     }
