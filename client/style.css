@@ -92,6 +92,15 @@ header {
     width: 100%;
 }
 
+.current-games table{
+    width: 100%;
+}
+
+.current-games th,
+.current-games td{
+    text-align: left;
+}
+
 @media screen and (min-width: 700px){
     .banner {
         width: auto;
