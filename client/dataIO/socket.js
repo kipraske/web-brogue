@@ -2,7 +2,7 @@ define(['dataIO/router'], function(router){
     
     // TODO: make this host URL not hardcoded
     
-    var socket = new WebSocket("ws://localhost:8080");
+    var socket = new WebSocket("ws://localhost");
     socket.binaryType = "arraybuffer";
     
     // TODO : set up onerror, onclose all that stuff

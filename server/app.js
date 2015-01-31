@@ -16,24 +16,22 @@ app.get("/", function(req, res){
     res.sendFile(config.CLIENT_DIR + "/index.html");
 });
 
-server = app.listen(80, function(){
+httpServer = app.listen(80, function(){
     
-var port = server.address().port;
-    console.log("http server listening on port %s", port);
+var port = httpServer.address().port;
+    console.log("Server listening on port %s", port);
 });
 
 // Web Socket Server
-var wsPort = 8080;
-var cleanUp = require("./controllers/cleanup-controllers.js");
 var WebSocketServer = require("ws").Server;
-var wss = new WebSocketServer({port: wsPort}, function(){
-    console.log("ws server listening on port %s", wsPort);
+var wss = new WebSocketServer({server: httpServer});
 
-});
 var ErrorController = require("./controllers/error-controller");
 var BrogueController = require("./controllers/brogue-controller");
 var AuthController = require("./controllers/authentication-controller");
 var LobbyController = require("./controllers/lobby-controller");
+
+var cleanUp = require("./controllers/cleanup-controllers.js");
 
 var Router = require("./controllers/router");
 
@@ -56,6 +54,9 @@ wss.on("connection", function(ws) {
         brogue : brogue
     });
     brogue.auth = auth; //circular dependency
+ 
+    // TODO - can probably remove the circular dependency here by creating a "current User" object which holds the current user info
+    // That would make a lot of things cleaner in the code, but this is not as high priority as other issues at the moment
  
     var router = new Router([
         clientError,
