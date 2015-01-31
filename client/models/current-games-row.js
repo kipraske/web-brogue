@@ -16,17 +16,19 @@ define([
         },
         
         calculateFormattedIdleTime : function(){
-            var idleSeconds = this.idle;
+            var idleSeconds = this.get("idle");
             var formattedTime = "";
             
-            if (this.idle < 120){
+            if (idleSeconds < 120){
                 formattedTime = idleSeconds + "s";
             }
-            else if (this.idle >= 120 && this.idle < 3600){
-                formattedTime = (idleSeconds / 60) + "m";
+            else if (idleSeconds >= 120 && idleSeconds < 3600){
+                var min = (idleSeconds / 60) | 0;
+                formattedTime = min + "m";
             }
             else {
-                formattedTime = (idleSeconds / 3600) + "h";
+                var hours = (idleSeconds / 3600) | 0;
+                formattedTime = hours + "h";
             }
             
             this.set({formattedIdle : formattedTime});
