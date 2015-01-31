@@ -68,6 +68,7 @@ define([
             switch (message.data) {
                 case "logged-in" :
                     this.render("welcome");
+                    this.$el.addClass("logged-in");
                     $('#play').removeClass("inactive");
                     break;
                 case "registered" :
