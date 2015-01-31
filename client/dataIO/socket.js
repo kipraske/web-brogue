@@ -1,8 +1,9 @@
 define(['dataIO/router'], function(router){
     
-    // TODO: make this host URL not hardcoded
+    // websocket is at the same url just using the ws protocol
+    var socketUrl = "ws://" + window.location.host;
     
-    var socket = new WebSocket("ws://localhost");
+    var socket = new WebSocket(socketUrl);
     socket.binaryType = "arraybuffer";
     
     // TODO : set up onerror, onclose all that stuff
