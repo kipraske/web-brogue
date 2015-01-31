@@ -57,8 +57,10 @@ header {
 }
 
 .auth, 
-.play{
+.play,
+.current-games{
     margin: 0 2.5%;
+    box-sizing: border-box;
 }
 
 .auth form{
@@ -86,14 +88,27 @@ header {
     float: right;
 }
 
-@media screen and (min-width: 600px){
+.current-games{
+    width: 100%;
+}
+
+@media screen and (min-width: 700px){
     .banner {
         width: auto;
         margin: 0 auto;
     }
     
+    .auth{
+        float: left;
+    }
+    
     .auth form{
         margin: 0 10%;
+    }
+    
+    .current-games{
+        margin: 0 2.5% 0 7.5%;
+        padding-left: 200px;
     }
 }
 
