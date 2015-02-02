@@ -15,9 +15,10 @@ require([
     "dataIO/router",
     "views/auth-view",
     "views/play-view",
+    "views/header-view",
     "views/current-games-view",
     "views/console-view"
-], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, CurrentGamesView, ConsoleView){
+], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, ConsoleView){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
@@ -25,6 +26,7 @@ require([
     // initialize each view
     var authView = new AuthView();
     var playView = new PlayView();
+    var headerView = new HeaderView();
     var currentGamesView = new CurrentGamesView();
     var consoleView = new ConsoleView();
     
