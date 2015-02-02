@@ -3,8 +3,9 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
+    "dataIO/router",
     "models/auth"
-], function ($, _, Backbone, send, AuthenticationModel) {
+], function ($, _, Backbone, send, router, AuthenticationModel) {
 
     var AuthenticationView = Backbone.View.extend({
         el: "#auth",
@@ -18,8 +19,7 @@ define([
         },
         templates: {
             login: _.template($('#login').html()),
-            register: _.template($('#register').html()),
-            welcome: _.template($('#welcome').html())
+            register: _.template($('#register').html())
         },
         initialize: function () {
 
@@ -67,9 +67,15 @@ define([
 
             switch (message.data) {
                 case "logged-in" :
-                    this.render("welcome");
-                    this.$el.addClass("logged-in");
+                    $('#auth').addClass("inactive");
+                    $('header').removeClass("inactive");
                     $('#play').removeClass("inactive");
+                    
+                    console.log(this.model.username);
+                    
+                    var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
+                    router.route(headerMessage);
+                    
                     break;
                 case "registered" :
                     this.render("login");

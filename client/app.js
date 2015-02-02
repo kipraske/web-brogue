@@ -37,7 +37,8 @@ require([
         "brogue" : consoleView.updateCellModelData.bind(consoleView),
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "quit" : playView.goToLobby.bind(playView),
-        "auth" : authView.handleMessage.bind(authView)
+        "auth" : authView.handleMessage.bind(authView),
+        "header" : headerView.setUserData.bind(headerView)
     });
     
     // clean up application

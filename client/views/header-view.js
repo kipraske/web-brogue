@@ -17,10 +17,22 @@ define([
         template: _.template($('#welcome').html()),
         
         initialize: function () {
-            this.render();
+
         },
+        
         render: function () {
-            console.log("rendered... kind of");
+            this.$el.html(this.template(this.userModel.toJSON()));
+        },
+        
+        setUserData : function(username){
+            this.userModel.set({
+                username : username
+            })
+            
+            this.render();
+            
+            // TODO get session info to get the rest of the options and save in the user model
+            
         },
         
         logout: function() {
