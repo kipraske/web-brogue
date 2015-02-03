@@ -7,7 +7,7 @@ define([
 ], function ($, _, Backbone, send, UserModel) {
 
     var HeaderView = Backbone.View.extend({
-        el: "header",
+        el: "#header",
         userModel: new UserModel(),
 
         events: {
@@ -35,11 +35,9 @@ define([
             
         },
         
-        logout: function() {
-            
-            // TODO - actually log out.
-            
-            console.log("pretend logged-out");
+        logout: function(e) {
+            e.preventDefault();
+            send("auth", "logout");
         },
         
     });

@@ -63,12 +63,21 @@ define([
                         .removeClass()
                         .addClass("error")
                         .html(message.data);
+                return;
+            }
+            
+            if (message.result === "logout"){
+                $('#play').addClass("inactive");
+                $('#header').addClass("inactive");
+                $('#auth').removeClass("inactive");
+                this.render("login");
+                return;
             }
 
             switch (message.data) {
                 case "logged-in" :
                     $('#auth').addClass("inactive");
-                    $('header').removeClass("inactive");
+                    $('#header').removeClass("inactive");
                     $('#play').removeClass("inactive");
                     
                     console.log(this.model.username);

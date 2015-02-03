@@ -4,6 +4,7 @@ var fs = require('fs');
 var Controller = require('./controller-base');
 var User = require('../user/user-model');
 var allUsers = require('../user/all-users');
+var cleanUp = require("./cleanup-controllers.js");
 
 // Controller for handling user authentication over the web socket
 
@@ -121,7 +122,14 @@ _.extend(AuthController.prototype, {
             allUsers.removeUser(this.currentUserName);
             this.currentUserName = "";
             this.currentUserData = {};
+            
+            // TODO - need to stop lobby listening call
+            
             this.brogue.handlerCollection.clean.call(this.brogue, null);
+            this.sendMessage("auth", {
+                result : "logout",
+                data : ""
+            });
         }
     }
 });
