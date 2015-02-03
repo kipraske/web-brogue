@@ -122,9 +122,6 @@ _.extend(AuthController.prototype, {
             allUsers.removeUser(this.currentUserName);
             this.currentUserName = "";
             this.currentUserData = {};
-            
-            // TODO - need to stop lobby listening call
-            
             this.brogue.handlerCollection.clean.call(this.brogue, null);
             this.sendMessage("auth", {
                 result : "logout",

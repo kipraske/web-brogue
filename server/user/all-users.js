@@ -42,7 +42,7 @@ module.exports = {
         };
     },
     removeUser : function(userName){
-        this.users[userName] = null;
+        delete this.users[userName];
         userCount--;
     },
     getUser : function(userName){
