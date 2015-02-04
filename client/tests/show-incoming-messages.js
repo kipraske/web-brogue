@@ -6,7 +6,10 @@ define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
         
         console.info("You will now see messages recieved by the socket from the server")
         
+        var originalOnmessage = ws.onmessage.bind(ws);
+        
         ws.onmessage = function(event){
+            originalOnmessage(event);
             
             var message = event.data;
             
@@ -17,7 +20,6 @@ define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
             else{
                 console.log(message);
             }
-        router.route(message);
     };
     }
     

@@ -9,6 +9,7 @@ define(['dataIO/socket'], function(ws) {
         console.info("You will now see the messages sent to the socket from the client");
         
         ws.send = function(message){
+            originalSocketSend(message);
             if (message instanceof ArrayBuffer){
                 var messageArray = new Uint8Array(message);
                 console.log(messageArray);
@@ -16,8 +17,6 @@ define(['dataIO/socket'], function(ws) {
             else{
                 console.log(message);
             }
-            
-            originalSocketSend(message);
         };
     }
     
