@@ -16,6 +16,8 @@ Table Of Contents
 
 /* 0.1 Base Styles ------------------*/
 body{
+    margin: 0;
+    padding: 0;
     background-color: #000000;
     color: #ffffff;
 }

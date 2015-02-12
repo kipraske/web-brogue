@@ -37,7 +37,7 @@ define([
             // For now we will use the full settings
 
             this.$el.addClass("full-width");
-            this.$el.addClass("partial-height");
+            this.$el.addClass("full-height");
 
             this.calculateConsoleSize();
             this.calculateConsoleCellSize();
