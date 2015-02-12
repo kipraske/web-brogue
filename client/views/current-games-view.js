@@ -68,7 +68,7 @@ define([
             
             // clean up stale users
             for (var existingUserName in rowViewCollection){
-                if (! data[existingUserName]){
+                if (!data || !data[existingUserName]){
                     rowViewCollection[existingUserName].remove();
                     delete rowViewCollection[existingUserName];
                 }

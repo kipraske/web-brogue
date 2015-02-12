@@ -15,7 +15,7 @@ define([
             else {
                 var message = JSON.parse(rawMessage);
 
-                if (message.type && message.data && _handlers[message.type]) {
+                if (message.type && _handlers[message.type]) {
                     _handlers[message.type](message.data);
                 }
             }
