@@ -1,55 +1,33 @@
 
 /**
 Table Of Contents
-=======================
+=======================================
 0.0 - General
-    0.1 - Reset
-    0.2 - General
-    0.3 - Control
-1.0 - Header
-2.0 - Main Area
-    2.1 - Lobby
-    2.2 - Console
+    0.1 - Base
+    0.2 - Control
+1.0 - Lobby
+2.0 - Console
 3.0 - Chat Sidebar
-
 */
 
-/* 0.0 - Reset
- =====================
-*/
+/*=====================================
+ * 0.0 - Reset
+ ====================================*/
 
-/* 0.1 Reset Styles -----------------*/
-
-/* 0.2 General Styles ---------------*/
+/* 0.1 Base Styles ------------------*/
 body{
     background-color: #000000;
     color: #ffffff;
 }
 
-/* 0.3 Control Styles ---------------*/
+/* 0.2 Control Styles ---------------*/
 .inactive{
     display : none;
 }
 
-/* 1.0 Header
-=========================
-*/
-
-header {
-    height: 5vh;
-    background-color : grey;
-}
-
-.brogue-icon {
-    height : 4.8vh;
-    width : 4.8vh;
-}
-
-/* 2.0 Main
-=========================
-*/
-
-/* 2.1 - Lobby --------------------*/
+/*=====================================
+ * 2.0 Lobby
+ *===================================*/
 
 .banner {
     display: block;
@@ -129,8 +107,9 @@ header {
     }
 }
 
-
-/* 2.2 - Console --------------------*/
+/*=====================================
+ * 3.0 Console
+ *===================================*/
 
 .console {
     position : relative;
@@ -158,7 +137,3 @@ header {
     overflow: hidden;
     text-align: center;
 }
-
-/* 3.0 Sidebar
-=========================
-*/
