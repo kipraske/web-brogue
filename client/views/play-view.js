@@ -17,6 +17,7 @@ define([
             
             send("brogue", "start");
             $("#console").removeClass("inactive");
+            $('header').addClass("inactive");
             $("#lobby").addClass("inactive");
         },
         
@@ -25,6 +26,7 @@ define([
         },
         
         goToLobby: function(){
+            $('header').removeClass("inactive");
             $("#lobby").removeClass("inactive");
             $("#console").addClass("inactive");
         }
