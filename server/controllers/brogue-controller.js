@@ -107,9 +107,9 @@ _.extend(BrogueController.prototype, {
             // go back to lobby in the event something happens to the child process
             self.brogueChild = null;
             self.sendMessage("quit", true);
+            self.setState(brogueState.INACTIVE);
             self.controllers.lobby.sendAllUserData();
             self.controllers.lobby.userDataListen();
-            self.setState(brogueState.INACTIVE);
         });
 
         self.brogueChild.on('error', function(err){
