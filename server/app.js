@@ -32,7 +32,7 @@ var AuthController = require("./controllers/authentication-controller");
 var LobbyController = require("./controllers/lobby-controller");
 
 var controllerFactory = require("./controllers/controller-factory")
-var cleanUp = require("./controllers/cleanup-controllers.js");
+var controllerCleanUp = require("./controllers/cleanup-controllers.js");
 var Router = require("./controllers/router");
 
 wss.on("connection", function(ws) {
@@ -44,46 +44,13 @@ wss.on("connection", function(ws) {
         "brogue"
     ]);
     
-    console.log(controllers);
-    
-    // Initialize Controllers - each controller needs this specific websocket instance and access to any other controller that it may need to communicate with.
-    var clientError = new ErrorController(ws);
-    
-    var lobby = new LobbyController(ws, {
-        error : clientError
-    });
-    
-    var brogue = new BrogueController(ws, {
-        error : clientError,
-        lobby : lobby
-    });
-    
-    var auth = new AuthController(ws, {
-        error : clientError, 
-        brogue : brogue
-    });
-    brogue.auth = auth; //circular dependency
- 
-    // TODO - can probably remove the circular dependency here by creating a "current User" object which holds the current user info
-    // That would make a lot of things cleaner in the code, but this is not as high priority as other issues at the moment
- 
-    var router = new Router([
-        clientError,
-        brogue,
-        auth,
-        lobby
-    ]);
+    var router = new Router(controllers);
     
     ws.on("message", function(message){
        router.route(message);
     });
     
     ws.on("close", function(code, message){
-        cleanUp({
-            auth : auth,
-            brogue : brogue,
-            lobby : lobby
-        })
-    })
-    
+        controllerCleanUp(controllers);
+    });
 });

@@ -1,7 +1,7 @@
 function Controller() {
-    this.ws;
-    this.sharedControllers;
     this.controllerName = "";
+    this.ws;
+    this.controllers;
     
     this.defaultSendCallback = function(err){
         if (!err){

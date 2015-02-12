@@ -5,7 +5,7 @@ var brogueState = require('../enum/brogue-state');
 
 module.exports = function(controllers){
     
-    var currentUser = controllers.auth.currentUserName;
+    var currentUser = controllers.authentication.currentUserName;
     
     if (allUsers.users[currentUser]){
         allUsers.users[currentUser].brogueState.INACTIVE;

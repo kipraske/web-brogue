@@ -8,10 +8,10 @@ function Router(initialControllers){
 
 Router.prototype = {
     registerControllers : function(controllerCollection) {
-        var self = this;
-        controllerCollection.forEach(function(controller){
-            self.routeCollection[controller.controllerName] = controller;
-        });
+        for (var cKey in controllerCollection){
+            var controller = controllerCollection[cKey];
+            this.routeCollection[controller.controllerName] = controller;
+        }
     },
     prepareRecievedData : function(rawMessage) {
         // default is to just parse it the message, override to do fancy things

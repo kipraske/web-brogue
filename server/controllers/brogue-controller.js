@@ -53,14 +53,14 @@ _.extend(BrogueController.prototype, {
             this.handlerCollection[message.type].call(this, message.data);
         }
         else {
-            this.error.send("Message type incorrectly set: " + JSON.stringify(message));
+            this.controllers.error.send("Message type incorrectly set: " + JSON.stringify(message));
         }
     },
     handlerCollection: {
         //TODO - validate data when needed -- I mean we don't want anything crazy getting passed in as arguments and crashing the server
 
         start: function (data) {
-            var currentUserName = this.auth.currentUserName;
+            var currentUserName = this.controllers.auth.currentUserName;
 
             if (!currentUserName || this.brogueChild){
                 return;
@@ -69,7 +69,7 @@ _.extend(BrogueController.prototype, {
             var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
             this.spawnChildProcess(data, childWorkingDir);
             this.attachChildEvents();
-            this.lobby.stopUserDataListen();
+            this.controllers.lobby.stopUserDataListen();
             this.setState(brogueState.PLAYING);
         },
         
@@ -90,7 +90,7 @@ _.extend(BrogueController.prototype, {
     
     setState : function(state){
         this.currentState = state;
-        allUsers.users[this.auth.currentUserName].brogueState = state;
+        allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
     },
     
     spawnChildProcess: function (data, childWorkingDir) {
@@ -107,13 +107,13 @@ _.extend(BrogueController.prototype, {
             // go back to lobby in the event something happens to the child process
             self.brogueChild = null;
             self.sendMessage("quit", true);
-            self.lobby.sendAllUserData(false);
-            self.lobby.userDataListen();
+            self.controllers.lobby.sendAllUserData();
+            self.controllers.lobby.userDataListen();
             self.setState(brogueState.INACTIVE);
         });
 
         self.brogueChild.on('error', function(err){
-            self.error.send('Message could not be sent to brogue process - Error: ' + err);
+            self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
         });
 
         self.brogueChild.stdout.on('data', function (data) {
@@ -148,7 +148,7 @@ _.extend(BrogueController.prototype, {
                             self.dataAccumulator[i + STATUS_DATA_OFFSET + 4]
                     
                     allUsers.updateLobbyStatus(
-                            self.auth.currentUserName,
+                            self.controllers.auth.currentUserName,
                             updateFlag,
                             updateValue);
                 }

@@ -25,13 +25,13 @@ _.extend(AuthController.prototype, {
             var self = this;
 
             if (data.username == null || data.password == null) {
-                self.error.send("Invalid authentication data sent: " + data);
+                self.controllers.error.send("Invalid authentication data sent: " + data);
             }
 
             User.findOne({'username': data.username},
             function (err, user) {
                 if (err) {
-                    self.error.send(JSON.stringify(err));
+                    self.controllers.error.send(JSON.stringify(err));
                     return;
                 }
 
@@ -75,7 +75,7 @@ _.extend(AuthController.prototype, {
             var self = this;
             User.findOne({'username': data.username}, function (err, user) {
                 if (err) {
-                    self.error.send(JSON.stringify(err));
+                    self.controllers.error.send(JSON.stringify(err));
                     return;
                 }
                 // already exists
@@ -101,12 +101,12 @@ _.extend(AuthController.prototype, {
                     // each user needs their own directory for the brogue processes to run in
                     fs.mkdir(config.GAME_DATA_DIR + data.username, 0755, function (err) {
                         if (err) {
-                            self.error.send(JSON.stringify(err));
+                            self.controllers.error.send(JSON.stringify(err));
                         }
 
                         newUser.save(function (err) {
                             if (err) {
-                                self.error.send(JSON.stringify(err));
+                                self.controllers.error.send(JSON.stringify(err));
                             }
 
                             self.sendMessage("auth", {
@@ -123,7 +123,7 @@ _.extend(AuthController.prototype, {
             allUsers.removeUser(this.currentUserName);
             this.currentUserName = "";
             this.currentUserData = {};
-            this.brogue.handlerCollection.clean.call(this.brogue, null);
+            this.controllers.brogue.handlerCollection.clean.call(this.controllers.brogue, null);
             this.sendMessage("auth", {
                 result : "logout",
                 data : ""
