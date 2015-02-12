@@ -18,13 +18,10 @@ var STATUS_DATA_OFFSET = 2;
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
-function BrogueController(ws, sharedControllers) {
+function BrogueController(ws) {
+    this.controllerName = "brogue";
     this.ws = ws;
-    this.error = sharedControllers.error;
-    this.lobby = sharedControllers.lobby;
-    
-    // Set this after instantiation due to circular dependency
-    this.auth = null;
+    this.controllers = null;
     
     this.currentState = brogueState.INACTIVE;
     this.brogueChild;  // child process

@@ -8,12 +8,13 @@ var cleanUp = require("./cleanup-controllers.js");
 
 // Controller for handling user authentication over the web socket
 
-function AuthController(ws, sharedControllers) {
+function AuthController(ws) {
+    this.controllerName = "auth";
     this.ws = ws;
+    this.controllers = null;
+    
     this.currentUserName = "";
     this.currentUserData = {};
-    this.error = sharedControllers.error;
-    this.brogue = sharedControllers.brogue;
 }
 
 AuthController.prototype = new Controller();

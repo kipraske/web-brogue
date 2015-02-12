@@ -31,12 +31,21 @@ var BrogueController = require("./controllers/brogue-controller");
 var AuthController = require("./controllers/authentication-controller");
 var LobbyController = require("./controllers/lobby-controller");
 
+var controllerFactory = require("./controllers/controller-factory")
 var cleanUp = require("./controllers/cleanup-controllers.js");
-
 var Router = require("./controllers/router");
 
 wss.on("connection", function(ws) {
 
+    var controllers = controllerFactory(ws, [
+        "error",
+        "lobby",
+        "authentication",
+        "brogue"
+    ]);
+    
+    console.log(controllers);
+    
     // Initialize Controllers - each controller needs this specific websocket instance and access to any other controller that it may need to communicate with.
     var clientError = new ErrorController(ws);
     
