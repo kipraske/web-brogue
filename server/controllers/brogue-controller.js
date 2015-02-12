@@ -60,7 +60,7 @@ _.extend(BrogueController.prototype, {
         //TODO - validate data when needed -- I mean we don't want anything crazy getting passed in as arguments and crashing the server
 
         start: function (data) {
-            var currentUserName = this.controllers.auth.currentUserName;
+            var currentUserName = this.controllers.authentication.currentUserName;
 
             if (!currentUserName || this.brogueChild){
                 return;
@@ -90,7 +90,7 @@ _.extend(BrogueController.prototype, {
     
     setState : function(state){
         this.currentState = state;
-        allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
+        allUsers.users[this.controllers.authentication.currentUserName].brogueState = state;
     },
     
     spawnChildProcess: function (data, childWorkingDir) {
@@ -148,7 +148,7 @@ _.extend(BrogueController.prototype, {
                             self.dataAccumulator[i + STATUS_DATA_OFFSET + 4]
                     
                     allUsers.updateLobbyStatus(
-                            self.controllers.auth.currentUserName,
+                            self.controllers.authentication.currentUserName,
                             updateFlag,
                             updateValue);
                 }
