@@ -22,6 +22,8 @@ define([
         // These both will fire but the order is uncertain.  We need the data from both combined. The keyCode will come from the input field except when the character does not define it, then it will come from the keydown event.  The shift and ctrl modifiers always come from the keydown event.
         
         inputHandler : function(event){
+            console.log("input!")
+            
             if (this.el.value === ""){
                 this.model.set("inputValidValue", false);
             }
@@ -39,6 +41,8 @@ define([
             this.model.set("inputEventFired", true);
         },
         keydownHandler : function(event){
+            console.log("key!")
+            
             var keyCode = event.keyCode;
             
             // Ignore key events for lone modifiers

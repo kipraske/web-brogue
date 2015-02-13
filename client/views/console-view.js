@@ -28,8 +28,7 @@ define([
     var Console = Backbone.View.extend({
         el: "#console",
         events: {
-            "keypress" : "handleKeypress",
-            "keydown" : "handleNonCharacterKeypress"
+
         },
         initialize: function() {
 
