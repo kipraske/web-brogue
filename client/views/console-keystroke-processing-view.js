@@ -11,7 +11,7 @@ define([
     // See BrogueCode/rogue.h for all brogue event definitions
     var KEYPRESS_EVENT_CHAR = 0;
     
-    var KeyProcessor = Backbone.View.extend({
+    var ConsoleKeyProcessor = Backbone.View.extend({
         el : '#console-keyboard',
         model : new ConsoleKeyboardModel(),
         events : {
@@ -73,6 +73,7 @@ define([
             var keyData = this.model.get("keyData");
             sendKeypressEvent(KEYPRESS_EVENT_CHAR, keyData.keyCode, keyData.keyData, keyData.shiftKey);
         }
-
     });
+    
+    return ConsoleKeyProcessor;
 });

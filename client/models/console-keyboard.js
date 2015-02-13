@@ -21,10 +21,6 @@ define([
             this.attributes.keyData[key] = value;
         },
         
-        getKeyDataAttribute : function(key){
-            return this.attributes.keyData[key];
-        }
-        
         resetEvents : function(){
             this.set({
                 keyEventFired : false,
