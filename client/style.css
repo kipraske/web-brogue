@@ -143,6 +143,10 @@ header {
 
 .console.partial-width {}
 
+.console-keyboard{
+    display:none;
+}
+
 .console-cell{
     position : absolute;
     overflow: hidden;
