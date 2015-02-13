@@ -29,7 +29,7 @@ define([
             }
             else {
                 this.model.set("inputValidValue", true);
-                this.model.setKeyDataAttribute("keyCode", this.el.value);
+                this.model.setKeyDataAttribute("keyCode", this.el.value.charCodeAt(0));
                 this.el.value = "";
             }
             
@@ -37,8 +37,9 @@ define([
                 this.sendKey();
                 this.model.resetEvents();
             }
-            
-            this.model.set("inputEventFired", true);
+            else{
+                this.model.set("inputEventFired", true);
+            }    
         },
         keydownHandler : function(event){
             console.log("key!")
@@ -69,13 +70,12 @@ define([
             else {
                 // set this anyway then since this event ran first
                 this.model.setKeyDataAttribute("keyCode", keyCode);
-            }
-            
-            this.model.set("keyEventFired", true);
+                this.model.set("keyEventFired", true);
+            }         
         },
         sendKey: function () {
             var keyData = this.model.get("keyData");
-            sendKeypressEvent(KEYPRESS_EVENT_CHAR, keyData.keyCode, keyData.keyData, keyData.shiftKey);
+            sendKeypressEvent(KEYPRESS_EVENT_CHAR, keyData.keyCode, keyData.ctrlKey, keyData.shiftKey);
         }
     });
     
