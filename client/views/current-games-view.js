@@ -24,14 +24,17 @@ define([
         
         headingTemplate : _.template($('#current-games-heading').html()),    
         
-        updateRowModelData: function(data){
+        updateRowModelData: function(data){           
             this.tableState.set("isEmpty", true);
             // handle incoming user data
-            for (var incomingUserName in data){
+            
+            if (data){
                 this.tableState.set("isEmpty", false);
                 // were there no user rows but now there is?
                 this.renderHeadingOnEmptyChange();
-                
+            }
+            
+            for (var incomingUserName in data){
                 var update = data[incomingUserName];
                 
                 if (!rowViewCollection[incomingUserName]) {
