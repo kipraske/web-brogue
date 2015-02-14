@@ -36,7 +36,7 @@ _.extend(SavedGamesController.prototype, {
 
                     if (brogueSaveRegex.test(fileName)) {
                     var filePath =  userDirectory + fileName;
-                    var fileStats = fs.stat(filePath);
+                    var fileStats = fs.statSync(filePath);
                         
                         savedGames.push({
                             fileName : fileName,
@@ -49,7 +49,7 @@ _.extend(SavedGamesController.prototype, {
                     return;
                 }                
 
-                this.sendMessage("saved games", savedGames);
+                self.sendMessage("saved games", savedGames);
                 
             });
         }
