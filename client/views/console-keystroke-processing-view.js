@@ -71,6 +71,10 @@ define([
             }
 
             if (returnCode){
+                if (shiftKey === true){
+                    returnCode -= 32; // use uppercase character
+                }
+                
                 sendKeypressEvent(KEYPRESS_EVENT_CHAR, returnCode, ctrlKey, shiftKey);
             }
 
