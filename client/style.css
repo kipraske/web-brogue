@@ -46,7 +46,7 @@ header {
 
 .auth, 
 .play,
-.games{
+.current-games{
     margin: 0 2.5%;
     box-sizing: border-box;
 }
@@ -76,16 +76,16 @@ header {
     float: right;
 }
 
-.games{
+.current-games{
     width: 100%;
 }
 
-.games table{
+.current-games table{
     width: 100%;
 }
 
-.games th,
-.games td{
+.current-games th,
+.current-games td{
     text-align: left;
 }
 
@@ -112,7 +112,7 @@ header {
         text-align: right;
     }
     
-    .games{
+    .current-games{
         margin: 0 2.5% 0 7.5%;
         padding-left: 200px;
     }

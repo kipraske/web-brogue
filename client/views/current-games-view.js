@@ -12,7 +12,7 @@ define([
     var rowViewCollection = {};
 
     var CurrentGamesView = Backbone.View.extend({
-        el: "#games",
+        el: "#current-games",
         tableSelector : "#current-games-table",
         $tableElement: null,
         tableState : new LobbyTableState(),

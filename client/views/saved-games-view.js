@@ -10,7 +10,7 @@ define([
     var fileViewCollection = {};
 
     var SavedGamesView = Backbone.View.extend({
-        el: "#games",
+        el: "#saved-games",
         tableSelector: "#saved-games-table",
         $tableElement: null,
         tableState: new LobbyTableState(),
