@@ -22,13 +22,10 @@ define([
     var _consoleCellCharPaddingPx;
     var _consoleCellAspectRatio = 0.53;  //TODO: set this via options model, reset via resize function, may wish to have an option to keep fixed size even if it means we have to drag it about
 
-    // See BrogueCode/rogue.h for all brogue event definitions
-    var KEYPRESS_EVENT_CHAR = 0;
-
     var Console = Backbone.View.extend({
         el: "#console",
         events: {
-
+            'focus' : 'giveKeyboardFocus'
         },
         initialize: function() {
 
@@ -162,25 +159,8 @@ define([
             }
         },
         
-        // For keys that produce a character in the console
-        handleKeypress: function (event) {
-            sendKeypressEvent(KEYPRESS_EVENT_CHAR, event.charCode, event.ctrlKey, event.shiftKey);
-        },
-        // For keys that don't produce a character - for example the escape key
-        handleNonCharacterKeypress: function (event) {
-            
-            var isSpecialChar = false;
-            var specialKeyCode = 0;
-
-            switch (event.keyCode) {
-                case 27 : // ESC_KEY
-                    isSpecialChar = true;
-                    specialKeyCode = 27;
-            }
-
-            if (isSpecialChar) {
-                sendKeypressEvent(KEYPRESS_EVENT_CHAR, specialKeyCode, event.ctrlKey, event.shiftKey);
-            }
+        giveKeyboardFocus : function(){
+            $('#console-keyboard').focus();
         }
     });
 

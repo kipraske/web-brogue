@@ -143,8 +143,13 @@ header {
 
 .console.partial-width {}
 
+/*hidden off screen so we can still give it focus*/
 .console-keyboard{
-    display:none;
+    position:absolute;
+    left: -5px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
 
 .console-cell{
