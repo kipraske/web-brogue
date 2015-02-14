@@ -23,7 +23,7 @@ define({
             this.tableState.set("oldIsEmpty", isEmpty);
 
             if (!isEmpty) {
-                this.$tableElement = this.$el.find('#current-games-table');
+                this.$tableElement = this.$el.find(this.tableSelector);
             }
         }
     }

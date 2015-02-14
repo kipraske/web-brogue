@@ -6,13 +6,13 @@ define([
     "views/lobby-data-table-base",
     "views/current-games-row-view",
     'models/lobby-data-table-state',
-    "models/current-games-row",
+    "models/current-games-row"
 ], function ($, _, Backbone, send, lobbyTableBase, CurrentGamesRowView, LobbyTableState, CurrentGamesRowModel) {
 
     var rowViewCollection = {};
 
     var CurrentGamesView = Backbone.View.extend({
-        el: "#current-games",
+        el: "#games",
         tableSelector : "#current-games-table",
         $tableElement: null,
         tableState : new LobbyTableState(),

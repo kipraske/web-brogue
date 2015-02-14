@@ -8,67 +8,51 @@ define([
 ], function ($, _, Backbone, send, FileRowView, FileRowModel) {
 
     var fileViewCollection = {};
-    var isEmpty = true;
-    var oldIsEmpty = true;
 
-    var CurrentGamesView = Backbone.View.extend({
-        el: "#current-games",
-        $tableElement : null,
+    var SavedGamesView = Backbone.View.extend({
+        el: "#games",
+        tableSelector: "#saved-games-table",
+        $tableElement: null,
+        tableState: new LobbyTableState(),
         
-        initialize : function(){
-            this.renderHeading();
-            send("lobby", "requestAllUserData");
-        },
-        
-        headingTemplate : _.template($('#current-games-heading').html()),
-        
-        renderHeading : function(){
-            this.$el.html(this.headingTemplate({isEmpty : isEmpty}));
-        },
+        initialize: function () {
 
-        renderHeadingOnEmptyChange: function () {
-            if (isEmpty !== oldIsEmpty) {
-                this.renderHeading();
-                oldIsEmpty = isEmpty;
-                
-                if (!isEmpty) {
-                    this.$tableElement = this.$el.find('#current-games-table');
-                }
-            }
         },
+        headingTemplate: _.template($('#saved-games-heading').html()),
         
+        // TODO - rewrite this for saved games = currently the same as the current games
         
-        updateRowModelData: function(data){
-            isEmpty = true;
+        updateRowModelData: function (data) {
+            this.tableState.set("isEmpty", true);
             // handle incoming user data
-            for (var incomingUserName in data){
-                isEmpty = false;
+            for (var incomingUserName in data) {
+                this.tableState.set("isEmpty", false);
                 // were there no user rows but now there is?
                 this.renderHeadingOnEmptyChange();
-                
+
                 var update = data[incomingUserName];
-                
+
                 if (!rowViewCollection[incomingUserName]) {
                     var rowData = _.extend(update, {
                         userName: incomingUserName
                     });
-                    
+
                     var rowModel = new CurrentGamesRowModel(rowData);
                     var newRowView = rowViewCollection[incomingUserName] = new CurrentGamesRowView({
-                        model : rowModel,
-                        id : "game-row-" + incomingUserName,
+                        model: rowModel,
+                        id: "game-row-" + incomingUserName,
                     });
                     this.$tableElement.append(newRowView.render().el);
                 }
                 else {
                     rowViewCollection[incomingUserName].model.set(update);
                     rowViewCollection[incomingUserName].render();
-                }   
+                }
             }
-            
+
             // clean up stale users
-            for (var existingUserName in rowViewCollection){
-                if (!data || !data[existingUserName]){
+            for (var existingUserName in rowViewCollection) {
+                if (!data || !data[existingUserName]) {
                     rowViewCollection[existingUserName].remove();
                     delete rowViewCollection[existingUserName];
                 }
@@ -77,7 +61,9 @@ define([
             this.renderHeadingOnEmptyChange();
         }
     });
-    
-    return CurrentGamesView;
+
+    _.extend(SavedGamesView.prototype, lobbyTableBase);
+
+    return SavedGamesView;
 
 });
