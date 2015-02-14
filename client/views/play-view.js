@@ -16,13 +16,13 @@ define([
             event.preventDefault();
             
             send("brogue", "start");
-            $("#console").removeClass("inactive");
-            $('header').addClass("inactive");
-            $("#lobby").addClass("inactive");
+            this.goToConsole();
         },
         
         goToConsole : function(){
-            // TODO - move the above swapping to this function
+            $('header').addClass("inactive");
+            $("#lobby").addClass("inactive");
+            $("#console").removeClass("inactive").focus();
         },
         
         goToLobby: function(){
