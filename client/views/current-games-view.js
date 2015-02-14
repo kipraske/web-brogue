@@ -3,46 +3,32 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
+    "views/lobby-data-table-base",
     "views/current-games-row-view",
+    'models/lobby-data-table-state',
     "models/current-games-row",
-], function ($, _, Backbone, send, CurrentGamesRowView, CurrentGamesRowModel) {
+], function ($, _, Backbone, send, lobbyTableBase, CurrentGamesRowView, LobbyTableState, CurrentGamesRowModel) {
 
     var rowViewCollection = {};
-    var isEmpty = true;
-    var oldIsEmpty = true;
 
     var CurrentGamesView = Backbone.View.extend({
         el: "#current-games",
-        $tableElement : null,
+        tableSelector : "#current-games-table",
+        $tableElement: null,
+        tableState : new LobbyTableState(),
         
         initialize : function(){
             this.renderHeading();
             send("lobby", "requestAllUserData");
         },
         
-        headingTemplate : _.template($('#current-games-heading').html()),
-        
-        renderHeading : function(){
-            this.$el.html(this.headingTemplate({isEmpty : isEmpty}));
-        },
-
-        renderHeadingOnEmptyChange: function () {
-            if (isEmpty !== oldIsEmpty) {
-                this.renderHeading();
-                oldIsEmpty = isEmpty;
-                
-                if (!isEmpty) {
-                    this.$tableElement = this.$el.find('#current-games-table');
-                }
-            }
-        },
-        
+        headingTemplate : _.template($('#current-games-heading').html()),    
         
         updateRowModelData: function(data){
-            isEmpty = true;
+            this.tableState.set("isEmpty", true);
             // handle incoming user data
             for (var incomingUserName in data){
-                isEmpty = false;
+                this.tableState.set("isEmpty", false);
                 // were there no user rows but now there is?
                 this.renderHeadingOnEmptyChange();
                 
@@ -77,6 +63,8 @@ define([
             this.renderHeadingOnEmptyChange();
         }
     });
+    
+    _.extend(CurrentGamesView.prototype, lobbyTableBase);
     
     return CurrentGamesView;
 
