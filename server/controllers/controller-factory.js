@@ -12,7 +12,9 @@ module.exports = function(ws, controllersList){
         var cName = controllersList[i];
         var cPath = "./" + cName + "-controller";
         var ControllerClass = require(cPath);
-        controllerInstances[cName] = new ControllerClass(ws);
+        var controllerInstance = new ControllerClass(ws);
+        
+        controllerInstances[controllerInstance.controllerName] = controllerInstance;
     }
     
     for (var cKey in controllerInstances){

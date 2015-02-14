@@ -35,6 +35,7 @@ wss.on("connection", function (ws) {
         "error",
         "lobby",
         "authentication",
+        "saved-games",
         "brogue"
     ]);
 

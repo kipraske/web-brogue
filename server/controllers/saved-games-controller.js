@@ -8,18 +8,18 @@ var path = require('path');
 // Controller for displaying saved games for loading
 
 function SavedGamesController(ws) {
-    this.controllerName = "saved games";
+    this.controllerName = "savedGames";
     this.ws = ws;
     this.controllers = null;
 }
 
 SavedGamesController.prototype = new Controller();
 _.extend(SavedGamesController.prototype, {
-    controllerName: "saved games",
+    controllerName: "savedGames",
     handlerCollection: {
         getBrogueSaves: function (data) {
             var self = this;
-            var currentUserName = this.controllers.authentication.currentUserName;
+            var currentUserName = this.controllers.auth.currentUserName;
             var userDirectory = path.normalize(config.GAME_DATA_DIR + currentUserName + '/');
 
             fs.readdir(userDirectory, function (err, files) {
