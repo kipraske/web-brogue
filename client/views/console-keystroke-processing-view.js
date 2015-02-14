@@ -15,35 +15,12 @@ define([
         el : '#console-keyboard',
         model : new ConsoleKeyboardModel(),
         events : {
-            'input' : 'inputHandler',
-            'keydown' : 'keydownHandler'
+            'keydown' : 'keydownHandler',
+            'input' : 'inputHandler'
         },
         
-        // These both will fire but the order is uncertain.  We need the data from both combined. The keyCode will come from the input field except when the character does not define it, then it will come from the keydown event.  The shift and ctrl modifiers always come from the keydown event.
-        
-        inputHandler : function(event){
-            console.log("input!")
-            
-            if (this.el.value === ""){
-                this.model.set("inputValidValue", false);
-            }
-            else {
-                this.model.set("inputValidValue", true);
-                this.model.setKeyDataAttribute("keyCode", this.el.value.charCodeAt(0));
-                this.el.value = "";
-            }
-            
-            if (this.model.get("keyEventFired") === true){
-                this.sendKey();
-                this.model.resetEvents();
-            }
-            else{
-                this.model.set("inputEventFired", true);
-            }    
-        },
-        keydownHandler : function(event){
-            console.log("key!")
-            
+        // keydown fires before input is calculated
+        keydownHandler : function(event){            
             var keyCode = event.keyCode;
             
             // Ignore key events for lone modifiers
@@ -53,30 +30,25 @@ define([
                 return;
             }
             
-            // TODO - Adjust overlapping codes: 34-40 are the arrows and others on the numkeypad (but this overlaps with & and stuff)
-            
-            this.model.setKeyDataAttribute("ctrlKey", event.ctrlKey);
-            this.model.setKeyDataAttribute("shiftKey", event.shiftKey);
-            
-            if (!this.model.get("inputValidValue")){
-                // this event ran second but we never updated this so update now
-                this.model.setKeyDataAttribute("keyCode", keyCode);
-            }
-            
-            if (this.model.get("inputEventFired") === true){
-                this.sendKey();
-                this.model.resetEvents();
-            }
-            else {
-                // set this anyway then since this event ran first
-                this.model.setKeyDataAttribute("keyCode", keyCode);
-                this.model.set("keyEventFired", true);
-            }         
+            this.model.set("ctrlKeyHeld", event.ctrlKey);
+            this.model.set("shiftKeyHeld", event.shiftKey);
         },
-        sendKey: function () {
-            var keyData = this.model.get("keyData");
-            sendKeypressEvent(KEYPRESS_EVENT_CHAR, keyData.keyCode, keyData.ctrlKey, keyData.shiftKey);
-        }
+        
+        // input fires after input is calculated
+        inputHandler : function(event){
+            
+            var charCode = this.el.value.charCodeAt(0);
+            this.el.value = "";
+            
+            var ctrlKey = this.model.get("ctrlKeyHeld");
+            var shiftKey = this.model.get("shiftKeyHeld");
+            
+            sendKeypressEvent(KEYPRESS_EVENT_CHAR, charCode, ctrlKey, shiftKey);
+            
+            this.model.set("ctrlKeyHeld", false);
+            this.model.set("shiftKeyHeld", false);
+        },
+
     });
     
     return ConsoleKeyProcessor;
