@@ -20,6 +20,11 @@ _.extend(SavedGamesController.prototype, {
         getBrogueSaves: function (data) {
             var self = this;
             var currentUserName = this.controllers.auth.currentUserName;
+            
+            if (!currentUserName){
+                return;
+            }
+            
             var userDirectory = path.normalize(config.GAME_DATA_DIR + currentUserName + '/');
 
             fs.readdir(userDirectory, function (err, files) {
