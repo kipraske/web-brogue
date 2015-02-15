@@ -15,50 +15,41 @@ define([
         $tableElement: null,
         tableState: new LobbyTableState(),
         
-        initialize: function () {
-
-        },
         headingTemplate: _.template($('#saved-games-heading').html()),
-        
-        // TODO - rewrite this for saved games = currently the same as the current games
-        
+
         updateRowModelData: function (data) {
             this.tableState.set("isEmpty", true);
-            // handle incoming user data
-            for (var incomingUserName in data) {
+            this.clearRowModelData();
+            
+            var numberOfGames = data.length
+
+            if (data.length > 0) {
                 this.tableState.set("isEmpty", false);
-                // were there no user rows but now there is?
+                // were there no files found before but now there is?
                 this.renderHeadingOnEmptyChange();
+            }
 
-                var update = data[incomingUserName];
+            for (var i = 0; i < numberOfGames; i++) {
+                var fileData = data[i];
 
-                if (!rowViewCollection[incomingUserName]) {
-                    var rowData = _.extend(update, {
-                        userName: incomingUserName
+                if (!fileViewCollection[fileData.fileName]) {
+                    var fileModel = new FileRowModel(fileData);
+                    var newFileView = fileViewCollection[fileData.fileName] = new FileRowView({
+                        model: fileModel,
+                        id: "game-row-" + i
                     });
 
-                    var rowModel = new CurrentGamesRowModel(rowData);
-                    var newRowView = rowViewCollection[incomingUserName] = new CurrentGamesRowView({
-                        model: rowModel,
-                        id: "game-row-" + incomingUserName,
-                    });
                     this.$tableElement.append(newRowView.render().el);
                 }
-                else {
-                    rowViewCollection[incomingUserName].model.set(update);
-                    rowViewCollection[incomingUserName].render();
-                }
-            }
 
-            // clean up stale users
-            for (var existingUserName in rowViewCollection) {
-                if (!data || !data[existingUserName]) {
-                    rowViewCollection[existingUserName].remove();
-                    delete rowViewCollection[existingUserName];
-                }
-            }
-            // were there user rows before now there is not?
+            // were there files before but now there is not?
             this.renderHeadingOnEmptyChange();
+            }
+        },
+        
+        clearRowModelData : function(){
+            fileViewCollection = {};
+            this.$tableElement.html("");
         }
     });
 
