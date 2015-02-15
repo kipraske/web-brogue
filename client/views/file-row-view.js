@@ -13,6 +13,7 @@ define([
         template : _.template($('#file-row').html()),
         
         render: function() {
+            this.model.formatModifiedDate();
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         }

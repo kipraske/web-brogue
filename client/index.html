@@ -82,6 +82,23 @@
                     <td><%= seed %></td>
 		</script>
 		
-		
+		<script id="saved-games-heading" type ="text/template">
+                    <h2>Current Games</h2>
+                    <% if (isEmpty) { %>
+                        <p>You currently do not have any saved games</p>
+                    <% } else { %>
+                        <table id="saved-games-table">
+                            <tr>
+                                <th>Saved Game</th>
+                                <th>Date Modified</th>
+                            </tr>
+                        </table>
+                    <% } %>
+                </script>
+                
+		<script id="file-row" type="text/template">
+                    <td><%= fileName %></td>
+                    <td><%= formattedModified %></td>
+		</script>
 	</body>
 </html>
