@@ -12,9 +12,9 @@ define([
         },
         
         formatModifiedDate : function(){
-            var modifiedDate = new Date(this.model.get("modified"));
+            var modifiedDate = new Date(this.get("modified"));
             var dateString = modifiedDate.toLocaleString();
-            this.model.set("formattedModified", dateString);
+            this.set("formattedModified", dateString);
         }
     });
     

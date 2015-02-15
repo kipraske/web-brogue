@@ -3,9 +3,11 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
+    "views/lobby-data-table-base",
+    "models/lobby-data-table-state",
     "views/file-row-view",
-    "models/file-row",
-], function ($, _, Backbone, send, FileRowView, FileRowModel) {
+    "models/file-row"
+], function ($, _, Backbone, send, lobbyTableBase, LobbyTableState, FileRowView, FileRowModel) {
 
     var fileViewCollection = {};
 
@@ -39,7 +41,7 @@ define([
                         id: "game-row-" + i
                     });
 
-                    this.$tableElement.append(newRowView.render().el);
+                    this.$tableElement.append(newFileView.render().el);
                 }
 
             // were there files before but now there is not?
@@ -49,7 +51,11 @@ define([
         
         clearRowModelData : function(){
             fileViewCollection = {};
-            this.$tableElement.html("");
+            
+            if (this.$tableElement){          
+                this.$tableElement.html("");
+            }
+
         }
     });
 
