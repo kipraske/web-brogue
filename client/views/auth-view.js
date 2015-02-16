@@ -70,6 +70,8 @@ define([
                 $('#play').addClass("inactive");
                 $('#header').addClass("inactive");
                 $('#auth').removeClass("inactive");
+                $('#saved-games').addClass('inactive');
+                $('#current-games').removeClass('inactive');
                 this.render("login");
                 return;
             }
