@@ -1,10 +1,5 @@
-// TODO - create an arraybuffer to send to the server and hook that into the console
-// On the node server we will check the bounds of each element (don't want anything weird on the c side) and then pass it in stdin
-
-// Here will be enums and maps and stuff for minimal processing on the c side
-
-
-// See BrogueCode/rogue.h for all event definitions
+// Sends keystroke to the server
+// Note that the keyCode is a 16 bit character which will need to be split for transmission
 
 define(['dataIO/socket'], function(ws){
     
@@ -12,10 +7,16 @@ define(['dataIO/socket'], function(ws){
     
     function send(eventCharCode, keyCode, ctrlKey, shiftKey){
         
-        var messageArray = new Uint8ClampedArray(4);
+        var messageArray = new Uint8ClampedArray(5);
+        
+        console.log(keyCode);
+        
+        var keyCodePart1 = (keyCode & '0xffff') >> 8;
+        var keyCodePart2 = (keyCode & '0xff');
         
         messageArray[0] = eventCharCode;
-        messageArray[1] = keyCode;
+        messageArray[1] = keyCodePart1;
+        messageArray[2] = keyCodePart2;
         messageArray[2] = ctrlKey;
         messageArray[3] = shiftKey;
         

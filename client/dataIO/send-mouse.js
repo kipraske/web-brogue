@@ -1,3 +1,6 @@
+// Sends a mouseclick event to the server
+// See rogue.h for mouse event definitions
+
 define(['dataIO/socket'], function(ws){
     
     // See PlatformCode/webplaform.c for how these are ultimately used

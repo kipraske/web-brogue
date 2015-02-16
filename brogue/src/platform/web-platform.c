@@ -12,7 +12,7 @@
 #define OUTPUT_SIZE             10
 #define MAX_INPUT_SIZE          4
 #define MOUSE_INPUT_SIZE        4
-#define KEY_INPUT_SIZE          3
+#define KEY_INPUT_SIZE          4
 
 enum StatusTypes {
     DEEPEST_LEVEL_STATUS,
@@ -126,9 +126,12 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     
     if (returnEvent->eventType == KEYSTROKE){
         fread(inputBuffer, sizeof(char), KEY_INPUT_SIZE, stdin);
-        returnEvent->param1 = inputBuffer[0];  //key character
-        returnEvent->controlKey = inputBuffer[1];
-        returnEvent->shiftKey = inputBuffer[2];
+        
+        unsigned short keyCharacter = inputBuffer[0] << 8 | inputBuffer[1];
+        
+        returnEvent->param1 = keyCharacter;  //key character
+        returnEvent->controlKey = inputBuffer[2];
+        returnEvent->shiftKey = inputBuffer[3];
     }
     else // it is a mouseEvent
     {
