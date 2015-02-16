@@ -13,10 +13,12 @@
 			<div id="auth" class="auth"></div>
 			<div id="play" class="play inactive">
 				<h2>Play Brogue 1.7.4</h2>
-				<a id="start-brogue" href="#brogue">Start New Game</a>
-                                <a id="start-brogue-seed" href="#brogue">Start New Game With Seed</a>
-                                <a id="show-saved-games" href="#show-saved-games">Load Saved Game</a>
-                                <a id="show-current-games" href="#show-current-games"> Watch Current Games </a>
+                                <ul>
+                                    <li><a id="start-brogue" href="#brogue">Start New Game</a></li>
+                                    <li><a id="start-brogue-seed" href="#brogue">Start New Game With Seed</a></li>
+                                    <li><a id="show-saved-games" href="#show-saved-games">Load Saved Game</a></li>
+                                    <li><a id="show-current-games" href="#show-current-games"> Watch Current Games </a></li>
+                                </ul>
 			</div>
                         <div id="current-games" class="current-games"></div>
                         <div id="saved-games" class="saved-games inactive"></div>
@@ -24,8 +26,8 @@
                 <div id="console" class="console inactive" tabindex="0">
                     <input type="text" id="console-keyboard" class="console-keyboard" />
                 </div>
-		<aside id="chat" class="inactive"></aside>
-		<aside id="popup" class="inactive"></aside>
+                
+		<div id="popup" class="popup inactive"></div>
 		
 		<!-- Templates -->
 		<script id="login" type="text/template">
