@@ -3,8 +3,8 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
-    "models/auth"
-], function ($, _, Backbone, send) {
+    "views/view-activation-helpers",
+], function ($, _, Backbone, send, activate) {
     
     var PlayView = Backbone.View.extend({
         el: "#play",
@@ -30,29 +30,22 @@ define([
         },
         
         showSavedGames : function(event){
-            event.preventDefault();
-            
+            event.preventDefault();    
             send('savedGames', 'getBrogueSaves');
-            $('#current-games').addClass('inactive');
-            $('#saved-games').removeClass('inactive');
+            activate.savedGames();
         },
         
         showCurrentGames : function(event){
             event.preventDefault();
-            $('#saved-games').addClass('inactive');
-            $('#current-games').removeClass('inactive');   
+            activate.currentGames();
         },
         
         goToConsole : function(){
-            $('header').addClass("inactive");
-            $("#lobby").addClass("inactive");
-            $("#console").removeClass("inactive").focus();
+            activate.console();
         },
         
         goToLobby: function(){
-            $('header').removeClass("inactive");
-            $("#lobby").removeClass("inactive");
-            $("#console").addClass("inactive");
+            activate.lobby();
         }
     });
     

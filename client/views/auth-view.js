@@ -4,8 +4,9 @@ define([
     "backbone",
     "dataIO/send-generic",
     "dataIO/router",
-    "models/auth"
-], function ($, _, Backbone, send, router, AuthenticationModel) {
+    "models/auth",
+    "views/view-activation-helpers"
+], function ($, _, Backbone, send, router, AuthenticationModel, activate) {
 
     var AuthenticationView = Backbone.View.extend({
         el: "#auth",
@@ -67,22 +68,14 @@ define([
             }
             
             if (message.result === "logout"){
-                $('#play').addClass("inactive");
-                $('#header').addClass("inactive");
-                $('#auth').removeClass("inactive");
-                $('#saved-games').addClass('inactive');
-                $('#current-games').removeClass('inactive');
                 this.render("login");
+                activate.resetAll();
                 return;
             }
 
             switch (message.data) {
                 case "logged-in" :
-                    $('#auth').addClass("inactive");
-                    $('#header').removeClass("inactive");
-                    $('#play').removeClass("inactive");
-                    
-                    console.log(this.model.username);
+                    activate.loggedIn();
                     
                     var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
                     router.route(headerMessage);

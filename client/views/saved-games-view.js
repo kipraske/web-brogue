@@ -6,8 +6,9 @@ define([
     "views/lobby-data-table-base",
     "models/lobby-data-table-state",
     "views/file-row-view",
-    "models/file-row"
-], function ($, _, Backbone, send, lobbyTableBase, LobbyTableState, FileRowView, FileRowModel) {
+    "models/file-row",
+    "views/view-activation-helpers"
+], function ($, _, Backbone, send, lobbyTableBase, LobbyTableState, FileRowView, FileRowModel, activate) {
 
     var fileViewCollection = {};
 
@@ -70,7 +71,7 @@ define([
                 savedGame : fileName
             });
             
-            this.goToConsole();
+            activate.console();
         }
     });
 
