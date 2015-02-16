@@ -98,6 +98,14 @@ _.extend(BrogueController.prototype, {
             cwd : childWorkingDir
         };
         var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
+        
+        if (data){
+            if (data.savedGame){
+                args.push("-o");
+                args.push(data.savedGame);
+            }
+        }
+        
         this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
     },
     attachChildEvents: function () {

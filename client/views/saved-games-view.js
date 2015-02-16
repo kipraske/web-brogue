@@ -17,6 +17,10 @@ define([
         $tableElement: null,
         tableState: new LobbyTableState(),
         
+        events: {
+            "click .file-link" : "loadSavedGame"
+        },
+        
         headingTemplate: _.template($('#saved-games-heading').html()),
 
         updateRowModelData: function (data) {
@@ -56,6 +60,17 @@ define([
                 this.$tableElement.html("");
             }
 
+        },
+        
+        loadSavedGame : function(event){
+            event.preventDefault();
+   
+            var fileName = event.target.innerHTML;
+            send("brogue", "start", {
+                savedGame : fileName
+            });
+            
+            this.goToConsole();
         }
     });
 
