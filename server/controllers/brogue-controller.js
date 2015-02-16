@@ -64,14 +64,33 @@ _.extend(BrogueController.prototype, {
         start: function (data) {
             var currentUserName = this.controllers.auth.currentUserName;
 
-            if (!currentUserName || this.brogueChild){
+            if (!currentUserName || this.brogueChild) {
                 return;
             }
 
+            var self = this;
             var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
-            this.spawnChildProcess(data, childWorkingDir);
-            this.controllers.lobby.stopUserDataListen();
-            this.setState(brogueState.PLAYING);
+            var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
+
+            if (data) {
+                if (data.savedGame) {
+                    var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
+                    fs.access(savedGamePath, fs.F_OK, function (err) {
+                        if (err) {
+                            self.controllers.error.send("Saved Game Not Found: '" + data.savedGame + "' does not exist");
+                            return;
+                        }
+
+                        args.push("-o");
+                        args.push(data.savedGame);
+
+                        self.spawnChildProcess(args, childWorkingDir);
+                    });
+                }
+            }
+            else {
+                this.spawnChildProcess(args, childWorkingDir);
+            }
         },
         
         clean: function (data) {
@@ -94,36 +113,16 @@ _.extend(BrogueController.prototype, {
         allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
     },
     
-    spawnChildProcess: function (data, childWorkingDir) {
-        var self = this;
-        
+    spawnChildProcess: function (args, childWorkingDir) {
         var options = {            
             cwd: childWorkingDir
         };
-        var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
-
-        if (data) {
-            if (data.savedGame) {
-                var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
-                fs.access(savedGamePath, fs.F_OK, function (err) {
-                    if (err) {
-                        self.controllers.error.send("Saved Game Not Found");
-                        return;
-                    }
-
-                    args.push("-o");
-                    args.push(data.savedGame);
-                    
-                    self.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
-                    self.attachChildEvents();
-                });
-            }
-        }
-        else {
-            self.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
-            self.attachChildEvents();
-        } 
+        this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+        this.attachChildEvents();
+        this.controllers.lobby.stopUserDataListen();
+        this.setState(brogueState.PLAYING);
     },
+
     attachChildEvents: function () {
         var self = this;
 
