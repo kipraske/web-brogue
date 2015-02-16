@@ -1,6 +1,8 @@
 var _ = require('underscore');
 var config = require('../config');
 var childProcess = require('child_process');
+var path = require('path');
+var fs = require('fs');
 
 var router = require('./router');
 var Controller = require('./controller-base');
@@ -68,7 +70,6 @@ _.extend(BrogueController.prototype, {
 
             var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
             this.spawnChildProcess(data, childWorkingDir);
-            this.attachChildEvents();
             this.controllers.lobby.stopUserDataListen();
             this.setState(brogueState.PLAYING);
         },
@@ -94,19 +95,34 @@ _.extend(BrogueController.prototype, {
     },
     
     spawnChildProcess: function (data, childWorkingDir) {
+        var self = this;
+        
         var options = {            
-            cwd : childWorkingDir
+            cwd: childWorkingDir
         };
         var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
-        
-        if (data){
-            if (data.savedGame){
-                args.push("-o");
-                args.push(data.savedGame);
+
+        if (data) {
+            if (data.savedGame) {
+                var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
+                fs.access(savedGamePath, fs.F_OK, function (err) {
+                    if (err) {
+                        self.controllers.error.send("Saved Game Not Found");
+                        return;
+                    }
+
+                    args.push("-o");
+                    args.push(data.savedGame);
+                    
+                    self.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+                    self.attachChildEvents();
+                });
             }
         }
-        
-        this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+        else {
+            self.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+            self.attachChildEvents();
+        } 
     },
     attachChildEvents: function () {
         var self = this;
