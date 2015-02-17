@@ -22,19 +22,24 @@ define([
             "click .file-link" : "loadSavedGame"
         },
         
+        initialize : function(){
+            this.renderHeading();
+        },
+        
         headingTemplate: _.template($('#saved-games-heading').html()),
 
         updateRowModelData: function (data) {
-            this.tableState.set("isEmpty", true);
             this.clearRowModelData();
-            
-            var numberOfGames = data.length
+            var numberOfGames = data.length;
 
-            if (data.length > 0) {
+            if (numberOfGames > 0) {
                 this.tableState.set("isEmpty", false);
-                // were there no files found before but now there is?
-                this.renderHeadingOnEmptyChange();
             }
+            else{
+                this.tableState.set("isEmpty", true);
+            }
+            
+            this.renderHeadingOnEmptyChange();
 
             for (var i = 0; i < numberOfGames; i++) {
                 var fileData = data[i];
@@ -48,10 +53,7 @@ define([
 
                     this.$tableElement.append(newFileView.render().el);
                 }
-
-            // were there files before but now there is not?
-            this.renderHeadingOnEmptyChange();
-            }
+            }      
         },
         
         clearRowModelData : function(){

@@ -48,11 +48,7 @@ _.extend(SavedGamesController.prototype, {
                             modified : fileStats.mtime
                         });
                     }
-                }
-
-                if (savedGames.length === 0){
-                    return;
-                }                
+                }            
 
                 self.sendMessage("saved games", savedGames);
                 
