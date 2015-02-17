@@ -19,8 +19,9 @@ require([
     "views/current-games-view",
     "views/saved-games-view",
     "views/console-view",
-    "views/console-keystroke-processing-view"
-], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView){
+    "views/console-keystroke-processing-view",
+    "views/popup-view"
+], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, PopupView){
     
     // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
     debugMode.attachToGlobalScope();
@@ -33,6 +34,7 @@ require([
     var savedGamesView = new SavedGamesView();
     var consoleView = new ConsoleView();
     var consoleKeyboardView = new ConsoleKeyProcessingView();
+    var popup = new PopupView();
     
     // set up routes for the websocket connection
     router.registerHandlers({

@@ -26,7 +26,7 @@ define([
             event.preventDefault();
             
             // TODO - show seed form
-            console.log("Here is when we show the view")
+            
         },
         
         showSavedGames : function(event){
