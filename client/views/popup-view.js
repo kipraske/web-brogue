@@ -25,6 +25,14 @@ define([
             this.$el.html(this.templates[templateName](data));
         },
         
+        showPopup : function(message){
+            this.$el.removeClass("inactive");
+            this.render(message.popupType, message.data);
+        },
+        
+        closePopup : function(){
+            this.$el.addClass('inactive');
+        }
     });
 
     return PopupView;

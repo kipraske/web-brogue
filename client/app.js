@@ -45,7 +45,8 @@ require([
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
         "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView),
-        "header" : headerView.setUserData.bind(headerView)
+        "header" : headerView.setUserData.bind(headerView),
+        "popup" : popup.showPopup.bind(popup)
     });
     
     // clean up application

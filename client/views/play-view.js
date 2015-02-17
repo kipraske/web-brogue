@@ -3,8 +3,9 @@ define([
     "underscore",
     "backbone",
     "dataIO/send-generic",
+    "dataIO/router",
     "views/view-activation-helpers",
-], function ($, _, Backbone, send, activate) {
+], function ($, _, Backbone, send, router, activate) {
     
     var PlayView = Backbone.View.extend({
         el: "#play",
@@ -25,8 +26,8 @@ define([
         startBrogueSeed: function(event){
             event.preventDefault();
             
-            // TODO - show seed form
-            
+            var popupMessage = '{ "type" : "popup", "data" : {"popupType" : "seed", "data" : null}}'
+            router.route(popupMessage);
         },
         
         showSavedGames : function(event){
