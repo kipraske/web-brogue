@@ -16,6 +16,9 @@ var STATUS_MESSAGE_SIZE = STATUS_MESSAGE_NUMBER * CELL_MESSAGE_SIZE;
 var STATUS_BYTE_FLAG = 255;
 var STATUS_DATA_OFFSET = 2;
 
+var MOUSE_INPUT_SIZE = 5;
+var KEY_INPUT_SIZE = 5;
+
 // TODO - hook up these brogueStates to the current playing and disconnect events - will be needed if we are watching - need these states so people only get sent stuff when in INACTIVE state
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
@@ -44,6 +47,33 @@ _.extend(BrogueController.prototype, {
         }
     },
     handleIncomingBinaryMessage : function(message){
+        
+        var controlValue = message.readUInt8(0);
+        var messageLength = message.length;
+        var ctrlCheck;
+        var shiftCheck;
+        var isValid;
+        
+        if (controlValue === 0) { // key input
+            ctrlCheck = message.readUInt8(3);
+            shiftCheck = message.readUInt8(4);
+            isValid = (messageLength === KEY_INPUT_SIZE) &&
+                    (ctrlCheck === 0 || ctrlCheck === 1) &&
+                    (shiftCheck === 0 || shiftCheck === 1);    
+        }
+        else if (controlValue >= 1 && controlValue <= 5){ // mouse input
+            ctrlCheck = message.readUInt8(3);
+            shiftCheck = message.readUInt8(4);
+            isValid = (messageLength === MOUSE_INPUT_SIZE) &&
+                    (ctrlCheck === 0 || ctrlCheck === 1) &&
+                    (shiftCheck === 0 || shiftCheck === 1);
+        }
+        
+        if (!isValid){
+            this.controllers.error.send("Invalid mouse or key input: " + JSON.stringify(message));
+            return;
+        }
+        
         // TODO - validate incoming data before passing in   
         if (this.brogueChild) {
             this.brogueChild.stdin.write(message);
