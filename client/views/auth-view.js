@@ -32,6 +32,8 @@ define([
             this.$el.html(this.templates[templateName](this.model.toJSON()));
         },
         loginSubmit: function (event) {
+            event.preventDefault();
+            
             var loginData = {
                 username: $('#username').val(),
                 password: $('#password').val()
@@ -42,6 +44,8 @@ define([
             send("auth", "login", loginData);
         },
         registerSubmit: function (event) {
+            event.preventDefault();
+            
             var registerData = {
                 username: $('#username').val(),
                 password: $('#password').val(),

@@ -1,6 +1,4 @@
-
-// For various popups:
-// * The form to enter seeds
+// View for popup modal boxes
 
 define([
     "jquery",
