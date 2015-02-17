@@ -100,6 +100,9 @@ _.extend(BrogueController.prototype, {
                     
                     this.spawnChildProcess(args, childWorkingDir);
                 }
+                else{
+                    this.controllers.error.send("Message data incorrectly set: " + JSON.stringify(data));
+                }
             }
             else {
                 this.spawnChildProcess(args, childWorkingDir);
