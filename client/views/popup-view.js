@@ -44,11 +44,11 @@ define([
             send("brogue", "start", {
                 seed: seedValue
             });
+            this.closePopup();
+            activate.console();
         },
         
         showSeedError : function(message){
-            console.log(message);
-            
             $('#seed-validation').html(message);
         }
     });
