@@ -9,8 +9,6 @@ define(['dataIO/socket'], function(ws){
         
         var messageArray = new Uint8ClampedArray(5);
         
-        console.log(keyCode);
-        
         var keyCodePart1 = (keyCode & '0xffff') >> 8;
         var keyCodePart2 = (keyCode & '0xff');
         
