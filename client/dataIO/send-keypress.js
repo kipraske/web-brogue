@@ -17,8 +17,8 @@ define(['dataIO/socket'], function(ws){
         messageArray[0] = eventCharCode;
         messageArray[1] = keyCodePart1;
         messageArray[2] = keyCodePart2;
-        messageArray[2] = ctrlKey;
-        messageArray[3] = shiftKey;
+        messageArray[3] = ctrlKey;
+        messageArray[4] = shiftKey;
         
         ws.send(messageArray.buffer);
     }

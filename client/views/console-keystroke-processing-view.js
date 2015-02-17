@@ -19,7 +19,7 @@ define([
             'input' : 'inputHandler'
         },
         
-        // keydown fires before input is calculated
+        // keydown event fires before input is fired
         keydownHandler : function(event){            
             var keyCode = event.keyCode;
             var ctrlKey = event.ctrlKey;
@@ -36,51 +36,50 @@ define([
             }
             
             var returnCode;
-            
-            switch (keyCode){
-                case 13: //enter (\n)
+
+            // Check brogue/rogue.h for key definitions within brogue
+            switch (keyCode) {
+                case 13: //enter
                     returnCode = 13;
                     break;
                 case 27: //esc
                     returnCode = 27;
                     break;
-                case 33: //page up (9 or u)
-                    returnCode = 117;
+                case 8: // backspace
+                    returnCode = 127; // map to DELETE_KEY
                     break;
-                case 34: //page_down (3 or n)
-                    returnCode = 110;
+                case 46: // delete
+                    returnCode = 127;
                     break;
-                case 35: //end (1 or b)
-                    returnCode = 98;
+                case 33: //page up (9)
+                    returnCode = 117; // map to u
                     break;
-                case 36: //home (7 or y)
-                    returnCode = 121;
+                case 34: //page_down (3)
+                    returnCode = 110; // map to n
                     break;
-                case 37: //left-arrow (4 or h)
-                    returnCode = 104;
+                case 35: //end (1)
+                    returnCode = 98; // map to b
                     break;
-                case 38: //up-arrow(8 or k)
-                    returnCode = 107;
+                case 36: //home (7)
+                    returnCode = 121; // map to y
                     break;
-                case 39: //right-arrow(6 or l)
-                    returnCode = 108;
+                case 37: //left-arrow (4)
+                    returnCode = 63234;
                     break;
-                case 40: //down-arrow(2 or j)
-                    returnCode = 106;
+                case 38: //up-arrow(8)
+                    returnCode = 63232;
+                    break;
+                case 39: //right-arrow(6)
+                    returnCode = 63235;
+                    break;
+                case 40: //down-arrow(2)
+                    returnCode = 63233;
                     break;
             }
-
-            if (returnCode){
-                if (shiftKey === true){
-                    returnCode -= 32; // use uppercase character
-                }
-                
-                sendKeypressEvent(KEYPRESS_EVENT_CHAR, returnCode, ctrlKey, shiftKey);
-            }
-
+            sendKeypressEvent(KEYPRESS_EVENT_CHAR, returnCode, ctrlKey, shiftKey);
         },
         
-        // input fires after input is calculated
+        // input event fires after keydown is fired
         inputHandler : function(event){
             
             var charCode = this.el.value.charCodeAt(0);
