@@ -23,8 +23,8 @@ require([
     "views/popup-view"
 ], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, PopupView){
     
-    // TODO : once things don't require so much debugging, conditionally load the runner if the options have it
-    debugMode.attachToGlobalScope();
+    // If you want to enable debug mode, uncomment this function
+    // debugMode.attachToGlobalScope();
     
     // initialize each view
     var authView = new AuthView();

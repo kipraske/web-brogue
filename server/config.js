@@ -1,7 +1,5 @@
 var path = require('path');
 
-// TODO - combine the directories into a single object so we can sort this better
-
 var config = {
     CLIENT_DIR : path.normalize(__dirname + "/../client/"),
     BROGUE_PATH : path.normalize(__dirname + "/../brogue/bin/brogue"),

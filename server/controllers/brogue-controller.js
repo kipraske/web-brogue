@@ -19,8 +19,6 @@ var STATUS_DATA_OFFSET = 2;
 var MOUSE_INPUT_SIZE = 5;
 var KEY_INPUT_SIZE = 5;
 
-// TODO - hook up these brogueStates to the current playing and disconnect events - will be needed if we are watching - need these states so people only get sent stuff when in INACTIVE state
-
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
 function BrogueController(ws) {
@@ -73,8 +71,7 @@ _.extend(BrogueController.prototype, {
             this.controllers.error.send("Invalid mouse or key input: " + JSON.stringify(message));
             return;
         }
-        
-        // TODO - validate incoming data before passing in   
+ 
         if (this.brogueChild) {
             this.brogueChild.stdin.write(message);
         }
@@ -89,8 +86,6 @@ _.extend(BrogueController.prototype, {
         }
     },
     handlerCollection: {
-        //TODO - validate data when needed -- I mean we don't want anything crazy getting passed in as arguments and crashing the server
-
         start: function (data) {
             var currentUserName = this.controllers.auth.currentUserName;
 

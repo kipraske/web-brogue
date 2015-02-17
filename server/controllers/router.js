@@ -14,8 +14,6 @@ Router.prototype = {
         }
     },
     prepareRecievedData : function(rawMessage) {
-        // default is to just parse it the message, override to do fancy things
-        // TODO - compress data?
         return JSON.parse(rawMessage);
     },
     route : function(rawMessage){

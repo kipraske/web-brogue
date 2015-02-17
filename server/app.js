@@ -6,10 +6,10 @@ var app = express();
 var mongoose = require("mongoose");
 mongoose.connect(config.db.url);
 
-// TODO - may want to do something similar for session configuration.  First things first - websocket
-
 // Http Server Configuration
 app.use(express.static(config.CLIENT_DIR));
+
+// TODO - configure cookie session, the value is saved in the db, we just need to hook it up
 
 //routes
 app.get("/", function (req, res) {

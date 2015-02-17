@@ -60,8 +60,7 @@ _.extend(LobbyController.prototype, {
             }
         }
         
-        // TODO - probably should think of a better way to handle this since this error will happen any time someone closes window from the lobby - good to have a fallback though.
-        
+        // In the event our periodic calling tries to send data to a closed socket
         this.sendMessage("lobby", returnLobbyData, function(err){
             if (!err){
                 return;

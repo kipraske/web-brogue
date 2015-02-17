@@ -20,7 +20,7 @@ define([
     var _consoleCellHeightPercent;
     var _consoleCellCharSizePx;
     var _consoleCellCharPaddingPx;
-    var _consoleCellAspectRatio = 0.53;  //TODO: set this via options model, reset via resize function, may wish to have an option to keep fixed size even if it means we have to drag it about
+    var _consoleCellAspectRatio = 0.53;  //TODO: we may eventually want this to be adjustable
 
     var Console = Backbone.View.extend({
         el: "#console",
@@ -28,10 +28,6 @@ define([
             'focus' : 'giveKeyboardFocus'
         },
         initialize: function() {
-
-            //TODO: set console size based on options that are set
-            // For now we will use the full settings
-
             this.$el.addClass("full-width");
             this.$el.addClass("full-height");
 
