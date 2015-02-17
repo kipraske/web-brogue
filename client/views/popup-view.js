@@ -14,7 +14,7 @@ define([
         el: '#popup',
         
         events : {
-            
+            "click #popup-close" : "closePopup"
         },
         
         templates: {
@@ -26,12 +26,15 @@ define([
         },
         
         showPopup : function(message){
-            this.$el.removeClass("inactive");
             this.render(message.popupType, message.data);
+            this.$el.removeClass("inactive");
+            var $overlay = $('#popup-overlay').removeClass("inactive");
+            $overlay.on("click", $.proxy(this.closePopup, this));
         },
         
         closePopup : function(){
             this.$el.addClass('inactive');
+            $('#popup-overlay').addClass("inactive");
         }
     });
 
