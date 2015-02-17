@@ -46,7 +46,8 @@ require([
         "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
-        "popup" : popup.showPopup.bind(popup)
+        "popup" : popup.showPopup.bind(popup),
+        "seed error" : popup.showSeedError.bind(popup)
     });
     
     // clean up application

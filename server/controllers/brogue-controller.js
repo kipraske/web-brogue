@@ -87,6 +87,19 @@ _.extend(BrogueController.prototype, {
                         self.spawnChildProcess(args, childWorkingDir);
                     });
                 }
+                else if (data.seed){
+                    var seed = parseInt(data.seed, 10); 
+
+                    if (seed < 1 || seed > 4294967295){
+                        self.sendMessage("seed error", "Please enter a numerical seed between 1 and 4294967295")
+                        return;
+                    }
+                    
+                    args.push("-s");
+                    args.push(seed);
+                    
+                    this.spawnChildProcess(args, childWorkingDir);
+                }
             }
             else {
                 this.spawnChildProcess(args, childWorkingDir);

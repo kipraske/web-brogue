@@ -12,7 +12,8 @@ define([
         el: '#popup',
         
         events : {
-            "click #popup-close" : "closePopup"
+            "click #popup-close" : "closePopup",
+            "click #seed-button" : "startGameWithSeed"
         },
         
         templates: {
@@ -33,6 +34,22 @@ define([
         closePopup : function(){
             this.$el.addClass('inactive');
             $('#popup-overlay').addClass("inactive");
+        },
+        
+        
+        // Seed form Popup functions
+        startGameWithSeed : function(event){
+            event.preventDefault();        
+            var seedValue = $('#seed').val();  
+            send("brogue", "start", {
+                seed: seedValue
+            });
+        },
+        
+        showSeedError : function(message){
+            console.log(message);
+            
+            $('#seed-validation').html(message);
         }
     });
 
