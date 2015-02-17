@@ -24,15 +24,16 @@ define([
         
         headingTemplate : _.template($('#current-games-heading').html()),    
         
-        updateRowModelData: function(data){           
-            this.tableState.set("isEmpty", true);
+        updateRowModelData: function(data){                    
             // handle incoming user data
-            
             if (data){
                 this.tableState.set("isEmpty", false);
-                // were there no user rows but now there is?
-                this.renderHeadingOnEmptyChange();
             }
+            else{
+                this.tableState.set("isEmpty", true);
+            }
+            
+            this.renderHeadingOnEmptyChange();
             
             for (var incomingUserName in data){
                 var update = data[incomingUserName];
@@ -62,8 +63,6 @@ define([
                     delete rowViewCollection[existingUserName];
                 }
             }
-            // were there user rows before now there is not?
-            this.renderHeadingOnEmptyChange();
         }
     });
     
