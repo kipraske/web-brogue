@@ -1,3 +1,5 @@
+// Model for a single row for files on the server.  For instance it is used for viewing saved games
+
 define([
     'jquery',
     'underscore',

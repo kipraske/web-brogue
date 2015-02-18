@@ -1,3 +1,5 @@
+// Update a single console cell information
+
 define(['dataIO/router'], function(router) {
     
     var CELL_MESSAGE_SIZE = 9;

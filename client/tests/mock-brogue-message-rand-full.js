@@ -1,7 +1,7 @@
-define(['tests/mock-brogue-message-single'], function(updateSingleCell) {
+// Fill the entire console with random background, foreground, and character values
+// Worst case scenario load test
 
-    // Fill the entire console with random background, foreground, and character values
-    // Worst case scenario load test
+define(['tests/mock-brogue-message-single'], function(updateSingleCell) {
 
     function dispatchRandomFullMessages() {
         

@@ -1,7 +1,7 @@
-define(['tests/mock-brogue-message-single'], function(updateSingleCell) {
+// Fills 5% of cells with a random character and a grey background
+// Testing updating less of the cells at a time which is more realistic for real game data
 
-    // Fills 5% of cells with a random character and a grey background
-    // Testing updating less of the cells at a time which is more realistic for real game data
+define(['tests/mock-brogue-message-single'], function(updateSingleCell) {
 
     function dispatchRandomFewMessages() {
         

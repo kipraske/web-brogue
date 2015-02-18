@@ -1,3 +1,6 @@
+// Define the web socket object for our application
+// All socket messages are immediately passed into the router.
+
 define(['dataIO/router'], function(router){
     
     // websocket is at the same url just using the ws protocol

@@ -1,3 +1,5 @@
+// Model for single row of the current games view in the lobby
+
 define([
     'jquery',
     'underscore',

@@ -1,3 +1,5 @@
+// View for the entire console.  It is responsible for setting up all of the console-cell views
+
 define([
     "jquery",
     "underscore",

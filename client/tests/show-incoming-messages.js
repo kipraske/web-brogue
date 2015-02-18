@@ -1,6 +1,6 @@
-define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
+// Redefine our socket's onmessage event to log all incoming messages in the console.
 
-    // Redefine our socket's onmessage event to log all incoming messages in the console.
+define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
 
     function showIncomingMessages() {
         

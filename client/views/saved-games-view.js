@@ -1,3 +1,5 @@
+// View to show saved games to load
+
 define([
     "jquery",
     "underscore",

@@ -1,3 +1,5 @@
+// View for current games rollup in the lobby
+
 define([
     "jquery",
     "underscore",

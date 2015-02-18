@@ -1,3 +1,5 @@
+// View for a single console cell
+
 define([
     "jquery",
     "underscore",

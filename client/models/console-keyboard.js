@@ -1,3 +1,5 @@
+// Because keystrokes are handled with two separate events, the keyboard model helps share data between these events
+
 define([
     'jquery',
     'underscore',

@@ -1,3 +1,5 @@
+// Model to track if we need to render the empty view or not for lobby rollups
+
 define([
     'jquery',
     'underscore',

@@ -1,6 +1,6 @@
-define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
+// Test how much data is coming through the socket.  Needed for estimating how much hosting data will be needed.
 
-    // Test how much data is coming through the socket
+define(['dataIO/socket', 'dataIO/router'], function(ws, router) {
 
     function showIncomingDataUse() {
         

@@ -1,3 +1,5 @@
+// View for login and registration forms
+
 define([
     "jquery",
     "underscore",

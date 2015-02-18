@@ -1,3 +1,5 @@
+// Model for authentication view
+
 define([
     'jquery',
     'underscore',

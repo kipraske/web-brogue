@@ -1,3 +1,5 @@
+// View for showing a single file from server.  Used for saved games.
+
 define([
     "jquery",
     "underscore",

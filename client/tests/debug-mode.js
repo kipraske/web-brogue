@@ -1,3 +1,5 @@
+// Eventually we should set up unit test assertions based on these functions, but for now these are just a collection of utility functions that we can use from the client to test the views and the socket commands.
+
 define([
     'tests/mock-brogue-message-rand-full',
     'tests/mock-brogue-message-rand-few',
@@ -9,8 +11,6 @@ define([
     'dataIO/send-keypress',
     'dataIO/send-mouse'
 ], function(brogueFullRandMsg, brogueFewRandMsg, brogueUpdateCell, showIncomingMessages, showOutgoingMessages, showIncomingDataUse, customMessage, customKeyMessage, customMouseMessage) {
-
-    // Eventually we should set up unit test assertions based on these functions, but for now these are just a collection of utility functions that we can use from the client to test the views and the socket commands.
 
     function attach(){
         window.brogue = {

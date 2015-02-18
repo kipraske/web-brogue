@@ -1,5 +1,7 @@
+//A fake web socket object. Currently not used, but could be useful for testing without actually sending data out to the server.
+
 define(function(){
-   //fake socket so I can hook it up
+   
     var socket = {
        send : function (msg){
            console.log ("test message sent: ", msg);

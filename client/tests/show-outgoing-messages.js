@@ -1,6 +1,6 @@
-define(['dataIO/socket'], function(ws) {
+// Redefine the socket send function to log all outgoing messages in the console
 
-    // Redefine the socket send function to log all outgoing messages in the console
+define(['dataIO/socket'], function(ws) {
 
     var originalSocketSend = ws.send.bind(ws);
 

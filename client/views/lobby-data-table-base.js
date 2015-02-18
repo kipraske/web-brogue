@@ -1,3 +1,5 @@
+// Helper functions for our lobby rollup views with a table layout
+
 define({
     
     /*

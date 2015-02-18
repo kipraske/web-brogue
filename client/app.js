@@ -1,3 +1,5 @@
+// Main entry point in the client side application.  Initializes all main views.
+
 require.config({
     paths: {
 	jquery : "libs/jquery",

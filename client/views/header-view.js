@@ -1,3 +1,5 @@
+// View for the header that appears when logged in.  In the future may also contain things like user options.
+
 define([
     "jquery",
     "underscore",

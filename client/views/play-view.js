@@ -1,3 +1,5 @@
+// After logging in this view provides users with a list of options to begin play
+
 define([
     "jquery",
     "underscore",

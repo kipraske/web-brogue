@@ -1,3 +1,5 @@
+// Router for all incoming client websocket messages.
+
 define([
     "underscore"
 ], function (_) {
