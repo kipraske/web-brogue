@@ -62,7 +62,7 @@ define([
             fileViewCollection = {};
             
             if (this.$tableElement){          
-                this.$tableElement.html("");
+                this.$tableElement.find(".file-row").remove();
             }
 
         },
