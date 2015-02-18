@@ -114,8 +114,8 @@ _.extend(BrogueController.prototype, {
                 }
                 else if (data.seed){
                     var seed = parseInt(data.seed, 10); 
-
-                    if (seed < 1 || seed > 4294967295){
+                    
+                    if (isNaN(seed) || seed < 1 || seed > 4294967295){
                         self.sendMessage("seed error", "Please enter a numerical seed between 1 and 4294967295")
                         return;
                     }
