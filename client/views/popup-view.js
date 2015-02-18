@@ -37,15 +37,25 @@ define([
         },
         
         
+        // TODO - these seed functions should probably be their own view - especially if we are going to reuse this popup for other things
+        
         // Seed form Popup functions
+        handleSeedMessage : function(message){
+            if (message.result === "fail"){
+                this.showSeedError(message.data);
+            }
+            else{
+                this.closePopup();
+                activate.console();
+            }
+        },
+        
         startGameWithSeed : function(event){
             event.preventDefault();        
             var seedValue = $('#seed').val();  
             send("brogue", "start", {
                 seed: seedValue
             });
-            this.closePopup();
-            activate.console();
         },
         
         showSeedError : function(message){

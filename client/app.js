@@ -49,7 +49,7 @@ require([
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
         "popup" : popup.showPopup.bind(popup),
-        "seed error" : popup.showSeedError.bind(popup)
+        "seed" : popup.handleSeedMessage.bind(popup)
     });
     
     // clean up application
