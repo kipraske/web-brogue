@@ -120,6 +120,7 @@ header {
     .play,
     .about{
         float: left;
+        clear: left;
     }
     
     .auth form{
