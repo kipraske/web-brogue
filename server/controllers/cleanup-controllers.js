@@ -8,7 +8,7 @@ module.exports = function(controllers){
     var currentUser = controllers.auth.currentUserName;
     
     if (allUsers.users[currentUser]){
-        allUsers.users[currentUser].brogueState.INACTIVE;
+        allUsers.users[currentUser].brogueState = brogueState.INACTIVE;
     }
     
     // again we need 'this' to be in the context of the controller not this function so bind it
