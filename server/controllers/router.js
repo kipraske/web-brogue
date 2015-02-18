@@ -1,3 +1,4 @@
+// Routes incoming websocket messages to the appropriate controller
 
 var _ = require('underscore');
 

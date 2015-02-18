@@ -1,3 +1,5 @@
+// Object containing global constants for server program
+
 var path = require('path');
 
 var config = {

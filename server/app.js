@@ -1,3 +1,5 @@
+// Main entry point in server side code.  Sets up http server and websocket server and routes
+
 var config = require("./config");
 
 var express = require("express");
