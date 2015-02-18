@@ -1,13 +1,5 @@
-/* 
- module for collecting information to share about each user
- -- Schema --
- 
- username : {
-    sessionID : String,
-    brogueProcess : Node Child Process
-    lobby : Object // information to display in the lobby
- }
- */
+// module for collecting information to share about each user
+
 var _ = require('underscore');
 
 var bCrypt = require('bcrypt-nodejs');
@@ -24,6 +16,9 @@ var userCount = 0;
 
 module.exports = {
     users : {},
+    
+    // TODO - should probably split the user object defined here into its own module.  It is strange to be defining what a user is soley in "add user"
+    
     addUser : function(userName){
         userCount++;
         var hiddenSalt = bCrypt.genSaltSync(8);
