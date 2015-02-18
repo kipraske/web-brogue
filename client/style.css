@@ -66,6 +66,7 @@ header {
 
 .auth, 
 .play,
+.about,
 .current-games,
 .saved-games {
     margin: 0 2.5%;
@@ -111,8 +112,13 @@ header {
         margin-right: auto;
     }
     
+    .about{
+        width: 200px;
+    }
+    
     .auth,
-    .play {
+    .play,
+    .about{
         float: left;
     }
     
