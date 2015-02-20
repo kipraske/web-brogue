@@ -22,8 +22,9 @@ require([
     "views/saved-games-view",
     "views/console-view",
     "views/console-keystroke-processing-view",
-    "views/popups/seed-popup-view"
-], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView){
+    "views/popups/seed-popup-view",
+    "views/popups/duplicate-process-popup-view"
+], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     // debugMode.attachToGlobalScope();
@@ -37,7 +38,8 @@ require([
     var consoleView = new ConsoleView();
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
-        seed : new SeedPopupView()
+        seed : new SeedPopupView(),
+        duplicateBrogue : new DuplicateBroguePopupView()
     };
     
     // set up routes for the websocket connection
@@ -50,7 +52,8 @@ require([
         "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
-        "seed" : popups.seed.handleSeedMessage.bind(popups.seed)
+        "seed" : popups.seed.handleSeedMessage.bind(popups.seed),
+        "duplicate brogue" : popups.duplicateBrogue.showPopup(popups.duplicateBrogue)
     });
     
     // clean up application
