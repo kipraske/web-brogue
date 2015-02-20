@@ -93,6 +93,12 @@ _.extend(BrogueController.prototype, {
                 return;
             }
 
+            // A single user is only allowed to have one brogue process
+            if (allUsers.getUser(currentUserName).brogueProcess){
+                this.sendMessage("duplicated brogue");
+                return;
+            }
+
             var self = this;
             var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
             var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
@@ -166,6 +172,14 @@ _.extend(BrogueController.prototype, {
             cwd: childWorkingDir
         };
         this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+        allUsers.users[this.controllers.auth.currentUserName].brogueProcess = this.brogueChild;
+        this.attachChildEvents();
+        this.controllers.lobby.stopUserDataListen();
+        this.setState(brogueState.PLAYING);
+    },
+    
+    commandeerUserChildProcess : function(userName){
+        this.brogueChild = allUsers.users[this.controllers.auth.currentUserName].brogueProcess;
         this.attachChildEvents();
         this.controllers.lobby.stopUserDataListen();
         this.setState(brogueState.PLAYING);
