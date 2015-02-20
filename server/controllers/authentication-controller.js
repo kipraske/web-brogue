@@ -53,9 +53,15 @@ _.extend(AuthController.prototype, {
                         return;
                     }
 
-                    allUsers.addUser(data.username);
                     self.currentUserName = data.username;
-                    self.currentUserData = allUsers.getUser(data.username);
+                    var existingUserData = allUsers.getUser(data.username);
+
+                    if (existingUserData){
+                        self.currentUserData = existingUserData;
+                    }
+                    else{
+                        allUsers.addUser(data.username);
+                    }
 
                     self.sendMessage("auth", {
                         result: "success",
