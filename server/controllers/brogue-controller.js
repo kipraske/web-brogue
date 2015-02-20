@@ -191,6 +191,7 @@ _.extend(BrogueController.prototype, {
         self.brogueChild.on('exit', function(code){
             // go back to lobby in the event something happens to the child process
             self.brogueChild = null;
+            allUsers.users[this.controllers.auth.currentUserName].brogueProcess = null;
             self.sendMessage("quit", true);
             self.setState(brogueState.INACTIVE);
             self.controllers.lobby.sendAllUserData();
