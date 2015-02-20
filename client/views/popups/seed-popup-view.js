@@ -23,7 +23,7 @@ define([
         },
     
         handleSeedMessage : function(message){
-            if (message === "open"){
+            if (message === "show popup"){
                 this.showPopup(message);
                 return;
             }

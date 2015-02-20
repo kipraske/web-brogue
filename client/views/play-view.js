@@ -28,7 +28,7 @@ define([
         startBrogueSeed: function(event){
             event.preventDefault();
             
-            var popupMessage = '{ "type" : "seed", "data" : "open" }';
+            var popupMessage = '{ "type" : "seed", "data" : "show popup" }';
             router.route(popupMessage);
         },
         

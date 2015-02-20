@@ -53,7 +53,7 @@ require([
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
         "seed" : popups.seed.handleSeedMessage.bind(popups.seed),
-        "duplicate brogue" : popups.duplicateBrogue.showPopup(popups.duplicateBrogue)
+        "duplicate brogue" : popups.duplicateBrogue.showPopup.bind(popups.duplicateBrogue)
     });
     
     // clean up application
