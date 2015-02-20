@@ -22,8 +22,8 @@ require([
     "views/saved-games-view",
     "views/console-view",
     "views/console-keystroke-processing-view",
-    "views/popup-view"
-], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, PopupView){
+    "views/popups/seed-popup-view"
+], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView){
     
     // If you want to enable debug mode, uncomment this function
     // debugMode.attachToGlobalScope();
@@ -36,7 +36,9 @@ require([
     var savedGamesView = new SavedGamesView();
     var consoleView = new ConsoleView();
     var consoleKeyboardView = new ConsoleKeyProcessingView();
-    var popup = new PopupView();
+    var popups = {
+        seed : new SeedPopupView()
+    };
     
     // set up routes for the websocket connection
     router.registerHandlers({
@@ -48,8 +50,7 @@ require([
         "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
-        "popup" : popup.showPopup.bind(popup),
-        "seed" : popup.handleSeedMessage.bind(popup)
+        "seed" : popups.seed.handleSeedMessage.bind(popups.seed)
     });
     
     // clean up application
