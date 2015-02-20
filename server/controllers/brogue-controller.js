@@ -112,7 +112,7 @@ _.extend(BrogueController.prototype, {
                         self.spawnChildProcess(args, childWorkingDir);
                     });
                 }
-                else if (data.seed){
+                else if (data.seed || data.seed === ""){
                     var seed = parseInt(data.seed, 10); 
                     
                     if (isNaN(seed) || seed < 1 || seed > 4294967295){
