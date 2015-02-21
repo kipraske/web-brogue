@@ -29,12 +29,9 @@ define([
             }
             
             if (message.result === "fail"){
-                
-                // TODO - there is an odd bug that happens with the duplicate brogue popup
-                // If there we want a new seed but there is a duplicate process but we put in bad data into the field we will
-                // get the duplicate process popup but we won't see the seed popup... basically we need to re-render the
-                // seed popup if we have closed it but we get a bad seed error message.
-                
+                // re-rendering the popup in the case we have a conflict with the duplicate process popup
+                // only happens if we have a duplicate process AND user decides to put in a bad seed value
+                this.showPopup(message.data);
                 this.showSeedError(message.data);
             }
             else if (message.result === "success") {
