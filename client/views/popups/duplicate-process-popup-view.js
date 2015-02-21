@@ -5,11 +5,13 @@ define([
     "underscore",
     "backbone",
     "views/popups/popup-view",
+    "models/popups/duplicate-process-popup-data",
     "dataIO/send-generic",
     "views/view-activation-helpers"
-], function ($, _, Backbone, PopupView, send, activate) {
+], function ($, _, Backbone, PopupView, DuplicateBrogueModel, send, activate) {
 
     var DuplicateBrogueView = PopupView.extend({
+        model: new DuplicateBrogueModel(),
         
         events : {
 
@@ -24,24 +26,11 @@ define([
         handleMessage : function(message){
             
             // TODO - probaby should create a model for the action here
-            
-            var action = "";
-            
-            if (message){
-                if (message.SavedGame){
-                    // saved game
-                }
-                else if (message.seed){
-                    // seed
-                }
-            }
-            else
-            {
-                // new game
-            }
+            this.model.set("brogueProcessData", message);
+            this.model.calculateActionText();
             
             this.showPopup({
-                action: "XX test action XX"
+                action: this.model.get("action")
             });
             
         }
