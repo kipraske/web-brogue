@@ -95,7 +95,7 @@ _.extend(BrogueController.prototype, {
 
             // A single user is only allowed to have one brogue process
             if (allUsers.getUser(currentUserName).brogueProcess){
-                this.sendMessage("duplicate brogue", "show popup");
+                this.sendMessage("duplicate brogue", data);
                 return;
             }
 

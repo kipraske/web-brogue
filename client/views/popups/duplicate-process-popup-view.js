@@ -19,7 +19,31 @@ define([
         
         initialize : function(){
             _.extend(this.events, PopupView.prototype.events);
-
+        },
+        
+        handleMessage : function(message){
+            
+            // TODO - probaby should create a model for the action here
+            
+            var action = "";
+            
+            if (message){
+                if (message.SavedGame){
+                    // saved game
+                }
+                else if (message.seed){
+                    // seed
+                }
+            }
+            else
+            {
+                // new game
+            }
+            
+            this.showPopup({
+                action: "XX test action XX"
+            });
+            
         }
    
     });

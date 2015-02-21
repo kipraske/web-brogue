@@ -124,7 +124,15 @@
                 
                 <script id="duplicate-brogue-popup" type="text/template">
                     <div id="popup-close" class="close"> X </div>
-                    <p> There is a duplicate process</p>
+                    <form>
+                        <div> It appears that you have a brogue game open in another window somewhere. </div>
+                        <label for="duplicate-brogue-choice"> What would you like to do with your existing game?</label>
+                        <select id="duplicate-brogue-choice" name="duplicate-brogue-choice">
+                            <option value="kill"> Continue <%= action %> and quit your current game. </option>
+                            <option value="mirror"> Mirror your current game here in this window </option>
+                        </select>
+                        <button type="submit" id="duplicate-brogue-button"> Ok </button>
+                    </form>
 		</script>
 	</body>
 </html>

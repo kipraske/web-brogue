@@ -22,7 +22,7 @@ define([
             this.bindOverlayEvents();
         },
     
-        handleSeedMessage : function(message){
+        handleMessage : function(message){
             if (message === "show popup"){
                 this.showPopup(message);
                 return;

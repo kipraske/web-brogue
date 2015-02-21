@@ -25,7 +25,7 @@ define([
         },
         
         showPopup : function(message){
-            this.render(message.data);
+            this.render(message);
             this.$el.removeClass("inactive");
             this.$overlay.removeClass("inactive");
         },

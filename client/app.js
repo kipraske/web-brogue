@@ -52,8 +52,8 @@ require([
         "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
-        "seed" : popups.seed.handleSeedMessage.bind(popups.seed),
-        "duplicate brogue" : popups.duplicateBrogue.showPopup.bind(popups.duplicateBrogue)
+        "seed" : popups.seed.handleMessage.bind(popups.seed),
+        "duplicate brogue" : popups.duplicateBrogue.handleMessage.bind(popups.duplicateBrogue)
     });
     
     // clean up application
