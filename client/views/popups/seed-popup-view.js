@@ -19,7 +19,7 @@ define([
         
         initialize : function(){
             _.extend(this.events, PopupView.prototype.events);
-
+            this.bindOverlayEvents();
         },
     
         handleSeedMessage : function(message){

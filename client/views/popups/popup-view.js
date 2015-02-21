@@ -8,8 +8,11 @@ define([
     "views/view-activation-helpers"
 ], function ($, _, Backbone, send, activate) {
 
+    var overlayEventsBound = false;
+
     var PopupView = Backbone.View.extend({
         el: '#popup',
+        $overlay : $('#popup-overlay'),
         
         events : {
             "click #popup-close" : "closePopup"
@@ -24,13 +27,20 @@ define([
         showPopup : function(message){
             this.render(message.data);
             this.$el.removeClass("inactive");
-            var $overlay = $('#popup-overlay').removeClass("inactive");
-            $overlay.on("click", $.proxy(this.closePopup, this));
+            this.$overlay.removeClass("inactive");
         },
         
         closePopup : function(){
             this.$el.addClass('inactive');
             $('#popup-overlay').addClass("inactive");
+        },
+        
+        bindOverlayEvents : function(){
+            // need only be bound once for all popup instances
+            if (!overlayEventsBound){
+                this.$overlay.on("click", $.proxy(this.closePopup, this));
+                overlayEventsBound = true;
+            }
         }
     });
 
