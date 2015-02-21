@@ -54,6 +54,10 @@ input {
     
 }
 
+input[type="radio"]{
+    display: inline;
+}
+
 button {
     display: block;
 }
