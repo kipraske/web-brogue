@@ -147,18 +147,32 @@ _.extend(BrogueController.prototype, {
             }
         },
         
-        clean: function (data) {
+        clean: function (data, optionalCallback) {
             
             // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
-            this.handlerCollection.kill.call(this, data);
+            this.handlerCollection.kill.call(this, data, optionalCallback);
         },
         
-        kill: function (data) {
+        kill: function (data, optionalCallback) {
             if (! this.brogueChild){
                 return;
             }
             this.brogueChild.kill('SIGINT');
             this.brogueChild = null;
+            
+            if (typeof optionalCallback === 'function'){
+                optionalCallback(data);
+            }
+        },
+        
+        reset : function(data){
+            var afterQuitFunction = this.handlerCollection.start.bind(this);
+            this.handlerCollection.clean.call(this, data, afterQuitFunction);
+        },
+        
+        mirror : function(data){
+            var currentUserName = this.controllers.auth.currentUserName;
+            this.commandeerUserChildProcess(currentUserName);
         }
     },
     
