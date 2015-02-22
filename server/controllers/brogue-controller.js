@@ -147,33 +147,27 @@ _.extend(BrogueController.prototype, {
             }
         },
         
-        clean: function (data, optionalCallback) {
+        clean: function (data) {
             
             // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
-            this.handlerCollection.kill.call(this, data, optionalCallback);
+            this.handlerCollection.kill.call(this, data);
         },
         
-        kill: function (data, optionalCallback) {
+        kill: function (data) {
             if (! this.brogueChild){
                 return;
             }
             this.brogueChild.kill('SIGINT');
             this.brogueChild = null;
-            
-            if (typeof optionalCallback === 'function'){
-                optionalCallback(data);
-            }
         },
         
-        reset : function(data){
-            var afterQuitFunction = this.handlerCollection.start.bind(this);
-            this.handlerCollection.clean.call(this, data, afterQuitFunction);
-        },
-        
-        mirror : function(data){
+        mirrorDuplicate : function(data){
             var currentUserName = this.controllers.auth.currentUserName;
             this.commandeerUserChildProcess(currentUserName);
-        }
+        },
+        resetDuplicate : function(data){
+            // TODO this code is not so great - make a method in all users          
+        },
     },
     
     setState : function(state){

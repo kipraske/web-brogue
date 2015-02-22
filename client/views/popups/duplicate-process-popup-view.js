@@ -36,10 +36,10 @@ define([
             var selection = $('input[name="duplicate-brogue-choice"]:checked').val();
             
             if (selection === "mirror"){
-                send("brogue", "mirror");
+                send("brogue", "mirrorDuplicate");
             }
             else if (selection === "reset"){
-                send("brogue", "reset", this.model.get("brogueProcessData"));
+                send("brogue", "resetDuplicate", this.model.get("brogueProcessData"));
             }
             
             this.closePopup();
