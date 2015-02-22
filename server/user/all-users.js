@@ -56,5 +56,10 @@ module.exports = {
         
         var lobbyItem = brogueStatusMap[updateFlag];
         this.users[userName].lobbyData[lobbyItem] = updateValue;
+    },
+    
+    killUserProcess : function(userName){
+        this.users[userName].brogueProcess.kill('SIGINT');
+        this.users[userName].brogueProcess = null;
     }
 };

@@ -166,7 +166,8 @@ _.extend(BrogueController.prototype, {
             this.commandeerUserChildProcess(currentUserName);
         },
         resetDuplicate : function(data){
-            // TODO this code is not so great - make a method in all users          
+            allUsers.killUserProcess(this.controllers.auth.currentUserName);
+            this.handlerCollection.start.call(this, data);
         },
     },
     
