@@ -14,7 +14,7 @@ define([
         model: new DuplicateBrogueModel(),
         
         events : {
-
+            'click #duplicate-brogue-button' : 'submit'
         },
         
         template : _.template($('#duplicate-brogue-popup').html()),
@@ -23,16 +23,26 @@ define([
             _.extend(this.events, PopupView.prototype.events);
         },
         
-        handleMessage : function(message){
-            
-            // TODO - probaby should create a model for the action here
+        handleMessage : function(message){            
             this.model.set("brogueProcessData", message);
             this.model.calculateActionText();
-            
             this.showPopup({
                 action: this.model.get("action")
             });
+        },
+   
+        submit : function(event){
+            event.preventDefault();
+            var selection = $('input[name="duplicate-brogue-choice"]:checked').val();
             
+            if (selection === "mirror"){
+                send("brogue", "mirror");
+            }
+            else if (selection === "reset"){
+                send("brogue", "reset", this.model.get("brogueProcessData"));
+            }
+            
+            this.closePopup();
         }
    
     });
