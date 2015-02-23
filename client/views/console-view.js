@@ -158,12 +158,22 @@ define([
             }
         },
         
+        clearConsole : function(){
+            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+                for (var j = 0; j < _CONSOLE_ROWS; j++) {
+                    _consoleCells[i][j].model.clear();
+                    _consoleCells[i][j].render();
+                }
+            }
+        },
+        
         giveKeyboardFocus : function(){
             $('#console-keyboard').focus();
         },
         
         exitToLobby : function(message){
             activate.lobby();
+            this.clearConsole();
         }
     });
 

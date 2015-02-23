@@ -36,6 +36,18 @@ define([
                 leftPositionPercent : this.get("x") * this.get("widthPercent") + this.get("leftOffsetPercent"),
                 topPositionPercent : this.get("y") * this.get("heightPercent") + this.get("topOffsetPercent")
             });
+        },
+        
+        clear : function(){
+            this.set({
+                char: 0,
+                foregroundRed: 255,
+                foregroundGreen: 255,
+                foregroundBlue: 255,
+                backgroundRed: 0,
+                backgroundGreen: 0,
+                backgroundBlue: 0
+            });
         }
       
     });
