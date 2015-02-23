@@ -6,8 +6,9 @@ define([
     "backbone",
     'dataIO/send-keypress',
     "views/console-cell-view",
-    "models/console-cell"
-], function($, _, Backbone, sendKeypressEvent, ConsoleCellView, CellModel) {
+    "models/console-cell",
+    "views/view-activation-helpers"
+], function($, _, Backbone, sendKeypressEvent, ConsoleCellView, CellModel, activate) {
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;
@@ -159,6 +160,10 @@ define([
         
         giveKeyboardFocus : function(){
             $('#console-keyboard').focus();
+        },
+        
+        exitToLobby : function(message){
+            activate.lobby();
         }
     });
 

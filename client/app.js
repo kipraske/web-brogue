@@ -38,8 +38,8 @@ require([
     var consoleView = new ConsoleView();
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
-        seed : new SeedPopupView(),
-        duplicateBrogue : new DuplicateBroguePopupView()
+        seedView : new SeedPopupView(),
+        duplicateBrogueView : new DuplicateBroguePopupView()
     };
     
     // set up routes for the websocket connection
@@ -47,13 +47,13 @@ require([
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console),
         "brogue" : consoleView.updateCellModelData.bind(consoleView),
+        "quit" : consoleView.exitToLobby.bind(consoleView),
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
-        "quit" : playView.goToLobby.bind(playView),
         "auth" : authView.handleMessage.bind(authView),
         "header" : headerView.setUserData.bind(headerView),
-        "seed" : popups.seed.handleMessage.bind(popups.seed),
-        "duplicate brogue" : popups.duplicateBrogue.handleMessage.bind(popups.duplicateBrogue)
+        "seed" : popups.seedView.handleMessage.bind(popups.seedView),
+        "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)
     });
     
     // clean up application

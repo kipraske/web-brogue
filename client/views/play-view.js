@@ -45,11 +45,8 @@ define([
         
         goToConsole : function(){
             activate.console();
-        },
-        
-        goToLobby: function(){
-            activate.lobby();
         }
+        
     });
     
     return PlayView;
