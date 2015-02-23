@@ -165,9 +165,8 @@ _.extend(BrogueController.prototype, {
             var currentUserName = this.controllers.auth.currentUserName;
             this.commandeerUserChildProcess(currentUserName);
         },
-        resetDuplicate : function(data){
+        killDuplicate : function(data){
             allUsers.killUserProcess(this.controllers.auth.currentUserName);
-            this.handlerCollection.start.call(this, data);
         },
     },
     

@@ -5,14 +5,11 @@ define([
     "underscore",
     "backbone",
     "views/popups/popup-view",
-    "models/popups/duplicate-process-popup-data",
     "dataIO/send-generic",
     "views/view-activation-helpers"
-], function ($, _, Backbone, PopupView, DuplicateBrogueModel, send, activate) {
+], function ($, _, Backbone, PopupView, send, activate) {
 
     var DuplicateBrogueView = PopupView.extend({
-        model: new DuplicateBrogueModel(),
-        
         events : {
             'click #duplicate-brogue-button' : 'submit'
         },
@@ -24,11 +21,7 @@ define([
         },
         
         handleMessage : function(message){            
-            this.model.set("brogueProcessData", message);
-            this.model.calculateActionText();
-            this.showPopup({
-                action: this.model.get("action")
-            });
+            this.showPopup(message);
         },
    
         submit : function(event){
@@ -38,8 +31,9 @@ define([
             if (selection === "mirror"){
                 send("brogue", "mirrorDuplicate");
             }
-            else if (selection === "reset"){
-                send("brogue", "resetDuplicate", this.model.get("brogueProcessData"));
+            else if (selection === "kill"){
+                send("brogue", "killDuplicate");
+                activate.lobby();
             }
             
             this.closePopup();

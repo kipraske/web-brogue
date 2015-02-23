@@ -10,7 +10,7 @@ function Controller() {
             return;
         }
         
-        this.error.log("Server Error: There is a problem with the socket that prevented sending: " + err);
+        this.controllers.error.log("Server Error: There is a problem with the socket that prevented sending: " + err);
     };
     
     this.handlerCollection = {};  // collection of handlername : function
@@ -20,7 +20,7 @@ function Controller() {
             this.handlerCollection[message.type].call(this, message.data);
         }
         else {
-            this.error.send("Message type incorrectly set: " + JSON.stringify(message));
+            this.controllers.error.send("Message type incorrectly set: " + JSON.stringify(message));
         }
     };
     
