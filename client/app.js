@@ -27,7 +27,7 @@ require([
 ], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
-    // debugMode.attachToGlobalScope();
+    debugMode();
     
     // initialize each view
     var authView = new AuthView();

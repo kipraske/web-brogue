@@ -26,9 +26,7 @@ define([
         };
     }
 
-    return {
-        attachToGlobalScope : attach
-    };
+    return attach;
 
 });
 
