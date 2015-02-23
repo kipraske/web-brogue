@@ -1,6 +1,8 @@
 // Fill the entire console with random background, foreground, and character values
 // Worst case scenario load test
 
+// TODO - update this test to reflect reality of how data comes over the line.  This is currently useful for load testing my application but not very accurate as a test anymore.
+
 define(['tests/mock-brogue-message-single'], function(updateSingleCell) {
 
     function dispatchRandomFullMessages() {
