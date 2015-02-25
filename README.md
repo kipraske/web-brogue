@@ -38,3 +38,7 @@ To upgrade brogue, grab the latest version of the brogue source code from https:
 * Update the makefile
 
 Future updates to brogue will likely not prevent any of these updates from being added, though care must be given if the platform-dependant logic changes for some reason.
+
+Server Configuration
+--------------------------------
+Server global configuration variables are defined in server/config.js. You may need to adjust these depending on how your environment is set up.
