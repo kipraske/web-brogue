@@ -66,6 +66,10 @@ button {
  * 1.0 Lobby
  *===================================*/
 
+.loading{
+    text-align: center;
+}
+
 .header {
     margin: 0 2.5%;
     text-align: right;
