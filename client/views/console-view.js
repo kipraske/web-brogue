@@ -40,6 +40,8 @@ define([
             this.initializeConsoleCells();
         },
         initializeConsoleCells: function() {
+            var consoleCellsFragment = document.createDocumentFragment();
+            
             for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
                 var column = [];
                 for (var j = 0; j < _CONSOLE_ROWS; j++) {
@@ -59,11 +61,13 @@ define([
                         id: "console-cell-" + i + "-" + j
                     });
 
-                    this.$el.append(cellView.render().el);
+                    consoleCellsFragment.appendChild(cellView.render().el);
                     column.push(cellView);
                 }
                 _consoleCells.push(column);
             }
+            
+            this.$el.append(consoleCellsFragment);
         },
         calculateConsoleSize: function() {
             _consoleWidth = this.$el.width();
