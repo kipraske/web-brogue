@@ -18,7 +18,7 @@ app.get("/", function (req, res) {
     res.sendFile(config.CLIENT_DIR + "/index.html");
 });
 
-httpServer = app.listen(80, function () {
+httpServer = app.listen(config.SERVER_PORT, function () {
     var port = httpServer.address().port;
     console.log("Server listening on port %s", port);
 });

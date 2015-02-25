@@ -3,6 +3,7 @@
 var path = require('path');
 
 var config = {
+    SERVER_PORT : 80,
     CLIENT_DIR : path.normalize(__dirname + "/../client/"),
     BROGUE_PATH : path.normalize(__dirname + "/../brogue/bin/brogue"),
     GAME_DATA_DIR : path.normalize(__dirname + "/../game-data/"),
