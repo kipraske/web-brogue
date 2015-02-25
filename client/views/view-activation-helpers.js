@@ -4,6 +4,10 @@
 define(['jquery'], function($){
     
     var activate = {
+        endLoading : function(){
+            $('#about').removeClass('inactive');
+            $('#loading').addClass('inactive');
+        },
         savedGames : function(){       
             $('#current-games').addClass('inactive');
             $('#saved-games').removeClass('inactive');

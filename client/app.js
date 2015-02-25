@@ -15,6 +15,7 @@ require([
     "tests/debug-mode",
     "dataIO/socket",
     "dataIO/router",
+    "views/view-activation-helpers",
     "views/auth-view",
     "views/play-view",
     "views/header-view",
@@ -24,7 +25,7 @@ require([
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, debugMode, socket, router, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, debugMode, socket, router, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -67,4 +68,5 @@ require([
         }, 100);
     $(window).resize(throttledResize);
     
+    activate.endLoading()();
 });
