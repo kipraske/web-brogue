@@ -27,7 +27,7 @@ function Controller() {
     this.sendMessage = function(messageType, messageData, callback){
         
         if (!callback){
-            callback = this.defaultSendCallback;
+            callback = this.defaultSendCallback.bind(this);
         }
         
         var messageObject = {
