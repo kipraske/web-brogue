@@ -30,6 +30,7 @@ define([
             
             if (selection === "mirror"){
                 send("brogue", "mirrorDuplicate");
+                activate.console();
             }
             else if (selection === "kill"){
                 send("brogue", "killDuplicate");

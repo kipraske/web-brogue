@@ -68,5 +68,5 @@ require([
         }, 100);
     $(window).resize(throttledResize);
     
-    activate.endLoading()();
+    activate.endLoading();
 });
