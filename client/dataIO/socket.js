@@ -4,7 +4,7 @@
 define(['dataIO/router'], function(router){
     
     // websocket is at the same url just using the ws protocol
-    var socketUrl = "ws://" + window.location.host;
+    var socketUrl = "ws://" + window.location.host + ":8080";
     
     var socket = new WebSocket(socketUrl);
     socket.binaryType = "arraybuffer";

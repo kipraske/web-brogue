@@ -18,13 +18,15 @@ app.get("/", function (req, res) {
     res.sendFile(config.path.CLIENT_DIR + "/index.html");
 });
 
-httpServer = app.listen(config.port.HTTP, function () {
-    console.log("Server listening on port %s", config.port.HTTP);
+httpServer = app.listen(config.port.HTTP, function() {
+    console.log("http server listening on port %s", config.port.HTTP);
 });
 
 // Web Socket Server
 var WebSocketServer = require("ws").Server;
-var wss = new WebSocketServer({server: httpServer});
+var wss = new WebSocketServer({port:config.port.WS}, function(){
+    console.log("ws server listening on port %s", config.port.WS);
+});
 
 var controllerFactory = require("./controllers/controller-factory")
 var controllerCleanUp = require("./controllers/cleanup-controllers.js");
