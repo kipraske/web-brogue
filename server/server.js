@@ -9,18 +9,17 @@ var mongoose = require("mongoose");
 mongoose.connect(config.db.url);
 
 // Http Server Configuration
-app.use(express.static(config.CLIENT_DIR));
+app.use(express.static(config.path.CLIENT_DIR));
 
 // TODO - configure cookie session, the value is saved in the db, we just need to hook it up
 
 //routes
 app.get("/", function (req, res) {
-    res.sendFile(config.CLIENT_DIR + "/index.html");
+    res.sendFile(config.path.CLIENT_DIR + "/index.html");
 });
 
-httpServer = app.listen(config.SERVER_PORT, function () {
-    var port = httpServer.address().port;
-    console.log("Server listening on port %s", port);
+httpServer = app.listen(config.port.HTTP, function () {
+    console.log("Server listening on port %s", config.port.HTTP);
 });
 
 // Web Socket Server

@@ -25,7 +25,7 @@ _.extend(SavedGamesController.prototype, {
                 return;
             }
             
-            var userDirectory = path.normalize(config.GAME_DATA_DIR + currentUserName + '/');
+            var userDirectory = path.normalize(config.path.GAME_DATA_DIR + currentUserName + '/');
 
             fs.readdir(userDirectory, function (err, files) {
                 if (err) {

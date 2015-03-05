@@ -100,7 +100,7 @@ _.extend(BrogueController.prototype, {
             }
 
             var self = this;
-            var childWorkingDir = config.GAME_DATA_DIR + currentUserName;
+            var childWorkingDir = config.path.GAME_DATA_DIR + currentUserName;
             var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
 
             if (data) {
@@ -179,7 +179,7 @@ _.extend(BrogueController.prototype, {
         var options = {            
             cwd: childWorkingDir
         };
-        this.brogueChild = childProcess.spawn(config.BROGUE_PATH, args, options);
+        this.brogueChild = childProcess.spawn(config.path.BROGUE, args, options);
         allUsers.users[this.controllers.auth.currentUserName].brogueProcess = this.brogueChild;
         this.attachChildEvents();
         this.controllers.lobby.stopUserDataListen();

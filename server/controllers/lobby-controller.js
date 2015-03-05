@@ -34,7 +34,7 @@ _.extend(LobbyController.prototype, {
         var self = this;
         this.broadcastInterval = setInterval(function(){
             self.sendAllUserData(false);
-        }, config.LOBBY_UPDATE_INTERVAL);
+        }, config.lobby.UPDATE_INTERVAL);
     },
     stopUserDataListen: function(){
         clearInterval(this.broadcastInterval);
