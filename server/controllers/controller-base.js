@@ -9,8 +9,8 @@ function Controller() {
         if (!err){
             return;
         }
-        
-        this.controllers.error.log("Server Error: There is a problem with the socket that prevented sending: " + err);
+        // Going to just eat this error.  If you navigate away from the page at the right time it fires quite a few times.
+        // this.controllers.error.log("Server Error: There is a problem with the socket that prevented sending: " + err);
     };
     
     this.handlerCollection = {};  // collection of handlername : function
