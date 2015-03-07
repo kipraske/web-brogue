@@ -37,9 +37,11 @@ define([
         }
         else if (rand < 0.95){
             // send mouse click
+            next(0);
         }
-        else if (rand < 0.99){
+        else if (rand < 0.995){
             // send random keystroke
+            next(0);
         }
         else{
             var forcedReload = true;

@@ -7,10 +7,11 @@ define([
     'tests/show-incoming-messages',
     'tests/show-outgoing-messages',
     'tests/show-incoming-data-use',
+    'tests/autoplay',
     'dataIO/send-generic',
     'dataIO/send-keypress',
     'dataIO/send-mouse'
-], function(brogueFullRandMsg, brogueFewRandMsg, brogueUpdateCell, showIncomingMessages, showOutgoingMessages, showIncomingDataUse, customMessage, customKeyMessage, customMouseMessage) {
+], function(brogueFullRandMsg, brogueFewRandMsg, brogueUpdateCell, showIncomingMessages, showOutgoingMessages, showIncomingDataUse, autoplay, customMessage, customKeyMessage, customMouseMessage) {
 
     function attach(){
         window.brogue = {
@@ -22,7 +23,8 @@ define([
             showIncomingDataUse : showIncomingDataUse,
             send : customMessage,
             sendKey : customKeyMessage,
-            sendMouse : customMouseMessage
+            sendMouse : customMouseMessage,
+            autoplay : autoplay
         };
     }
 
