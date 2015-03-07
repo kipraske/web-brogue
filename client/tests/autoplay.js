@@ -35,6 +35,7 @@ define([
             sendThreeEsc();
             next(0);
         }
+        //TODO - these would be nice to get some i/o going for more realistic testing
         else if (rand < 0.95){
             // send mouse click
             next(0);
@@ -44,6 +45,8 @@ define([
             next(0);
         }
         else{
+            // 0.5% chance of reloading the page and severing the connection in 
+            // the most dirty way possible
             var forcedReload = true;
             window.location.reload(forcedReload);
         }
