@@ -1,6 +1,7 @@
 // Main entry point in server side code.  Sets up http server and websocket server and routes
 
 var config = require("./config");
+var util = require("util");
 
 var express = require("express");
 var app = express();
@@ -18,8 +19,12 @@ app.get("/", function (req, res) {
     res.sendFile(config.path.CLIENT_DIR + "/index.html");
 });
 
-httpServer = app.listen(config.port.HTTP, function() {
+var httpServer = app.listen(config.port.HTTP, function() {
     console.log("http server listening on port %s", config.port.HTTP);
+});
+
+httpServer.on("clientError", function(err, socket){
+    util.log("Error from client socket in http server: " + err);
 });
 
 // Web Socket Server
@@ -51,10 +56,17 @@ wss.on("connection", function (ws) {
     ws.on("close", function (code, message) {
         controllerCleanUp(controllers);
     });
+    
+    ws.on("error", function(err){
+        util.log('Error emitted internally from web socket instance: ' + err); 
+    });
 });
 
-// Server sometimes crashes when we try to write to stdout twice at the same time 
-// In other words when there are two errors logged at the same time
+wss.on("error", function(err){
+   util.log('Error emitted internally from web socket server: ' + err); 
+});
+
+// Process Handlers
 process.stdout.on('error', function(err){
-   console.log('Error when writing to stdout: ' + err); 
+   util.log('Error when writing to process stdout: ' + err); 
 });
