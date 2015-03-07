@@ -52,3 +52,9 @@ wss.on("connection", function (ws) {
         controllerCleanUp(controllers);
     });
 });
+
+// Server sometimes crashes when we try to write to stdout twice at the same time 
+// In other words when there are two errors logged at the same time
+process.stdout.on('error', function(err){
+   console.log('Error when writing to stdout: ' + err); 
+});
