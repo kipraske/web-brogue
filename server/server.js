@@ -43,9 +43,13 @@ httpServerDomain.run(function () {
 websocketServerDomain = domain.create();
 websocketServerDomain.on("error", function (err) {
     util.log("Unhandled Exception emitted from web socket server:");
-    
+
+    // So this is not a good node practice, but the ws library doesn't appear to let me listen for these errors which sometimes crop up. They may cause some strange behavior for one user, but we shouldn't shut down the whole server for these.
     if (err.code === 'ECONNRESET'){
-        util.log("Socket exception is ECONNRESET: Client Abuptly closed the TCP connection.");
+        util.log("Socket server exception is ECONNRESET: Client Abuptly terminated a TCP communication.");
+    }
+    else if (err.code === 'EPIPE'){
+        util.log("Socket server exception is EPIPE: Likely caused by trying to read or write to a stream which has been closed");
     }
     else{
         console.log(err.stack);
