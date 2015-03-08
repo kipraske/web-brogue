@@ -45,6 +45,7 @@ websocketServerDomain.on("error", function (err) {
     util.log("Unhandled Exception emitted from web socket server:");
 
     // So this is not a good node practice, but the ws library doesn't appear to let me listen for these errors which sometimes crop up. They may cause some strange behavior for one user, but we shouldn't shut down the whole server for these.
+    // TODO - figure out a better way to do this. Why is this bad: possible system instability or memory leaks...
     if (err.code === 'ECONNRESET'){
         util.log("Socket server exception is ECONNRESET: Client Abuptly terminated a TCP communication.");
     }
