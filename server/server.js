@@ -42,9 +42,15 @@ httpServerDomain.run(function () {
 // Web Socket Server
 websocketServerDomain = domain.create();
 websocketServerDomain.on("error", function (err) {
-    util.log("Unhandled Exception emitted from web socket server.");
-    console.log(err);
-    process.exit(1);
+    util.log("Unhandled Exception emitted from web socket server:");
+    
+    if (err.code === 'ECONNRESET'){
+        util.log("Socket exception is ECONNRESET: Client Abuptly closed the TCP connection.");
+    }
+    else{
+        console.log(err.stack);
+        process.exit(1);
+    }
 });
 
 websocketServerDomain.run(function () {
