@@ -167,6 +167,9 @@ button {
     box-sizing : border-box;
     overflow : hidden;
     font-family: monospace;
+   -moz-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
 }
 
 .console.full-height {
