@@ -76,6 +76,11 @@ define([
                     returnCode = 63233;
                     break;
             }
+            
+            if (returnCode){
+                event.preventDefault();
+            }
+            
             sendKeypressEvent(KEYPRESS_EVENT_CHAR, returnCode, ctrlKey, shiftKey);
         },
         
@@ -92,8 +97,8 @@ define([
             
             this.model.set("ctrlKeyHeld", false);
             this.model.set("shiftKeyHeld", false);
-        },
-
+        }
+        
     });
     
     return ConsoleKeyProcessor;
