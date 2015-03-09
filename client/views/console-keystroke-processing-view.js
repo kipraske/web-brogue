@@ -48,6 +48,9 @@ define([
                 case 8: // backspace
                     returnCode = 127; // map to DELETE_KEY
                     break;
+                case 9: // tab
+                    returnCode = 9;
+                    break;
                 case 46: // delete
                     returnCode = 127;
                     break;
