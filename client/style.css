@@ -186,12 +186,13 @@ button {
 
 .console.partial-width {}
 
-/*hidden off screen so we can still give it focus*/
+/*hidden in the corner so we can still give it focus*/
 .console-keyboard{
-    position:absolute;
-    left: -5px;
+    position:fixed;
     width: 1px;
     height: 1px;
+    border: none;
+    outline: none;
     overflow: hidden;
 }
 
