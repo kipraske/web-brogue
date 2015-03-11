@@ -3,9 +3,10 @@
 Table Of Contents
 =======================================
 0.0 - General
-    0.1 - Base
-    0.2 - Control
-    0.3 - Forms
+    0.1 - Fonts
+    0.2 - Base
+    0.3 - Control
+    0.4 - Forms
 1.0 - Lobby
 2.0 - Console
 3.0 - Popup
@@ -15,13 +16,20 @@ Table Of Contents
  * 0.0 - Reset
  ====================================*/
 
-/* 0.1 Base Styles ------------------*/
+/* 0.1 Fonts  -----------------------*/
+@font-face {
+    font-family: Monaco;
+    src: url('assets/Monaco.ttf')  format('truetype');
+}
+
+
+/* 0.2 Base Styles ------------------*/
 
 body{
     margin: 0;
     padding: 0;
     background-color: #000000;
-    font-family: sans-serif;
+    font-family: Monaco, monospace;
     color: #ffffff;
 }
 
@@ -33,13 +41,13 @@ a:hover{
     color: #ffffff;
 }
 
-/* 0.2 Control Styles ---------------*/
+/* 0.3 Control Styles ---------------*/
 
 .inactive{
     display : none;
 }
 
-/* 0.3 Form Styles -------------------*/
+/* 0.4 Form Styles -------------------*/
 
 label {
     display: block;
@@ -166,7 +174,7 @@ button {
     position : relative;
     box-sizing : border-box;
     overflow : hidden;
-    font-family: monospace;
+    font-family: Monaco, monospace;
    -moz-user-select: none;
    -webkit-user-select: none;
    -ms-user-select: none;
@@ -229,7 +237,6 @@ button {
     height: 15px;
     line-height: 15px;
     font-size: 12px;
-    font-family: sans-serif;
     text-align: center;
     font-weight: bold;
     cursor: pointer;
