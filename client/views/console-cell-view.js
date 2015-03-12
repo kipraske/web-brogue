@@ -4,9 +4,8 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    "dataIO/send-mouse",
-    "models/console-cell"
-], function($, _, Backbone, sendMouseEvent, CellModel) {
+    "dataIO/send-mouse"
+], function($, _, Backbone, sendMouseEvent) {
 
     // See BrogueCode/rogue.h for all brogue event definitions
     var MOUSE_UP_EVENT_CHAR = 1;
@@ -44,10 +43,10 @@ define([
         },
         
         applySize : function(){
-            this.el.style.width = this.model.get("widthPercent") + "%";
-            this.el.style.height = this.model.get("heightPercent") + "%";
-            this.el.style.left = this.model.get("leftPositionPercent") + "%";
-            this.el.style.top = this.model.get("topPositionPercent") + "%";
+            this.el.style.width = this.model.get("widthPx") + "px";
+            this.el.style.height = this.model.get("heightPx") + "px";
+            this.el.style.left = this.model.get("leftPositionPx") + "px";
+            this.el.style.top = this.model.get("topPositionPx") + "px";
             this.el.style.fontSize = this.model.get("charSizePx") + "px";
             this.el.style.paddingTop = this.model.get("charPaddingPx") + "px";
         },

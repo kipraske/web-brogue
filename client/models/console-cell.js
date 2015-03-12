@@ -19,12 +19,12 @@ define([
             y: 0,
             charSizePx : 10,
             charPaddingPx : 2,
-            widthPercent: 1,
-            heightPercent: 2,
-            leftPositionPercent: 0,
-            topPositionPercent: 0,
-            topOffsetPercent : 0,
-            leftOffsetPercent: 0
+            widthPx: 1,
+            heightPx: 2,
+            leftPositionPx: 0,
+            topPositionPx: 0,
+            topOffsetPx : 0,
+            leftOffsetPx: 0
         },
 
         initialize: function() {
@@ -33,8 +33,8 @@ define([
         
         calculatePositionAttributes : function(){
             this.set({
-                leftPositionPercent : this.get("x") * this.get("widthPercent") + this.get("leftOffsetPercent"),
-                topPositionPercent : this.get("y") * this.get("heightPercent") + this.get("topOffsetPercent")
+                leftPositionPx : this.get("x") * this.get("widthPx") + this.get("leftOffsetPx"),
+                topPositionPx : this.get("y") * this.get("heightPx") + this.get("topOffsetPx")
             });
         },
         
