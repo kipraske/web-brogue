@@ -17,10 +17,10 @@ define([
     var _consoleCells = [];
     var _consoleWidth;
     var _consoleHeight;
-    var _consoleCellTopOffsetPercent;
-    var _consoleCellLeftOffsetPercent;
-    var _consoleCellWidthPercent;
-    var _consoleCellHeightPercent;
+    var _consoleCellTopOffsetPx;
+    var _consoleCellLeftOffsetPx;
+    var _consoleCellWidthPx;
+    var _consoleCellHeightPx;
     var _consoleCellCharSizePx;
     var _consoleCellCharPaddingPx;
     var _consoleCellAspectRatio = 0.53;  //TODO: we may eventually want this to be adjustable
@@ -48,12 +48,12 @@ define([
                     var cellModel = new CellModel({
                         x: i,
                         y: j,
-                        widthPercent: _consoleCellWidthPercent,
-                        heightPercent: _consoleCellHeightPercent,
+                        widthPx: _consoleCellWidthPx,
+                        heightPx: _consoleCellHeightPx,
                         charSizePx: _consoleCellCharSizePx,
                         charPaddingPx: _consoleCellCharPaddingPx,
-                        topOffsetPercent: _consoleCellTopOffsetPercent,
-                        leftOffsetPercent: _consoleCellLeftOffsetPercent
+                        topOffsetPx: _consoleCellTopOffsetPx,
+                        leftOffsetPx: _consoleCellLeftOffsetPx
                     });
 
                     var cellView = new ConsoleCellView({
@@ -73,36 +73,28 @@ define([
             _consoleWidth = this.$el.width();
             _consoleHeight = this.$el.height();
         },
-        calculateConsoleCellSize: function() {
-            _consoleCellWidthPercent = 100 / _CONSOLE_COLUMNS;
-
-            // Cell Aspect Ratio
-            var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
-            var cellPixelHeight = cellPixelWidth / _consoleCellAspectRatio;
+        calculateConsoleCellSize: function() {          
+            //By default we want to use the full width
+            _consoleCellWidthPx = _consoleWidth / _CONSOLE_COLUMNS | 0; // using |0 is much faster than Math.floor
+            _consoleCellHeightPx = _consoleCellWidthPx / _consoleCellAspectRatio | 0;
 
             //If this height will make the console go off screen, recalculate size and horizontally center instead
-            if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight) {              
-                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;
-                cellPixelWidth = cellPixelHeight * _consoleCellAspectRatio;
-
-                _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
-                _consoleCellWidthPercent = 100 * cellPixelWidth / _consoleWidth;
-                _consoleCellTopOffsetPercent = 0;
-
-                var leftOffSetPx = (_consoleWidth - cellPixelWidth * _CONSOLE_COLUMNS) / 2;
-                _consoleCellLeftOffsetPercent = leftOffSetPx / _consoleWidth * 100;
+            if (_consoleCellHeightPx * _CONSOLE_ROWS > _consoleHeight) {              
+                _consoleCellHeightPx = _consoleHeight / _CONSOLE_ROWS | 0;
+                _consoleCellWidthPx = _consoleCellHeightPx * _consoleCellAspectRatio;
+                
+                _consoleCellTopOffsetPx = 0;
+                _consoleCellLeftOffsetPx = (_consoleWidth - _consoleCellWidthPx * _CONSOLE_COLUMNS) / 2 | 0;
             }
             else {
                 // Vertically center the console
-                _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
-                _consoleCellLeftOffsetPercent = 0;
-                var topOffSetPx = (_consoleHeight - cellPixelHeight * _CONSOLE_ROWS) / 2;
-                _consoleCellTopOffsetPercent = topOffSetPx / _consoleHeight * 100;
+                _consoleCellLeftOffsetPx = 0;
+                _consoleCellTopOffsetPx = (_consoleHeight - _consoleCellHeightPx * _CONSOLE_ROWS) / 2 | 0;
             }
 
             // Cell Character Positioning
-            _consoleCellCharSizePx = cellPixelHeight * 3 / 5;
-            _consoleCellCharPaddingPx = cellPixelHeight / 5;
+            _consoleCellCharSizePx = _consoleCellHeightPx * 3 / 5;
+            _consoleCellCharPaddingPx = _consoleCellHeightPx / 5;
         },
         render: function() {
             for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
@@ -118,12 +110,12 @@ define([
             for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
                 for (var j = 0; j < _CONSOLE_ROWS; j++) {
                     _consoleCells[i][j].model.set({
-                        widthPercent: _consoleCellWidthPercent,
-                        heightPercent: _consoleCellHeightPercent,
+                        widthPx: _consoleCellWidthPx,
+                        heightPx: _consoleCellHeightPx,
                         charSizePx: _consoleCellCharSizePx,
                         charPaddingPx: _consoleCellCharPaddingPx,
-                        topOffsetPercent: _consoleCellTopOffsetPercent,
-                        leftOffsetPercent: _consoleCellLeftOffsetPercent
+                        topOffsetPx: _consoleCellTopOffsetPx,
+                        leftOffsetPx: _consoleCellLeftOffsetPx
                     });
                     _consoleCells[i][j].model.calculatePositionAttributes();
                     _consoleCells[i][j].applySize();
