@@ -102,7 +102,7 @@ define([
 
             // Cell Character Positioning
             _consoleCellCharSizePx = cellPixelHeight * 3 / 5;
-            _consoleCellCharPaddingPx = cellPixelHeight / 5;
+            _consoleCellCharPaddingPx = cellPixelHeight / 10;
         },
         render: function() {
             for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
