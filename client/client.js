@@ -47,7 +47,7 @@ require([
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console),
-        "brogue" : consoleView.updateCellModelData.bind(consoleView),
+        "brogue" : consoleView.queueUpdateCellModelData.bind(consoleView),
         "quit" : consoleView.exitToLobby.bind(consoleView),
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),

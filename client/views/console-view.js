@@ -131,6 +131,13 @@ define([
             }
         },
         
+        queueUpdateCellModelData : function(data){
+            // todo -- comment
+            var self = this;
+            setTimeout(function(){
+                self.updateCellModelData(data);
+            }, 0);
+        },
         updateCellModelData: function (data) {
             var dataArray = new Uint8Array(data);
             var dataLength = dataArray.length;
