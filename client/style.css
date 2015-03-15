@@ -86,8 +86,10 @@ button {
 .current-games,
 .saved-games {
     margin: 0 2.5%;
+    width: 225px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    word-wrap:break-word;
 }
 
 .auth form{
