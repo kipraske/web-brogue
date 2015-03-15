@@ -87,16 +87,15 @@ button {
 .saved-games {
     margin: 0 2.5%;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 .auth form{
-    box-sizing: border-box;
     width: 225px;
     margin: 0 auto;
 }
 
 .auth input {
-    box-sizing: border-box;
     width: 100%; 
 }
 
@@ -111,7 +110,7 @@ button {
 
 .current-games table,
 .saved-games table {
-    width: 100%;
+    width: 95%;
 }
 
 .current-games th,
@@ -153,7 +152,7 @@ button {
     .current-games,
     .saved-games {
         margin: 0 2.5% 0 7.5%;
-        padding-left: 225px;
+        padding-left: 250px;
     }
 }
 
@@ -164,6 +163,7 @@ button {
 .console {
     position : relative;
     box-sizing : border-box;
+    -moz-box-sizing: border-box;
     overflow : hidden;
     font-family: Source Code Pro, monospace;
    -moz-user-select: none;
