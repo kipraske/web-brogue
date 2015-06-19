@@ -11,7 +11,7 @@ mongoose.connect(config.db.url);
 // Http Server Configuration
 httpServerDomain = domain.create();
 httpServerDomain.on("error", function (err) {
-    util.log("Uncaught exception emmitted internally from Http Server. Process Terminating.");
+    util.log("Uncaught exception emitted internally from Http Server. Process Terminating.");
     console.log(err.stack);
     process.exit(1);
 });
