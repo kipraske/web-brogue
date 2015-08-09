@@ -20,6 +20,7 @@
     "express-session": "^1.10.3",
     "mongoose": "^3.8.24",
     "underscore": "^1.8.2",
-    "ws": "^0.7.1"
+    "ws": "^0.7.1",
+    "node-unix-dgram": "bnoordhuis/node-unix-dgram"
   }
 }

@@ -4,7 +4,7 @@ var path = require('path');
 
 var config = {
     port : {
-        HTTP : 80,
+        HTTP : 8081,
         WS : 8080
     },
     path : {

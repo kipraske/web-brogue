@@ -4,10 +4,15 @@ var childProcess = require('child_process');
 var path = require('path');
 var fs = require('fs');
 
+var unixdgram = require('unix-dgram');
+
 var router = require('./router');
 var Controller = require('./controller-base');
 var brogueState = require('../enum/brogue-state');
 var allUsers = require('../user/all-users');
+
+var SERVER_SOCKET = 'server-socket';
+var CLIENT_SOCKET = 'client-socket';
 
 var CELL_MESSAGE_SIZE = 10;
 
@@ -73,7 +78,9 @@ _.extend(BrogueController.prototype, {
         }
  
         if (this.brogueChild) {
-            this.brogueChild.stdin.write(message);
+            this.brogueSocket.send(message, 0, messageLength, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function() {
+                //console.error('client send');
+            });
         }
     },
     
@@ -85,6 +92,11 @@ _.extend(BrogueController.prototype, {
             this.controllers.error.send("Message type incorrectly set: " + JSON.stringify(message));
         }
     },
+
+    getChildWorkingDir: function () {
+      return config.path.GAME_DATA_DIR + this.controllers.auth.currentUserName;
+    },
+
     handlerCollection: {
         start: function (data) {
             var currentUserName = this.controllers.auth.currentUserName;
@@ -100,7 +112,7 @@ _.extend(BrogueController.prototype, {
             }
 
             var self = this;
-            var childWorkingDir = config.path.GAME_DATA_DIR + currentUserName;
+            var childWorkingDir = this.getChildWorkingDir();
             var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
 
             if (data) {
@@ -196,21 +208,14 @@ _.extend(BrogueController.prototype, {
     attachChildEvents: function () {
         var self = this;
 
-        self.brogueChild.on('exit', function(code){
-            // go back to lobby in the event something happens to the child process
-            self.brogueChild = null;
-            allUsers.users[self.controllers.auth.currentUserName].brogueProcess = null;
-            self.sendMessage("quit", true);
-            self.setState(brogueState.INACTIVE);
-            self.controllers.lobby.sendAllUserData();
-            self.controllers.lobby.userDataListen();
-        });
+        //Setup sockets
 
-        self.brogueChild.on('error', function(err){
-            self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
-        });
+        //Client read socket
 
-        self.brogueChild.stdout.on('data', function (data) {
+        try { fs.unlinkSync(this.getChildWorkingDir() + "/" + CLIENT_SOCKET); } catch (e) { /* swallow */ }
+
+        var client_read = unixdgram.createSocket('unix_dgram', function(data, rinfo) {
+            //console.error('data: (%d, %d) -> %s', data[0], data[1], String.fromCharCode(data[3]));
 
             // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
             // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
@@ -220,7 +225,7 @@ _.extend(BrogueController.prototype, {
             var sizeOfCellsToSend = numberOfCellsToSend * CELL_MESSAGE_SIZE;
             var newReminderLength = dataLength + remainderLength - sizeOfCellsToSend;
 
-            //fill the data to send 
+            //fill the data to send
             self.dataAccumulator = new Buffer(sizeOfCellsToSend);
             self.dataRemainder.copy(self.dataAccumulator);
             data.copy(self.dataAccumulator, remainderLength, 0, dataLength - newReminderLength);
@@ -233,22 +238,44 @@ _.extend(BrogueController.prototype, {
             for (var i = 0; i < sizeOfCellsToSend; i += CELL_MESSAGE_SIZE){
                 if (self.dataAccumulator[i] === STATUS_BYTE_FLAG){
                     var updateFlag = self.dataAccumulator[i + STATUS_DATA_OFFSET];
-                    
+
                     // We need to send 4 bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
-                    var updateValue = 
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 1] * 16777216 +
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 2] * 65536 +
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 256 +
-                            self.dataAccumulator[i + STATUS_DATA_OFFSET + 4]
-                    
+                    var updateValue =
+                        self.dataAccumulator[i + STATUS_DATA_OFFSET + 1] * 16777216 +
+                        self.dataAccumulator[i + STATUS_DATA_OFFSET + 2] * 65536 +
+                        self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 256 +
+                        self.dataAccumulator[i + STATUS_DATA_OFFSET + 4]
+
                     allUsers.updateLobbyStatus(
-                            self.controllers.auth.currentUserName,
-                            updateFlag,
-                            updateValue);
+                        self.controllers.auth.currentUserName,
+                        updateFlag,
+                        updateValue);
                 }
             }
 
             self.ws.send(self.dataAccumulator, {binary: true}, self.defaultSendCallback.bind(self));
+        });
+
+        client_read.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
+
+        //Server write socket
+        this.brogueSocket = unixdgram.createSocket('unix_dgram', function(buf, rinfo) {
+            //console.error('client recv', arguments);
+            //assert(0);
+        });
+
+        self.brogueChild.on('exit', function(code){
+            // go back to lobby in the event something happens to the child process
+            self.brogueChild = null;
+            allUsers.users[self.controllers.auth.currentUserName].brogueProcess = null;
+            self.sendMessage("quit", true);
+            self.setState(brogueState.INACTIVE);
+            self.controllers.lobby.sendAllUserData();
+            self.controllers.lobby.userDataListen();
+        });
+
+        self.brogueChild.on('error', function(err){
+            self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
         });
     }
 });
