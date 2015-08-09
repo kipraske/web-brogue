@@ -119,7 +119,7 @@ static void write_to_socket(char *buf, int size) {
     char msg[80];
     snprintf(msg, 80, "Sent %ld bytes only %s\n", (long) no_bytes_sent, strerror(errno));
     write_to_log(msg);
-    usleep(5);
+    //usleep(50);
   }
 }
 
@@ -188,7 +188,11 @@ static void sendStatusUpdate() {
 
 // This function is used both for checking input and pausing
 static boolean web_pauseForMilliseconds(short milliseconds)
-{       
+{
+  char msg[80];
+  snprintf(msg, 80, "web_pauseForMillisecond %d\n", milliseconds);
+  write_to_log(msg);
+
   usleep(milliseconds);
 
   //Poll for input data
@@ -206,6 +210,9 @@ static boolean web_pauseForMilliseconds(short milliseconds)
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
+
+  write_to_log("web_nextKeyOrMouseEvent\n");
+
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
     
