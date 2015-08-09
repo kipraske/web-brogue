@@ -104,7 +104,7 @@ int read_from_socket(char *buf, int size) {
 
   int bytes_received = recvfrom(rfd, buf, size, 0, NULL, NULL);
 
-  snprintf(msg, 80, "Received %ld bytes\n", (long) bytes_received);
+  snprintf(msg, 80, "Received %ld bytes, keypress %c\n", (long) bytes_received, buf[2]);
   write_to_log(msg);
 
   return bytes_received;

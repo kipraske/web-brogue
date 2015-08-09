@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   //Send a keypress to the server & give details of the response
 
   //Send keypress
-  sendto(wfd, keypress, strlen(keypress) + 1, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
+  sendto(wfd, keypress, 5, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
 
   struct timeval tv;
 
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     if(size == -1) {
       //Resend
       fprintf(stderr, "Timed-out, resending\n");
-      sendto(wfd, keypress, strlen(keypress) + 1, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
+      sendto(wfd, keypress, 5, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
     }
 
     //Likely to be a web plot char
