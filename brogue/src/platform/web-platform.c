@@ -42,14 +42,14 @@ static void write_to_socket(char *buf, int size);
 
 static void gameLoop()
 {
-  open_logfile();
-  write_to_log("Logfile started");
+  //open_logfile();
+  //write_to_log("Logfile started");
 
   setup_sockets();
 
   rogueMain();
 
-  close_logfile();
+  //close_logfile();
 }
 
 
@@ -66,7 +66,6 @@ static void close_logfile() {
 
 static void write_to_log(const char *msg) {
   fprintf(logfile, msg);
-  fflush(logfile);
 }
 
 static void setup_sockets() {
@@ -100,12 +99,12 @@ static void setup_sockets() {
 int read_from_socket(char *buf, int size) {
 
   char msg[80];
-  write_to_log("Blocking on receiving from socket\n");
+  //write_to_log("Blocking on receiving from socket\n");
 
   int bytes_received = recvfrom(rfd, buf, size, 0, NULL, NULL);
 
   snprintf(msg, 80, "Received %ld bytes, keypress %c\n", (long) bytes_received, buf[2]);
-  write_to_log(msg);
+  //write_to_log(msg);
 
   return bytes_received;
 }
@@ -118,7 +117,7 @@ static void write_to_socket(char *buf, int size) {
   if (no_bytes_sent != size) {
     char msg[80];
     snprintf(msg, 80, "Sent %ld bytes only %s\n", (long) no_bytes_sent, strerror(errno));
-    write_to_log(msg);
+    //write_to_log(msg);
     //usleep(50);
   }
 }
@@ -128,7 +127,7 @@ static void web_plotChar(uchar inputChar,
 			  short foreRed, short foreGreen, short foreBlue,
 			  short backRed, short backGreen, short backBlue) {
 
-    write_to_log("web_plotChar\n");
+    //write_to_log("web_plotChar\n");
 
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
@@ -189,9 +188,9 @@ static void sendStatusUpdate() {
 // This function is used both for checking input and pausing
 static boolean web_pauseForMilliseconds(short milliseconds)
 {
-  char msg[80];
-  snprintf(msg, 80, "web_pauseForMillisecond %d\n", milliseconds);
-  write_to_log(msg);
+  //char msg[80];
+  //snprintf(msg, 80, "web_pauseForMillisecond %d\n", milliseconds);
+  //write_to_log(msg);
 
   usleep(milliseconds);
 
@@ -211,7 +210,7 @@ static boolean web_pauseForMilliseconds(short milliseconds)
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
 
-  write_to_log("web_nextKeyOrMouseEvent\n");
+  //write_to_log("web_nextKeyOrMouseEvent\n");
 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
