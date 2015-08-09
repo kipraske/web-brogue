@@ -223,7 +223,6 @@ _.extend(BrogueController.prototype, {
             // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
             // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
             var dataLength = data.length;
-            dataLength = data.length - 1;
 
             console.error(dataLength);
 

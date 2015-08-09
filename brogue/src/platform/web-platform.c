@@ -18,7 +18,7 @@
 #define MAX_INPUT_SIZE          5
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          4
-#define OUTPUT_BUFFER_SIZE      500
+#define OUTPUT_BUFFER_SIZE      1000
 
 enum StatusTypes {
     DEEPEST_LEVEL_STATUS,
@@ -70,6 +70,7 @@ static void close_logfile() {
 
 static void write_to_log(const char *msg) {
   fprintf(logfile, msg);
+  //fflush(logfile);
 }
 
 static void setup_sockets() {
@@ -120,8 +121,8 @@ static void flush_output_buffer() {
   write_to_log(msg);
 
   int no_bytes_sent;
-  no_bytes_sent = sendto(wfd, output_buffer, output_buffer_pos + 1, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
-  if (no_bytes_sent != output_buffer_pos + 1) {
+  no_bytes_sent = sendto(wfd, output_buffer, output_buffer_pos, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
+  if (no_bytes_sent != output_buffer_pos) {
     char msg[80];
     snprintf(msg, 80, "Sent %ld bytes only %s\n", (long) no_bytes_sent, strerror(errno));
     write_to_log(msg);
