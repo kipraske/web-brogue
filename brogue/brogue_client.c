@@ -3,7 +3,7 @@
 #define SERVER_SOCKET "server-socket"
 #define CLIENT_SOCKET "client-socket"
 
-#define BUF_SIZE 256
+#define BUF_SIZE 600
 
 #include <sys/un.h>
 #include <sys/socket.h>
@@ -82,7 +82,12 @@ int main(int argc, char *argv[])
 
     //Likely to be a web plot char
 
-    fprintf(stderr, "size: %i, data: (%i, %i) -> %c\n", size, resp[0], resp[1], resp[3]);
+    int count = 0;
+    while(count < size) {
+      fprintf(stderr, "size: %i, data: (%i, %i) -> %c\n", size, resp[count + 0], resp[count + 1], resp[count + 3]);
+      count += 10;
+    }
+
 
 
   }

@@ -18,6 +18,7 @@
 #define MAX_INPUT_SIZE          5
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          4
+#define OUTPUT_BUFFER_SIZE      500
 
 enum StatusTypes {
     DEEPEST_LEVEL_STATUS,
@@ -32,6 +33,8 @@ static struct sockaddr_un addr_write;
 static int wfd, rfd;
 
 static FILE *logfile;
+static char output_buffer[OUTPUT_BUFFER_SIZE];
+static int output_buffer_pos = 0;
 
 static void open_logfile();
 static void close_logfile();
@@ -39,17 +42,18 @@ static void write_to_log(const char *msg);
 static void setup_sockets();
 static int read_from_socket(char *buf, int size);
 static void write_to_socket(char *buf, int size);
+static void flush_output_buffer();
 
 static void gameLoop()
 {
-  //open_logfile();
-  //write_to_log("Logfile started");
+  open_logfile();
+  write_to_log("Logfile started\n");
 
   setup_sockets();
 
   rogueMain();
 
-  //close_logfile();
+  close_logfile();
 }
 
 
@@ -99,27 +103,50 @@ static void setup_sockets() {
 int read_from_socket(char *buf, int size) {
 
   char msg[80];
-  //write_to_log("Blocking on receiving from socket\n");
+  write_to_log("Blocking on receiving from socket\n");
 
   int bytes_received = recvfrom(rfd, buf, size, 0, NULL, NULL);
 
   snprintf(msg, 80, "Received %ld bytes, keypress %c\n", (long) bytes_received, buf[2]);
-  //write_to_log(msg);
+  write_to_log(msg);
 
   return bytes_received;
 }
 
-static void write_to_socket(char *buf, int size) {
+static void flush_output_buffer() {
+
+  char msg[80];
+  snprintf(msg, 80, "Flushing at %i\n", output_buffer_pos);
+  write_to_log(msg);
 
   int no_bytes_sent;
-
-  no_bytes_sent = sendto(wfd, buf, size, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
-  if (no_bytes_sent != size) {
+  no_bytes_sent = sendto(wfd, output_buffer, output_buffer_pos + 1, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
+  if (no_bytes_sent != output_buffer_pos + 1) {
     char msg[80];
     snprintf(msg, 80, "Sent %ld bytes only %s\n", (long) no_bytes_sent, strerror(errno));
-    //write_to_log(msg);
-    //usleep(50);
+    write_to_log(msg);
   }
+
+  output_buffer_pos = 0;
+}
+
+static void write_to_socket(char *buf, int size) {
+
+  if(output_buffer_pos + size > OUTPUT_BUFFER_SIZE) {
+    flush_output_buffer();
+  }
+
+  //memcpy(output_buffer + output_buffer_pos, buf, size);
+  int i;
+  for(i = 0; i < size; i++) {
+    output_buffer[i + output_buffer_pos] = buf[i];
+  }
+
+  output_buffer_pos += size;
+
+  char msg[80];
+  snprintf(msg, 80, "Output pos now %i\n", output_buffer_pos);
+  write_to_log(msg);
 }
 
 static void web_plotChar(uchar inputChar,
@@ -127,7 +154,7 @@ static void web_plotChar(uchar inputChar,
 			  short foreRed, short foreGreen, short foreBlue,
 			  short backRed, short backGreen, short backBlue) {
 
-    //write_to_log("web_plotChar\n");
+    write_to_log("web_plotChar\n");
 
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
@@ -188,9 +215,9 @@ static void sendStatusUpdate() {
 // This function is used both for checking input and pausing
 static boolean web_pauseForMilliseconds(short milliseconds)
 {
-  //char msg[80];
-  //snprintf(msg, 80, "web_pauseForMillisecond %d\n", milliseconds);
-  //write_to_log(msg);
+  char msg[80];
+  snprintf(msg, 80, "web_pauseForMillisecond %d\n", milliseconds);
+  write_to_log(msg);
 
   usleep(milliseconds);
 
@@ -210,7 +237,7 @@ static boolean web_pauseForMilliseconds(short milliseconds)
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
 
-  //write_to_log("web_nextKeyOrMouseEvent\n");
+  write_to_log("web_nextKeyOrMouseEvent\n");
 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
@@ -220,6 +247,9 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     
     // Send a status update of game variables we want on the client
     sendStatusUpdate();
+
+    // Flush output buffer
+    flush_output_buffer();
 
     char inputBuffer[MAX_INPUT_SIZE];
 
