@@ -4,13 +4,18 @@
 #include <string.h>
 #include <poll.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <ctype.h>
+#include <errno.h>
+#include <sys/un.h>
+#include <sys/socket.h>
 #include "platform.h"
 
-#define NUM_POLL_FIELDS         1
-#define RETURN_POLL_NOW         0
+#define SERVER_SOCKET "server-socket"
+#define CLIENT_SOCKET "client-socket"
 
 #define OUTPUT_SIZE             10
-#define MAX_INPUT_SIZE          4
+#define MAX_INPUT_SIZE          5
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          4
 
@@ -23,18 +28,108 @@ enum StatusTypes {
 };
 
 extern playerCharacter rogue;
-static struct pollfd fds[NUM_POLL_FIELDS];
+static struct sockaddr_un addr_write;
+static int wfd, rfd;
+
+static FILE *logfile;
+
+static void open_logfile();
+static void close_logfile();
+static void write_to_log(const char *msg);
+static void setup_sockets();
+static int read_from_socket(char *buf, int size);
+static void write_to_socket(char *buf, int size);
 
 static void gameLoop()
-{    
-    rogueMain();
+{
+  open_logfile();
+  write_to_log("Logfile started");
+
+  setup_sockets();
+
+  rogueMain();
+
+  close_logfile();
+}
+
+
+static void open_logfile() {
+  logfile = fopen ("brogue-web.txt", "w");
+  if (logfile == NULL) {
+    fprintf(stderr, "Logfile not created, errno = %d\n", errno);
+  }
+}
+
+static void close_logfile() {
+  fclose(logfile);
+}
+
+static void write_to_log(const char *msg) {
+  fprintf(logfile, msg);
+  fflush(logfile);
+}
+
+static void setup_sockets() {
+
+  struct sockaddr_un addr_read;
+
+  // Read socket (from external)
+
+  rfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+  remove(SERVER_SOCKET);
+
+  memset(&addr_read, 0, sizeof(struct sockaddr_un));
+  addr_read.sun_family = AF_UNIX;
+  strncpy(addr_read.sun_path, SERVER_SOCKET, sizeof(addr_read.sun_path) - 1);
+
+  bind(rfd, (struct sockaddr *) &addr_read, sizeof(struct sockaddr_un));
+
+  //non-blocking may not be desirable
+  //fcntl(socket, F_SETFL, O_NONBLOCK);
+
+  // Write socket (to external)
+
+  wfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+
+  memset(&addr_write, 0, sizeof(struct sockaddr_un));
+  addr_write.sun_family = AF_UNIX;
+  strncpy(addr_write.sun_path, CLIENT_SOCKET, sizeof(addr_write.sun_path) - 1);
+}
+
+//Returns -1 if no data available (if in non-blocking mode)
+int read_from_socket(char *buf, int size) {
+
+  char msg[80];
+  write_to_log("Blocking on receiving from socket\n");
+
+  int bytes_received = recvfrom(rfd, buf, size, 0, NULL, NULL);
+
+  snprintf(msg, 80, "Received %ld bytes\n", (long) bytes_received);
+  write_to_log(msg);
+
+  return bytes_received;
+}
+
+static void write_to_socket(char *buf, int size) {
+
+  int no_bytes_sent;
+
+  no_bytes_sent = sendto(wfd, buf, size, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
+  if (no_bytes_sent != size) {
+    char msg[80];
+    snprintf(msg, 80, "Sent %ld bytes only %s\n", (long) no_bytes_sent, strerror(errno));
+    write_to_log(msg);
+    usleep(5);
+  }
 }
 
 static void web_plotChar(uchar inputChar,
 			  short xLoc, short yLoc,
 			  short foreRed, short foreGreen, short foreBlue,
 			  short backRed, short backGreen, short backBlue) {
-    
+
+    write_to_log("web_plotChar\n");
+
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
     
@@ -52,11 +147,10 @@ static void web_plotChar(uchar inputChar,
     outputBuffer[8] = (char) backGreen * 255 / 100;
     outputBuffer[9] = (char) backBlue * 255 / 100;
     
-    fwrite(outputBuffer, sizeof(char), OUTPUT_SIZE, stdout);
-            
+    write_to_socket(outputBuffer, OUTPUT_SIZE);
 }
 
-static void sendStatusUpdate(){
+static void sendStatusUpdate() {
     
     char statusOutputBuffer[STATUS_TYPES_NUMBER * OUTPUT_SIZE];
     
@@ -88,20 +182,26 @@ static void sendStatusUpdate(){
             statusOutputBuffer[j] = 0;
         }
         
-        fwrite(statusOutputBuffer, sizeof(char), OUTPUT_SIZE, stdout);
+        write_to_socket(statusOutputBuffer, OUTPUT_SIZE);
     }
 }
 
 // This function is used both for checking input and pausing
-    static boolean web_pauseForMilliseconds(short milliseconds)
+static boolean web_pauseForMilliseconds(short milliseconds)
 {       
-    usleep(milliseconds);   
+  usleep(milliseconds);
 
-    fds[0].fd = STDIN_FILENO;
-    fds[0].events = POLLIN | POLLPRI;
-    fds[0].revents = 0;
-    
-    return (poll(fds, NUM_POLL_FIELDS, RETURN_POLL_NOW) > 0);
+  //Poll for input data
+
+  fd_set input;
+  FD_ZERO(&input);
+  FD_SET(rfd, &input);
+
+  struct timeval timeout;
+  timeout.tv_sec  = 0;
+  timeout.tv_usec = 0;
+
+  return select(rfd + 1, &input, NULL, NULL, &timeout);
 }
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
@@ -114,32 +214,27 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     
     // Send a status update of game variables we want on the client
     sendStatusUpdate();
-    
-    // ensure entire stream is written out before getting input
-    fflush(stdout);
-    
-    char controlBuffer[1];
+
     char inputBuffer[MAX_INPUT_SIZE];
-    
-    fread(controlBuffer, sizeof(char), 1, stdin);
-    returnEvent->eventType = controlBuffer[0]; 
+
+    read_from_socket(inputBuffer, MAX_INPUT_SIZE);
+    returnEvent->eventType = inputBuffer[0];
     
     if (returnEvent->eventType == KEYSTROKE){
-        fread(inputBuffer, sizeof(char), KEY_INPUT_SIZE, stdin);
-        
-        unsigned short keyCharacter = inputBuffer[0] << 8 | inputBuffer[1];
+
+        unsigned short keyCharacter = inputBuffer[1] << 8 | inputBuffer[2];
         
         returnEvent->param1 = keyCharacter;  //key character
-        returnEvent->controlKey = inputBuffer[2];
-        returnEvent->shiftKey = inputBuffer[3];
+        returnEvent->controlKey = inputBuffer[3];
+        returnEvent->shiftKey = inputBuffer[4];
     }
     else // it is a mouseEvent
     {
         fread(inputBuffer, sizeof(char), MOUSE_INPUT_SIZE, stdin);
-        returnEvent->param1 = inputBuffer[0];  //x coord
-        returnEvent->param2 = inputBuffer[1];  //y coord
-        returnEvent->controlKey = inputBuffer[2];
-        returnEvent->shiftKey = inputBuffer[3];
+        returnEvent->param1 = inputBuffer[1];  //x coord
+        returnEvent->param2 = inputBuffer[2];  //y coord
+        returnEvent->controlKey = inputBuffer[3];
+        returnEvent->shiftKey = inputBuffer[4];
     }
     
 }
