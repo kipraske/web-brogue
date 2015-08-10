@@ -76,10 +76,11 @@ _.extend(BrogueController.prototype, {
             this.controllers.error.send("Invalid mouse or key input: " + JSON.stringify(message));
             return;
         }
- 
-        if (this.brogueChild) {
+
+        //Send message to socket, if connected
+        if (this.brogueSocket) {
             this.brogueSocket.send(message, 0, messageLength, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function() {
-                //console.error('client send');
+                    //console.error('client send');
             });
         }
     },
@@ -105,11 +106,13 @@ _.extend(BrogueController.prototype, {
                 return;
             }
 
+            //This test is removed, since there we don't spawn more than 1 process, we reconnect
+
             // A single user is only allowed to have one brogue process
-            if (allUsers.getUser(currentUserName).brogueProcess){
-                this.sendMessage("duplicate brogue", data);
-                return;
-            }
+            //if (allUsers.getUser(currentUserName).brogueProcess){
+            //    this.sendMessage("duplicate brogue", data);
+            //    return;
+            //}
 
             var self = this;
             var childWorkingDir = this.getChildWorkingDir();
@@ -155,14 +158,46 @@ _.extend(BrogueController.prototype, {
                 }
             }
             else {
-                this.spawnChildProcess(args, childWorkingDir);
+
+                //Support reconnect (TODO: for other modes, change structure?)
+
+                //TODO: We already have a brogueSocket???
+
+                //Test if we can send to server socket, if so, no need to spawn a new process, just attach
+
+                this.brogueSocket = unixdgram.createSocket('unix_dgram', function(buf, rinfo) {
+                });
+
+                try {
+
+                    var sendBuf = new Buffer(5);
+                    sendBuf[0] = 0; //keystroke
+                    sendBuf[1] = 0; //upper byte
+                    sendBuf[2] = 105; //i
+                    sendBuf[3] = 0; //mod
+                    sendBuf[4] = 0; //mod
+
+                    this.brogueSocket.send(sendBuf, 0, 5, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function () {
+                        console.error("ok to connect to socket - callback");
+                    });
+
+                    console.error("ok to connect to socket");
+                    //Okay to connect through socket to running process
+                    this.attachChildProcess();
+                }
+                catch(e) {
+                    console.error("failed to connect to socket, spawning new process " + e);
+
+                    this.spawnChildProcess(args, childWorkingDir);
+                }
             }
         },
         
         clean: function (data) {
             
             // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
-            this.handlerCollection.kill.call(this, data);
+            //Commented out temporarily so we can practice reconnecting
+            //this.handlerCollection.kill.call(this, data);
         },
         
         kill: function (data) {
@@ -188,11 +223,18 @@ _.extend(BrogueController.prototype, {
     },
     
     spawnChildProcess: function (args, childWorkingDir) {
-        var options = {            
-            cwd: childWorkingDir
+        var options = {
+            cwd: childWorkingDir,
+            detached: true,
+            stdio: 'ignore'
         };
         this.brogueChild = childProcess.spawn(config.path.BROGUE, args, options);
         allUsers.users[this.controllers.auth.currentUserName].brogueProcess = this.brogueChild;
+        //TODO: We need to use the presence of the socketLink, not the processLink
+        this.attachChildProcess();
+    },
+
+    attachChildProcess: function() {
         this.attachChildEvents();
         this.controllers.lobby.stopUserDataListen();
         this.setState(brogueState.PLAYING);
@@ -214,17 +256,20 @@ _.extend(BrogueController.prototype, {
 
         try { fs.unlinkSync(this.getChildWorkingDir() + "/" + CLIENT_SOCKET); } catch (e) { /* swallow */ }
 
+        //TODO: Return to the lobby cleanly on server error
+
         var client_read = unixdgram.createSocket('unix_dgram', function(data, rinfo) {
             //console.error('data: (%d, %d) -> %s', data[0], data[1], String.fromCharCode(data[3]));
 
-            var d = new Date();
-            console.error(d.getTime());
+            //Speed debugging
+            //var d = new Date();
+            //console.error(d.getTime());
 
             // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
             // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
             var dataLength = data.length;
 
-            console.error(dataLength);
+            //console.error(dataLength);
 
             var remainderLength = self.dataRemainder.length;
             var numberOfCellsToSend = (dataLength + remainderLength) / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor or parseInt
@@ -270,19 +315,23 @@ _.extend(BrogueController.prototype, {
             //assert(0);
         });
 
-        self.brogueChild.on('exit', function(code){
-            // go back to lobby in the event something happens to the child process
-            self.brogueChild = null;
-            allUsers.users[self.controllers.auth.currentUserName].brogueProcess = null;
-            self.sendMessage("quit", true);
-            self.setState(brogueState.INACTIVE);
-            self.controllers.lobby.sendAllUserData();
-            self.controllers.lobby.userDataListen();
-        });
+        //TODO: this guarding is for the reconnect case. Should be handled differently
+        if(self.brogueChild) {
 
-        self.brogueChild.on('error', function(err){
-            self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
-        });
+            self.brogueChild.on('exit', function (code) {
+                // go back to lobby in the event something happens to the child process
+                self.brogueChild = null;
+                allUsers.users[self.controllers.auth.currentUserName].brogueProcess = null;
+                self.sendMessage("quit", true);
+                self.setState(brogueState.INACTIVE);
+                self.controllers.lobby.sendAllUserData();
+                self.controllers.lobby.userDataListen();
+            });
+
+            self.brogueChild.on('error', function (err) {
+                self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
+            });
+        }
     }
 });
 
