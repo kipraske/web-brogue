@@ -1,4 +1,4 @@
-// A controller in the context of this application is just a part of the code which can recieve messages and send messages.  The controller base defines this basic functionality.
+// A controller in the context of this application is just a part of the code which can receive messages and send messages.  The controller base defines this basic functionality.
 
 function Controller() {
     this.controllerName = "";

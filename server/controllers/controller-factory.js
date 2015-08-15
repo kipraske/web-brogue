@@ -3,7 +3,7 @@
 // This way, each controller can call methods on the other controllers if needed, but still be in separate files.
 // controllersList is an array of the names of the controllers (which match the filenames).
 
-module.exports = function(ws, controllersList){
+module.exports = function(ws, controllersList) {
     
     var controllerInstances = {};
     var numControllers = controllersList.length;

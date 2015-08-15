@@ -31,7 +31,8 @@ Router.prototype = {
             this.routeCollection["error"].handleIncomingMessage(rawMessage);
             return;
         }
-        
+
+        //Route non-binary messages
         if (this.routeCollection[message.controller]) {
             this.routeCollection[message.controller].handleIncomingMessage(message);
         }
