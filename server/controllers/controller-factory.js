@@ -13,7 +13,9 @@ module.exports = function(ws, controllersList){
         var cPath = "./" + cName + "-controller";
         var ControllerClass = require(cPath);
         var controllerInstance = new ControllerClass(ws);
-        
+        //TODO: remove debug
+        console.error("New controller instance: " + cPath);
+
         controllerInstances[controllerInstance.controllerName] = controllerInstance;
     }
     

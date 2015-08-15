@@ -79,9 +79,7 @@ _.extend(BrogueController.prototype, {
 
         //Send message to socket, if connected
         if (this.brogueSocket) {
-            this.brogueSocket.send(message, 0, messageLength, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function() {
-                    //console.error('client send');
-            });
+            this.brogueSocket.send(message, 0, messageLength, this.getChildWorkingDir() + "/" + SERVER_SOCKET);
         }
     },
     
@@ -102,7 +100,7 @@ _.extend(BrogueController.prototype, {
         start: function (data) {
             var currentUserName = this.controllers.auth.currentUserName;
 
-            if (!currentUserName || this.brogueChild) {
+            if (!currentUserName || this.brogueSocket) {
                 return;
             }
 
@@ -118,6 +116,7 @@ _.extend(BrogueController.prototype, {
             var childWorkingDir = this.getChildWorkingDir();
             var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
 
+            //TODO: paths containing data
             if (data) {
                 if (data.savedGame) {
                     var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
@@ -161,15 +160,13 @@ _.extend(BrogueController.prototype, {
 
                 //Support reconnect (TODO: for other modes, change structure?)
 
-                //TODO: We already have a brogueSocket???
+                //TODO: We already have a brogueSocket??? - when does this occur? multiple windows?
 
                 //Test if we can send to server socket, if so, no need to spawn a new process, just attach
 
-                this.brogueSocket = unixdgram.createSocket('unix_dgram', function(buf, rinfo) {
-                });
-
                 try {
 
+                    //TODO: send screen redraw cmd, not inventory
                     var sendBuf = new Buffer(5);
                     sendBuf[0] = 0; //keystroke
                     sendBuf[1] = 0; //upper byte
@@ -177,15 +174,17 @@ _.extend(BrogueController.prototype, {
                     sendBuf[3] = 0; //mod
                     sendBuf[4] = 0; //mod
 
+                    this.brogueSocket = unixdgram.createSocket('unix_dgram');
+
                     this.brogueSocket.send(sendBuf, 0, 5, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function () {
-                        console.error("ok to connect to socket - callback");
+                        console.error("ok to connect to socket - callback"); //TODO: remove
                     });
 
-                    console.error("ok to connect to socket");
                     //Okay to connect through socket to running process
                     this.attachChildProcess();
                 }
                 catch(e) {
+                    //TODO: remove debug
                     console.error("failed to connect to socket, spawning new process " + e);
 
                     this.spawnChildProcess(args, childWorkingDir);
@@ -196,7 +195,7 @@ _.extend(BrogueController.prototype, {
         clean: function (data) {
             
             // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
-            //Commented out temporarily so we can practice reconnecting
+            //Commented out temporarily so we can practice reconnecting - seems to be called on logout (window close)
             //this.handlerCollection.kill.call(this, data);
         },
         
@@ -209,10 +208,13 @@ _.extend(BrogueController.prototype, {
         },
         
         mirrorDuplicate : function(data){
-            var currentUserName = this.controllers.auth.currentUserName;
-            this.commandeerUserChildProcess(currentUserName);
+//            var currentUserName = this.controllers.auth.currentUserName;
+  //          this.commandeerUserChildProcess(currentUserName);
+            //We can't support 2 socket based connections to the brogue executable?? I think (well, it's the wrong thing to do anyway)
+            //Multiple screens accessing the brogue executable need to be handled through an intermediate layer
         },
         killDuplicate : function(data){
+            //Not sure we want this
             allUsers.killUserProcess(this.controllers.auth.currentUserName);
         },
     },
@@ -239,14 +241,6 @@ _.extend(BrogueController.prototype, {
         this.controllers.lobby.stopUserDataListen();
         this.setState(brogueState.PLAYING);
     },
-    
-    commandeerUserChildProcess : function(userName){
-        this.brogueChild = allUsers.users[this.controllers.auth.currentUserName].brogueProcess;
-        this.attachChildEvents();
-        this.controllers.lobby.stopUserDataListen();
-        this.setState(brogueState.PLAYING);
-    },
-
     attachChildEvents: function () {
         var self = this;
 
