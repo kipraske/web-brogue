@@ -30,6 +30,8 @@ function BrogueInterface(username) {
     this.dataAccumulator; // buffer
     this.dataRemainder = new Buffer(0);
     this.brogueEvents = new events.EventEmitter();
+
+    this.disconnected = false;
 };
 
 BrogueInterface.prototype.addDataListener = function(listener) {
@@ -40,12 +42,20 @@ BrogueInterface.prototype.addQuitListener = function(listener) {
     this.brogueEvents.on('quit', listener);
 };
 
+BrogueInterface.prototype.addErrorListener = function(listener) {
+    this.brogueEvents.on('error', listener);
+};
+
 BrogueInterface.prototype.removeDataListener = function(listener) {
     this.brogueEvents.removeListener('data', listener);
 };
 
 BrogueInterface.prototype.removeQuitListener = function(listener) {
     this.brogueEvents.removeListener('quit', listener);
+};
+
+BrogueInterface.prototype.removeErrorListener = function(listener) {
+    this.brogueEvents.removeListener('error', listener);
 };
 
 BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callback) {
@@ -77,6 +87,7 @@ BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callba
         callback(new Error("Invalid mouse or key input: " + JSON.stringify(message)));
         return;
     }
+    console.log("Incoming binary message");
 
     //Send message to socket, if connected
     if (this.brogueSocket) {
@@ -95,6 +106,8 @@ BrogueInterface.prototype.getChildWorkingDir = function () {
 
 
 BrogueInterface.prototype.start = function () {
+
+    console.log("BrogueInterface.start");
 
     var childWorkingDir = this.getChildWorkingDir();
     var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
@@ -195,7 +208,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
     try { fs.unlinkSync(this.getChildWorkingDir() + "/" + CLIENT_SOCKET); } catch (e) { /* swallow */ }
 
-    var client_read = unixdgram.createSocket('unix_dgram', function(data, rinfo) {
+    var client_read = unixdgram.createSocket('unix_dgram');
+    client_read.on('message', function(data, rinfo) {
 
         //Callback when receiving data on the socket from brogue
 
@@ -253,16 +267,23 @@ BrogueInterface.prototype.attachChildEvents = function () {
         self.brogueEvents.emit('data', self.dataAccumulator);
     });
 
+    client_read.on('error', function(err) {
+        console.error('Error when reading from client socket' + err);
+        self.brogueEvents.emit('error', 'Error when reading from client socket');
+    });
+
     client_read.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
 
     //Server write socket
     //May have already been connected in the test above
     if(!this.brogueSocket) {
-        this.brogueSocket = unixdgram.createSocket('unix_dgram', function (buf, rinfo) {
-            //console.error('client recv', arguments);
-            //assert(0);
-        });
+        this.brogueSocket = unixdgram.createSocket('unix_dgram');
     }
+
+    this.brogueSocket.on('error', function(err) {
+        console.error('Error when writing to client socket: ' + err);
+        self.brogueEvents.emit('error', 'Error when writing from client socket');
+    });
 
     //TODO: this guarding is for the reconnect case. Should be handled differently
     if(self.brogueChild) {
@@ -270,24 +291,19 @@ BrogueInterface.prototype.attachChildEvents = function () {
         self.brogueChild.on('exit', function (code) {
             // go back to lobby in the event something happens to the child process
             self.brogueChild = null;
-            //allUsers.users[self.controllers.auth.currentUserName].brogueProcess = null;
+            self.brogueSocket = null;
+            self.disconnected = true;
+
+            console.log('Brogue Process exiting');
 
             //TODO: This needs to be sent in a listener / callback
 
-            this.brogueEvents.emit('quit');
-
-            /*
-            self.sendMessage("quit", true);
-            self.setState(brogueState.INACTIVE);
-            self.controllers.lobby.sendAllUserData();
-            self.controllers.lobby.userDataListen();
-            */
+            self.brogueEvents.emit('quit');
         });
 
         self.brogueChild.on('error', function (err) {
-            //self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
             //TODO: This needs to be sent in a listener / callback - no listener for this yest
-            this.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
+            self.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
         });
     }
 };

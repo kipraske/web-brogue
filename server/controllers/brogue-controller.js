@@ -13,6 +13,7 @@ function BrogueController(ws) {
     this.controllerName = "brogue";
     this.ws = ws;
     this.controllers = null;
+    this.username;
     
     this.currentState = brogueState.INACTIVE;
     this.brogueInterface;
@@ -39,10 +40,12 @@ _.extend(BrogueController.prototype, {
             return;
         }
 
+        var self = this;
+
         this.brogueInterface.handleIncomingBinaryMessage(message, function(err) {
 
             if(err) {
-                this.controllers.error.send(err.message);
+                self.controllers.error.send(err.message);
             }
         });
     },
@@ -59,6 +62,7 @@ _.extend(BrogueController.prototype, {
     handlerCollection: {
         start: function (data) {
 
+            console.log("brogue-controller.start")
             //TODO: assuming data has the username of the session to get
 
             var brogueSessionName;
@@ -70,6 +74,8 @@ _.extend(BrogueController.prototype, {
                 brogueSessionName = data.username;
             }
 
+            this.username = brogueSessionName; //for debugging
+
             //(could do this in callback style, since it's kinda IO
             this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName);
 
@@ -79,7 +85,8 @@ _.extend(BrogueController.prototype, {
                 self.ws.send(data, {binary: true}, self.defaultSendCallback.bind(self));
             });
 
-            this.brogueInterface.addQuitListener(function (data) {
+            this.brogueInterface.addQuitListener(function () {
+                console.log("Quit listener" + self.username);
                 self.sendMessage("quit", true);
                 self.setState(brogueState.INACTIVE);
                 self.controllers.lobby.sendAllUserData();
@@ -100,7 +107,8 @@ _.extend(BrogueController.prototype, {
             //Commented out temporarily so we can practice reconnecting - seems to be called on logout (window close)
             //this.handlerCollection.kill.call(this, data);
         },
-        
+
+        //TODO: If required, this needs to migrate to interface
         kill: function (data) {
             if (! this.brogueChild){
                 return;
