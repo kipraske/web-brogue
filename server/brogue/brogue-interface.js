@@ -12,10 +12,7 @@ var fs = require('fs');
 var SERVER_SOCKET = 'server-socket';
 var CLIENT_SOCKET = 'client-socket';
 
-
 var CELL_MESSAGE_SIZE = 10;
-//var STATUS_MESSAGE_NUMBER = 4;
-//var STATUS_MESSAGE_SIZE = STATUS_MESSAGE_NUMBER * CELL_MESSAGE_SIZE;
 
 var STATUS_BYTE_FLAG = 255;
 var STATUS_DATA_OFFSET = 2;
@@ -25,14 +22,11 @@ var KEY_INPUT_SIZE = 5;
 
 function BrogueInterface(username) {
     this.username = username;
-    this.brogueSocket;
-    this.brogueChild;
-    this.dataAccumulator; // buffer
     this.dataRemainder = new Buffer(0);
     this.brogueEvents = new events.EventEmitter();
 
     this.disconnected = false;
-};
+}
 
 BrogueInterface.prototype.addDataListener = function(listener) {
     this.brogueEvents.on('data', listener);
@@ -52,6 +46,10 @@ BrogueInterface.prototype.addStatusListener = function(listener) {
 
 BrogueInterface.prototype.removeDataListener = function(listener) {
     this.brogueEvents.removeListener('data', listener);
+};
+
+BrogueInterface.prototype.removeStatusListener = function(listener) {
+    this.brogueEvents.removeListener('status', listener);
 };
 
 BrogueInterface.prototype.removeQuitListener = function(listener) {

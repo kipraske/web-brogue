@@ -9,15 +9,14 @@ var brogueComms = require('../brogue/brogue-comms');
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
+//TODO: Cleanup brogueInterface on controller exit
+
 function BrogueController(ws) {
     this.controllerName = "brogue";
     this.ws = ws;
     this.controllers = null;
-    this.username;
-    
-    this.currentState = brogueState.INACTIVE;
-    this.brogueInterface;
 
+    this.currentState = brogueState.INACTIVE;
 }
 
 BrogueController.prototype = new Controller();
@@ -60,7 +59,45 @@ _.extend(BrogueController.prototype, {
     },
 
     removeBrogueListeners: function() {
-        //TODO
+        console.log("Removing data listener. Before " + this.brogueInterface.brogueEvents.listeners('data').length);
+        this.brogueInterface.removeDataListener(this.dataListener);
+        console.log("Removing data listener. After " + this.brogueInterface.brogueEvents.listeners('data').length);
+        this.brogueInterface.removeStatusListener(this.statusListener);
+        this.brogueInterface.removeQuitListener(this.quitListener);
+        this.brogueInterface.removeErrorListener(this.errorListener);
+
+    },
+
+    brogueQuitListener: function () {
+        console.log("Quit listener " + this.username);
+        this.sendMessage("quit", true);
+        this.setState(brogueState.INACTIVE);
+        this.controllers.lobby.sendAllUserData();
+        this.controllers.lobby.userDataListen();
+
+        this.removeBrogueListeners();
+    },
+
+    brogueErrorListener: function () {
+        console.log("Error listener" + this.username);
+        //TODO: Maybe some UI for the user? This normally occurs on an orphaned process connecting, which is expected behaviour
+        this.sendMessage("quit", true);
+        this.setState(brogueState.INACTIVE);
+        this.controllers.lobby.sendAllUserData();
+        this.controllers.lobby.userDataListen();
+
+        this.removeBrogueListeners();
+    },
+
+    brogueStatusListener: function (status) {
+        allUsers.updateLobbyStatus(
+            this.controllers.auth.currentUserName,
+            status.updateFlag,
+            status.updateValue);
+    },
+
+    brogueDataListener: function (data) {
+        this.ws.send(data, {binary: true}, this.defaultSendCallback.bind(this));
     },
 
     handlerCollection: {
@@ -83,39 +120,21 @@ _.extend(BrogueController.prototype, {
             //(could do this in callback style, since it's kinda IO
             this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName);
 
-            var self = this;
+            console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
-            this.brogueInterface.addDataListener(function (data) {
-                self.ws.send(data, {binary: true}, self.defaultSendCallback.bind(self));
-            });
+            this.dataListener = this.brogueDataListener.bind(this);
+            this.brogueInterface.addDataListener(this.dataListener);
 
-            this.brogueInterface.addQuitListener(function () {
-                console.log("Quit listener" + self.username);
-                self.sendMessage("quit", true);
-                self.setState(brogueState.INACTIVE);
-                self.controllers.lobby.sendAllUserData();
-                self.controllers.lobby.userDataListen();
+            this.quitListener = this.brogueQuitListener.bind(this);
+            this.brogueInterface.addQuitListener(this.quitListener);
 
-                self.removeBrogueListeners();
-            });
+            this.errorListener = this.brogueErrorListener.bind(this);
+            this.brogueInterface.addErrorListener(this.errorListener);
 
-            this.brogueInterface.addErrorListener(function () {
-                console.log("Error listener" + self.username);
-                //TODO: Maybe some UI for the user? This normally occurs on an orphaned process connecting, which is expected behaviour
-                self.sendMessage("quit", true);
-                self.setState(brogueState.INACTIVE);
-                self.controllers.lobby.sendAllUserData();
-                self.controllers.lobby.userDataListen();
+            this.statusListener = this.brogueStatusListener.bind(this);
+            this.brogueInterface.addStatusListener(this.statusListener);
 
-                self.removeBrogueListeners();
-            });
-
-            this.brogueInterface.addStatusListener(function(status) {
-                allUsers.updateLobbyStatus(
-                    self.controllers.auth.currentUserName,
-                    status.updateFlag,
-                    status.updateValue);
-            });
+            console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.controllers.lobby.stopUserDataListen();
             this.setState(brogueState.PLAYING);
