@@ -1,6 +1,8 @@
 // Class tracks communication with all brogue sockets
 // Responsible for distributing messages from players and observers
 
+var brogue = require('./brogue-interface');
+
 module.exports = {
 
     brogueInterface: {},
@@ -11,10 +13,10 @@ module.exports = {
             return this.brogueInterface[username];
         }
 
-        brogueInterface[username] = new BrogueInterface(username);
-        brogueInterface[username].start();
+        this.brogueInterface[username] = new brogue(username);
+        this.brogueInterface[username].start();
 
-        return brogueInterface[username];
+        return this.brogueInterface[username];
     }
 }
 

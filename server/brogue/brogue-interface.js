@@ -1,11 +1,52 @@
 // Class owns communication with a single? brogue socket
 // Needs a wrapper class to control its lifecycle then
 
+var events = require('events');
+var unixdgram = require('unix-dgram');
+var childProcess = require('child_process');
+
+var config = require('../config');
+var path = require('path');
+var fs = require('fs');
+
+var SERVER_SOCKET = 'server-socket';
+var CLIENT_SOCKET = 'client-socket';
+
+
+var CELL_MESSAGE_SIZE = 10;
+//var STATUS_MESSAGE_NUMBER = 4;
+//var STATUS_MESSAGE_SIZE = STATUS_MESSAGE_NUMBER * CELL_MESSAGE_SIZE;
+
+var STATUS_BYTE_FLAG = 255;
+var STATUS_DATA_OFFSET = 2;
+
+var MOUSE_INPUT_SIZE = 5;
+var KEY_INPUT_SIZE = 5;
+
 function BrogueInterface(username) {
     this.username = username;
     this.brogueSocket;
     this.brogueChild;
-}
+    this.dataAccumulator; // buffer
+    this.dataRemainder = new Buffer(0);
+    this.brogueEvents = new events.EventEmitter();
+};
+
+BrogueInterface.prototype.addDataListener = function(listener) {
+    this.brogueEvents.on('data', listener);
+};
+
+BrogueInterface.prototype.addQuitListener = function(listener) {
+    this.brogueEvents.on('quit', listener);
+};
+
+BrogueInterface.prototype.removeDataListener = function(listener) {
+    this.brogueEvents.removeListener('data', listener);
+};
+
+BrogueInterface.prototype.removeQuitListener = function(listener) {
+    this.brogueEvents.removeListener('quit', listener);
+};
 
 BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callback) {
 
@@ -196,15 +237,20 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 256 +
                     self.dataAccumulator[i + STATUS_DATA_OFFSET + 4];
 
-                allUsers.updateLobbyStatus(
-                    self.controllers.auth.currentUserName,
-                    updateFlag,
-                    updateValue);
+                //TODO: This should be a listener - listener not supported yet
+
+                //allUsers.updateLobbyStatus(
+                //    self.controllers.auth.currentUserName,
+                //    updateFlag,
+                //    updateValue);
+
+                self.brogueEvents.emit('status', {flag: updateFlag, value: updateValue});
             }
         }
 
         //TODO: This needs to be sent to all controller listeners
         //self.ws.send(self.dataAccumulator, {binary: true}, self.defaultSendCallback.bind(self));
+        self.brogueEvents.emit('data', self.dataAccumulator);
     });
 
     client_read.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
@@ -228,6 +274,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
             //TODO: This needs to be sent in a listener / callback
 
+            this.brogueEvents.emit('quit');
+
             /*
             self.sendMessage("quit", true);
             self.setState(brogueState.INACTIVE);
@@ -238,7 +286,10 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
         self.brogueChild.on('error', function (err) {
             //self.controller.error.send('Message could not be sent to brogue process - Error: ' + err);
-            //TODO: This needs to be sent in a listener / callback
+            //TODO: This needs to be sent in a listener / callback - no listener for this yest
+            this.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
         });
     }
-}
+};
+
+module.exports = BrogueInterface;

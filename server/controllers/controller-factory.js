@@ -11,6 +11,7 @@ module.exports = function(ws, controllersList) {
     for (var i = 0; i < numControllers; i++){
         var cName = controllersList[i];
         var cPath = "./" + cName + "-controller";
+        console.log(cPath);
         var ControllerClass = require(cPath);
         var controllerInstance = new ControllerClass(ws);
         //TODO: remove debug

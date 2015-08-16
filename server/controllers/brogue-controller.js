@@ -1,10 +1,4 @@
 var _ = require('underscore');
-var config = require('../config');
-var childProcess = require('child_process');
-var path = require('path');
-var fs = require('fs');
-
-var unixdgram = require('unix-dgram');
 
 var router = require('./router');
 var Controller = require('./controller-base');
@@ -12,19 +6,6 @@ var brogueState = require('../enum/brogue-state');
 var allUsers = require('../user/all-users');
 
 var brogueComms = require('../brogue/brogue-comms');
-
-var SERVER_SOCKET = 'server-socket';
-var CLIENT_SOCKET = 'client-socket';
-
-var CELL_MESSAGE_SIZE = 10;
-
-var STATUS_MESSAGE_NUMBER = 4;
-var STATUS_MESSAGE_SIZE = STATUS_MESSAGE_NUMBER * CELL_MESSAGE_SIZE;
-var STATUS_BYTE_FLAG = 255;
-var STATUS_DATA_OFFSET = 2;
-
-var MOUSE_INPUT_SIZE = 5;
-var KEY_INPUT_SIZE = 5;
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
@@ -34,10 +15,8 @@ function BrogueController(ws) {
     this.controllers = null;
     
     this.currentState = brogueState.INACTIVE;
-    this.brogueChild;  // child process
-    this.dataAccumulator; // buffer
     this.brogueInterface;
-    this.dataRemainder = new Buffer(0);
+
 }
 
 BrogueController.prototype = new Controller();
@@ -52,6 +31,7 @@ _.extend(BrogueController.prototype, {
             this.handleIncomingJSONMessage(message);
         }
     },
+
     handleIncomingBinaryMessage : function(message){
 
         if(!this.brogueInterface) {
@@ -83,7 +63,7 @@ _.extend(BrogueController.prototype, {
 
             var brogueSessionName;
 
-            if(!data.username) {
+            if(!data || !data.username) {
                 brogueSessionName = this.controllers.auth.currentUserName;
             }
             else {
@@ -92,6 +72,20 @@ _.extend(BrogueController.prototype, {
 
             //(could do this in callback style, since it's kinda IO
             this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName);
+
+            var self = this;
+
+            this.brogueInterface.addDataListener(function (data) {
+                self.ws.send(data, {binary: true}, self.defaultSendCallback.bind(self));
+            });
+
+            this.brogueInterface.addQuitListener(function (data) {
+                self.sendMessage("quit", true);
+                self.setState(brogueState.INACTIVE);
+                self.controllers.lobby.sendAllUserData();
+                self.controllers.lobby.userDataListen();
+            });
+
             this.controllers.lobby.stopUserDataListen();
             this.setState(brogueState.PLAYING);
 
