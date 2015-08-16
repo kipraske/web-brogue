@@ -46,6 +46,10 @@ BrogueInterface.prototype.addErrorListener = function(listener) {
     this.brogueEvents.on('error', listener);
 };
 
+BrogueInterface.prototype.addStatusListener = function(listener) {
+    this.brogueEvents.on('status', listener);
+};
+
 BrogueInterface.prototype.removeDataListener = function(listener) {
     this.brogueEvents.removeListener('data', listener);
 };
@@ -87,7 +91,6 @@ BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callba
         callback(new Error("Invalid mouse or key input: " + JSON.stringify(message)));
         return;
     }
-    console.log("Incoming binary message");
 
     //Send message to socket, if connected
     if (this.brogueSocket) {
@@ -251,24 +254,17 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     self.dataAccumulator[i + STATUS_DATA_OFFSET + 3] * 256 +
                     self.dataAccumulator[i + STATUS_DATA_OFFSET + 4];
 
-                //TODO: This should be a listener - listener not supported yet
-
-                //allUsers.updateLobbyStatus(
-                //    self.controllers.auth.currentUserName,
-                //    updateFlag,
-                //    updateValue);
-
                 self.brogueEvents.emit('status', {flag: updateFlag, value: updateValue});
             }
         }
 
-        //TODO: This needs to be sent to all controller listeners
-        //self.ws.send(self.dataAccumulator, {binary: true}, self.defaultSendCallback.bind(self));
         self.brogueEvents.emit('data', self.dataAccumulator);
     });
 
     client_read.on('error', function(err) {
         console.error('Error when reading from client socket' + err);
+        //Not identified any cases where this can happen yet but assume it's terminal
+        self.disconnected = true;
         self.brogueEvents.emit('error', 'Error when reading from client socket');
     });
 
@@ -282,10 +278,14 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
     this.brogueSocket.on('error', function(err) {
         console.error('Error when writing to client socket: ' + err);
-        self.brogueEvents.emit('error', 'Error when writing from client socket');
+        //This occurs when we connected to an orphaned brogue process and it exits
+        //Therefore we set ourselves into an ended state so a new game can be started
+        self.disconnected = true;
+
+        self.brogueEvents.emit('error', 'Error when writing to client socket');
     });
 
-    //TODO: this guarding is for the reconnect case. Should be handled differently
+    //Not applicable when connecting to an orphaned process
     if(self.brogueChild) {
 
         self.brogueChild.on('exit', function (code) {
@@ -296,13 +296,12 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
             console.log('Brogue Process exiting');
 
-            //TODO: This needs to be sent in a listener / callback
-
             self.brogueEvents.emit('quit');
         });
 
         self.brogueChild.on('error', function (err) {
-            //TODO: This needs to be sent in a listener / callback - no listener for this yest
+            self.disconnected = true;
+
             self.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
         });
     }

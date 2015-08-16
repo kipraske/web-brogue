@@ -59,6 +59,10 @@ _.extend(BrogueController.prototype, {
         }
     },
 
+    removeBrogueListeners: function() {
+        //TODO
+    },
+
     handlerCollection: {
         start: function (data) {
 
@@ -91,14 +95,30 @@ _.extend(BrogueController.prototype, {
                 self.setState(brogueState.INACTIVE);
                 self.controllers.lobby.sendAllUserData();
                 self.controllers.lobby.userDataListen();
+
+                self.removeBrogueListeners();
+            });
+
+            this.brogueInterface.addErrorListener(function () {
+                console.log("Error listener" + self.username);
+                //TODO: Maybe some UI for the user? This normally occurs on an orphaned process connecting, which is expected behaviour
+                self.sendMessage("quit", true);
+                self.setState(brogueState.INACTIVE);
+                self.controllers.lobby.sendAllUserData();
+                self.controllers.lobby.userDataListen();
+
+                self.removeBrogueListeners();
+            });
+
+            this.brogueInterface.addStatusListener(function(status) {
+                allUsers.updateLobbyStatus(
+                    self.controllers.auth.currentUserName,
+                    status.updateFlag,
+                    status.updateValue);
             });
 
             this.controllers.lobby.stopUserDataListen();
             this.setState(brogueState.PLAYING);
-
-            //TODO: Handle errors
-
-
         },
         
         clean: function (data) {
