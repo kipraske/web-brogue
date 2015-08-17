@@ -15,8 +15,7 @@ function BrogueController(ws) {
     this.controllerName = "brogue";
     this.ws = ws;
     this.controllers = null;
-
-    this.currentState = brogueState.INACTIVE;
+    this.readOnly = true;
 }
 
 BrogueController.prototype = new Controller();
@@ -36,6 +35,11 @@ _.extend(BrogueController.prototype, {
 
         if(!this.brogueInterface) {
             this.controllers.error.send("Not connected to brogue session");
+            return;
+        }
+
+        if(this.readOnly) {
+            console.log("Ignoring command for observe game.");
             return;
         }
 
@@ -90,10 +94,13 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueStatusListener: function (status) {
-        allUsers.updateLobbyStatus(
-            this.controllers.auth.currentUserName,
-            status.updateFlag,
-            status.updateValue);
+        //TODO: Consider observer case
+        if(this.controllers.auth.currentUserName) {
+            allUsers.updateLobbyStatus(
+                this.controllers.auth.currentUserName,
+                status.updateFlag,
+                status.updateValue);
+        }
     },
 
     brogueDataListener: function (data) {
@@ -103,15 +110,25 @@ _.extend(BrogueController.prototype, {
     handlerCollection: {
         start: function (data) {
 
-            console.log("brogue-controller.start")
+            console.log("brogue-controller.start");
+            if(data) {
+                console.log("Username supplied " + data.username);
+            }
             //TODO: assuming data has the username of the session to get
 
             var brogueSessionName;
 
+            //Work out if this is the user playing their own game or just observing
             if(!data || !data.username) {
                 brogueSessionName = this.controllers.auth.currentUserName;
+                this.readOnly = false;
             }
             else {
+                if(this.controllers.auth.currentUserName) {
+                    if(data.username === this.controllers.auth.currentUserName) {
+                        this.readOnly = false;
+                    }
+                }
                 brogueSessionName = data.username;
             }
 
@@ -158,8 +175,10 @@ _.extend(BrogueController.prototype, {
     },
     
     setState : function(state){
-        this.currentState = state;
-        allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
+        //TODO: consider observing case
+        if(this.controllers.auth.currentUserName) {
+            allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
+        }
     },
 
 });

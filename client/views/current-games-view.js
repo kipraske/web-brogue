@@ -28,16 +28,16 @@ define([
         
         updateRowModelData: function(data){                    
             // handle incoming user data
-            if (data){
+            if (data) {
                 this.tableState.set("isEmpty", false);
             }
-            else{
+            else {
                 this.tableState.set("isEmpty", true);
             }
             
             this.renderHeadingOnEmptyChange();
             
-            for (var incomingUserName in data){
+            for (var incomingUserName in data) {
                 var update = data[incomingUserName];
                 
                 if (!rowViewCollection[incomingUserName]) {

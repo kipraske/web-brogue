@@ -3,23 +3,41 @@
 define([
     "jquery",
     "underscore",
-    "backbone"
-], function($, _, Backbone) {
+    "backbone",
+    "dataIO/send-generic",
+    "views/view-activation-helpers",
+], function ($, _, Backbone, send, activate) {
 
     var CurrentGamesRowView = Backbone.View.extend({
         tagName: "tr",
         className: "games-row",
         events : {
+            "click #observe-game" : "observeGame"
         },
         
         template : _.template($('#current-games-row').html()),
-        
+
+        observeGame: function(event){
+            event.preventDefault();
+
+            var userNameStr = event.target.innerHTML;
+            var userName = userNameStr.split(' ', 2)[1];
+            console.log(userNameStr);
+            console.log(userName);
+
+            send("brogue", "start", {username: userName});
+            this.goToConsole();
+        },
+
         render: function() {
             this.model.calculateFormattedIdleTime();
             this.$el.html(this.template(this.model.toJSON()));
             return this;
-        }
-        
+        },
+
+        goToConsole : function() {
+            activate.console();
+        },
 
     });
 
