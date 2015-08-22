@@ -14,6 +14,9 @@ var CLIENT_SOCKET = 'client-socket';
 
 var CELL_MESSAGE_SIZE = 10;
 
+var EVENT_BYTE_FLAG = 254;
+var EVENT_DATA_OFFSET = 2;
+
 var STATUS_BYTE_FLAG = 255;
 var STATUS_DATA_OFFSET = 2;
 
@@ -46,6 +49,10 @@ BrogueInterface.prototype.addStatusListener = function(listener) {
     this.brogueEvents.on('status', listener);
 };
 
+BrogueInterface.prototype.addEventListener = function(listener) {
+    this.brogueEvents.on('event', listener);
+};
+
 BrogueInterface.prototype.removeDataListener = function(listener) {
     this.brogueEvents.removeListener('data', listener);
 };
@@ -60,6 +67,10 @@ BrogueInterface.prototype.removeQuitListener = function(listener) {
 
 BrogueInterface.prototype.removeErrorListener = function(listener) {
     this.brogueEvents.removeListener('error', listener);
+};
+
+BrogueInterface.prototype.removeEventListener = function(listener) {
+    this.brogueEvents.removeListener('event', listener);
 };
 
 BrogueInterface.prototype.sendRefreshScreen = function(callback) {
@@ -269,6 +280,38 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     self.dataAccumulator[i + STATUS_DATA_OFFSET + 4];
 
                 self.brogueEvents.emit('status', {flag: updateFlag, value: updateValue});
+
+                //Remove this status update from the dataAccumulator
+                if(i + CELL_MESSAGE_SIZE < self.dataAccumulator.length) {
+                    self.dataAccumulator.copy(self.dataAccumulator, i, i + CELL_MESSAGE_SIZE);
+                }
+            }
+            else if(self.dataAccumulator[i] === EVENT_BYTE_FLAG) {
+                var eventId = self.dataAccumulator[i + EVENT_DATA_OFFSET];
+                console.log("EVENT found");
+
+                // We need to send bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
+                var eventData1 =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 1] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 2];
+
+                var eventData2 =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 3] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 4];
+
+                var eventStr = self.dataAccumulator.slice(i + EVENT_DATA_OFFSET + 5, 100 - 4 - EVENT_DATA_OFFSET).toString('utf8');
+
+                self.brogueEvents.emit('event', {
+                    eventId: eventId,
+                    data1: eventData1,
+                    data2: eventData2,
+                    message: eventStr
+                });
+
+                //Remove this status update from the dataAccumulator
+                if (i + CELL_MESSAGE_SIZE < self.dataAccumulator.length) {
+                    self.dataAccumulator.copy(self.dataAccumulator, i, i + CELL_MESSAGE_SIZE);
+                }
             }
         }
 

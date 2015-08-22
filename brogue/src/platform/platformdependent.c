@@ -70,6 +70,10 @@ boolean pauseForMilliseconds(short milliseconds) {
 	return currentConsole.pauseForMilliseconds(milliseconds);
 }
 
+void notifyEvent(short eventId, short data1, short data2, const char *str) {
+	currentConsole.notifyEvent(eventId, data1, data2, str);
+}
+
 // creates an empty high scores file
 void initScores() {
 	short i;

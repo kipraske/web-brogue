@@ -320,6 +320,13 @@ enum eventTypes {
 	NUMBER_OF_EVENT_TYPES, // unused
 };
 
+enum notificationEventTypes {
+	GAMEOVER_QUIT,
+	GAMEOVER_DEATH,
+	GAMEOVER_VICTORY,
+	GAMEOVER_SUPERVICTORY
+};
+
 typedef struct rogueEvent {
 	enum eventTypes eventType;
 	signed long param1;
@@ -2658,6 +2665,7 @@ extern "C" {
 				  short foreRed, short foreGreen, short foreBlue);
 	void pausingTimerStartsNow();
 	boolean pauseForMilliseconds(short milliseconds);
+	void notifyEvent(short eventId, short data1, short data2, const char *str);
 	void nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance);
 	boolean controlKeyIsDown();
 	boolean shiftKeyIsDown();

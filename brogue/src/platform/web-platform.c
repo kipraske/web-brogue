@@ -15,6 +15,7 @@
 #define CLIENT_SOCKET "client-socket"
 
 #define OUTPUT_SIZE             10
+#define EVENT_SIZE              100
 #define MAX_INPUT_SIZE          5
 #define MOUSE_INPUT_SIZE        4
 #define KEY_INPUT_SIZE          4
@@ -293,13 +294,47 @@ static boolean modifier_held(int modifier) {
 	return 0;
 }
 
+static void notify_event(short eventId, short data1, short data2, const char *str) {
+  char msg[160];
+  snprintf(msg, 160, "event id: %d, d1: %d, d2: %d, str: %s", eventId, data1, data2, str);
+  write_to_log(msg);
+
+  char statusOutputBuffer[EVENT_SIZE];
+
+  // Coordinates of (254, 254) will let the server and client know that this is a event notification update rather than a cell update
+  statusOutputBuffer[0] = 254;
+  statusOutputBuffer[1] = 254;
+
+  // The event id
+  statusOutputBuffer[2] = eventId;
+
+  // I am just going to explicitly send the status big-endian so we can be consistent on the client and server
+  statusOutputBuffer[3] = data1 >> 8 & 0xff;
+  statusOutputBuffer[4] = data1;
+  statusOutputBuffer[5] = data2 >> 8 & 0xff;
+  statusOutputBuffer[6] = data2;
+
+  // The rest is filler so we keep consistent output size
+
+  int j;
+  for (j = 7; j < EVENT_SIZE; j++){
+      statusOutputBuffer[j] = str[j-7];
+      if(!str[j - 7])
+        break;
+  }
+
+  write_to_socket(statusOutputBuffer, EVENT_SIZE);
+  flush_output_buffer();
+}
+
 struct brogueConsole webConsole = {
 	gameLoop,
 	web_pauseForMilliseconds,
 	web_nextKeyOrMouseEvent,
 	web_plotChar,
 	web_remap,
-	modifier_held
+	modifier_held,
+	notify_event
 };
 
 #endif

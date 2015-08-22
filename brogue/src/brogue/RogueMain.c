@@ -1175,8 +1175,15 @@ void gameOver(char *killedBy, boolean useCustomPhrasing) {
 		}
 		blackOutScreen();
 		saveRecording();
+
+	if(!rogue.quit) {
+			notifyEvent(GAMEOVER_DEATH, theEntry.score, 0, theEntry.description);
+		}
+		else {
+			notifyEvent(GAMEOVER_QUIT, theEntry.score, 0, theEntry.description);
+  	}
 	}
-	
+
 	rogue.gameHasEnded = true;
 }
 
@@ -1287,7 +1294,14 @@ void victory(boolean superVictory) {
 	saveRecording();
 	
 	printHighScores(qualified);
-	
+
+	if(superVictory) {
+		notifyEvent(GAMEOVER_SUPERVICTORY, theEntry.score, 0, theEntry.description);
+	}
+	else {
+		notifyEvent(GAMEOVER_VICTORY, theEntry.score, 0, theEntry.description);
+	}
+
 	rogue.gameHasEnded = true;
 }
 

@@ -69,7 +69,7 @@ _.extend(BrogueController.prototype, {
         this.brogueInterface.removeStatusListener(this.statusListener);
         this.brogueInterface.removeQuitListener(this.quitListener);
         this.brogueInterface.removeErrorListener(this.errorListener);
-
+        this.brogueInterface.removeEventListener(this.eventListener);
     },
 
     brogueQuitListener: function () {
@@ -91,6 +91,10 @@ _.extend(BrogueController.prototype, {
         this.controllers.lobby.userDataListen();
 
         this.removeBrogueListeners();
+    },
+
+    brogueEventListener: function (event) {
+        console.log("Event listener " + this.username + " d1: " + event.data1 + " d2: " + event.data2 + " msg: " + event.message);
     },
 
     brogueStatusListener: function (status) {
@@ -145,6 +149,9 @@ _.extend(BrogueController.prototype, {
 
             this.errorListener = this.brogueErrorListener.bind(this);
             this.brogueInterface.addErrorListener(this.errorListener);
+
+            this.eventListener = this.brogueEventListener.bind(this);
+            this.brogueInterface.addEventListener(this.eventListener);
 
             this.statusListener = this.brogueStatusListener.bind(this);
             this.brogueInterface.addStatusListener(this.statusListener);
