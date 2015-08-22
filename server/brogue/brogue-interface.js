@@ -25,6 +25,11 @@ var KEY_INPUT_SIZE = 5;
 
 var SCREEN_REFRESH = 50;
 
+var GAMEOVER_QUIT = 0;
+var GAMEOVER_DEATH = 1;
+var GAMEOVER_VICTORY = 2;
+var GAMEOVER_SUPERVICTORY = 3;
+
 function BrogueInterface(username) {
     this.username = username;
     this.dataRemainder = new Buffer(0);
@@ -227,7 +232,6 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
 
 BrogueInterface.prototype.attachChildProcess = function() {
     this.attachChildEvents();
-
 };
 
 BrogueInterface.prototype.attachChildEvents = function () {
@@ -301,12 +305,16 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
                 var eventStr = self.dataAccumulator.slice(i + EVENT_DATA_OFFSET + 5, 100 - 4 - EVENT_DATA_OFFSET).toString('utf8');
 
-                self.brogueEvents.emit('event', {
+                var eventData = {
                     eventId: eventId,
                     data1: eventData1,
                     data2: eventData2,
                     message: eventStr
-                });
+                };
+
+                self.processBrogueEvents(self, eventData);
+
+                self.brogueEvents.emit('event', eventData);
 
                 //Remove this status update from the dataAccumulator
                 if (i + CELL_MESSAGE_SIZE < self.dataAccumulator.length) {
@@ -347,20 +355,48 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
         self.brogueChild.on('exit', function (code) {
             // go back to lobby in the event something happens to the child process
-            self.brogueChild = null;
-            self.brogueSocket = null;
-            self.disconnected = true;
-
+            self.disconnectBrogue(self);
             console.log('Brogue Process exiting');
 
             self.brogueEvents.emit('quit');
         });
 
         self.brogueChild.on('error', function (err) {
-            self.disconnected = true;
+            self.killBrogue(self);
+            self.disconnectBrogue(self);
 
             self.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
         });
+    }
+};
+
+BrogueInterface.prototype.killBrogue = function(self) {
+    if(self.brogueChild) {
+        self.brogueChild.kill();
+    }
+};
+
+BrogueInterface.prototype.disconnectBrogue = function(self) {
+    self.brogueChild = null;
+    self.brogueSocket = null;
+    self.disconnected = true;
+};
+
+BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
+    //Analyse brogue messages and do suitable processing, before passing back to the controller
+    console.log("Processing brogue events in interface");
+
+    //Kill the brogue process on quit (save a keypress and make sure it dies)
+    if(eventData.eventId === GAMEOVER_QUIT ||
+        eventData.eventId === GAMEOVER_DEATH ||
+        eventData.eventId === GAMEOVER_VICTORY ||
+        eventData.eventId === GAMEOVER_SUPERVICTORY) {
+
+        console.log("Killing brogue on quit.");
+
+        self.killBrogue(self);
+        self.disconnectBrogue(self);
+        self.brogueEvents.emit('quit');
     }
 };
 
