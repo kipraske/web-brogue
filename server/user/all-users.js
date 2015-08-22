@@ -47,6 +47,9 @@ module.exports = {
         var oldUserObject = this.getUser(userName);
         this.users[userName] = _.extend(oldUserObject, data);
     },
+    isUserValid : function(username) {
+        return username in this.users;
+    },
     
     updateLobbyStatus : function(userName, updateFlag, updateValue) {
         if (updateFlag === brogueStatus.SEED){

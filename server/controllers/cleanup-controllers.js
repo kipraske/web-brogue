@@ -7,7 +7,7 @@ module.exports = function(controllers){
     
     var currentUser = controllers.auth.currentUserName;
     
-    if (allUsers.users[currentUser]){
+    if (allUsers.isUserValid(currentUser)) {
         allUsers.users[currentUser].brogueState = brogueState.INACTIVE;
     }
     

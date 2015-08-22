@@ -94,8 +94,7 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueStatusListener: function (status) {
-        //TODO: Consider observer case
-        if(this.controllers.auth.currentUserName) {
+        if(!this.readOnly && allUsers.isUserValid(this.controllers.auth.currentUserName)) {
             allUsers.updateLobbyStatus(
                 this.controllers.auth.currentUserName,
                 status.updateFlag,
@@ -114,7 +113,6 @@ _.extend(BrogueController.prototype, {
             if(data) {
                 console.log("Username supplied " + data.username);
             }
-            //TODO: assuming data has the username of the session to get
 
             var brogueSessionName;
 
@@ -154,29 +152,34 @@ _.extend(BrogueController.prototype, {
             console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.controllers.lobby.stopUserDataListen();
-            this.setState(brogueState.PLAYING);
+
+            if(this.readOnly) {
+                this.setState(brogueState.PLAYING);
+            }
+            else {
+                this.setState(brogueState.WATCHING);
+            }
         },
         
         clean: function (data) {
             
-            // TODO - this function is for gracefully exiting brogue, right now we will just kill it            
+            // Called on logout or websocket close
+            this.handlerCollection.kill.call(this, data);
             //Commented out temporarily so we can practice reconnecting - seems to be called on logout (window close)
             //this.handlerCollection.kill.call(this, data);
         },
 
         //TODO: If required, this needs to migrate to interface
         kill: function (data) {
-            if (! this.brogueChild){
-                return;
-            }
-            this.brogueChild.kill('SIGINT');
-            this.brogueChild = null;
+
+            //Just kill off the controller gracefully, leave the process (both observing and playing)
+            this.removeBrogueListeners();
         },
     },
     
     setState : function(state){
-        //TODO: consider observing case
-        if(this.controllers.auth.currentUserName) {
+
+        if(allUsers.isUserValid(this.controllers.auth.currentUserName)) {
             allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
         }
     },
