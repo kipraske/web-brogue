@@ -160,7 +160,9 @@ _.extend(BrogueController.prototype, {
 
             this.controllers.lobby.stopUserDataListen();
 
-            this.brogueInterface.sendRefreshScreen(null);
+            //Refresh once the game has had a chance to start (if required)
+            var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
+            setTimeout(refreshMethod, 250);
 
             if(this.readOnly) {
                 this.setState(brogueState.PLAYING);
