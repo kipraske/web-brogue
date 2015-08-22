@@ -63,9 +63,13 @@ _.extend(BrogueController.prototype, {
     },
 
     removeBrogueListeners: function() {
-        console.log("Removing data listener. Before " + this.brogueInterface.brogueEvents.listeners('data').length);
+        if(this.brogueInterface) {
+            console.log("Removing data listener. Before " + this.brogueInterface.brogueEvents.listeners('data').length);
+        }
         this.brogueInterface.removeDataListener(this.dataListener);
-        console.log("Removing data listener. After " + this.brogueInterface.brogueEvents.listeners('data').length);
+        if(this.brogueInterface) {
+            console.log("Removing data listener. After " + this.brogueInterface.brogueEvents.listeners('data').length);
+        }
         this.brogueInterface.removeStatusListener(this.statusListener);
         this.brogueInterface.removeQuitListener(this.quitListener);
         this.brogueInterface.removeErrorListener(this.errorListener);
@@ -165,10 +169,10 @@ _.extend(BrogueController.prototype, {
             setTimeout(refreshMethod, 250);
 
             if(this.readOnly) {
-                this.setState(brogueState.PLAYING);
+                this.setState(brogueState.WATCHING);
             }
             else {
-                this.setState(brogueState.WATCHING);
+                this.setState(brogueState.PLAYING);
             }
         },
         
