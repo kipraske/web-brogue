@@ -20,6 +20,9 @@
 #define KEY_INPUT_SIZE          4
 #define OUTPUT_BUFFER_SIZE      1000
 
+//Custom events
+#define REFRESH_SCREEN          50
+
 enum StatusTypes {
     DEEPEST_LEVEL_STATUS,
     GOLD_STATUS,
@@ -256,8 +259,13 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
 
     read_from_socket(inputBuffer, MAX_INPUT_SIZE);
     returnEvent->eventType = inputBuffer[0];
-    
-    if (returnEvent->eventType == KEYSTROKE){
+
+    if (returnEvent->eventType == REFRESH_SCREEN) {
+
+     //Custom event type - brogue should ignore
+      refreshScreen();
+    }
+    else if (returnEvent->eventType == KEYSTROKE) {
 
         unsigned short keyCharacter = inputBuffer[1] << 8 | inputBuffer[2];
         

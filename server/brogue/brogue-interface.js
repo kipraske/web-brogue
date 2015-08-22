@@ -20,6 +20,8 @@ var STATUS_DATA_OFFSET = 2;
 var MOUSE_INPUT_SIZE = 5;
 var KEY_INPUT_SIZE = 5;
 
+var SCREEN_REFRESH = 50;
+
 function BrogueInterface(username) {
     this.username = username;
     this.dataRemainder = new Buffer(0);
@@ -60,6 +62,32 @@ BrogueInterface.prototype.removeErrorListener = function(listener) {
     this.brogueEvents.removeListener('error', listener);
 };
 
+BrogueInterface.prototype.sendRefreshScreen = function(callback) {
+
+    var messageArray = new Buffer(5);
+    messageArray[0] = SCREEN_REFRESH;
+    console.log("sending refresh");
+    this.sendToBrogue(messageArray, callback);
+};
+
+BrogueInterface.prototype.sendToBrogue = function(message, callback) {
+
+    //Send message to socket, if connected
+    var messageLength = message.length;
+
+    if (this.brogueSocket) {
+        this.brogueSocket.send(message, 0, messageLength, this.getChildWorkingDir() + "/" + SERVER_SOCKET);
+        if(callback) {
+            callback(null);
+        }
+    }
+    else {
+        if(callback) {
+            callback(new Error("Socket not connected"));
+        }
+    }
+};
+
 BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callback) {
 
     //Movement command from browser
@@ -90,14 +118,7 @@ BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callba
         return;
     }
 
-    //Send message to socket, if connected
-    if (this.brogueSocket) {
-        this.brogueSocket.send(message, 0, messageLength, this.getChildWorkingDir() + "/" + SERVER_SOCKET);
-        callback(null);
-    }
-    else {
-        callback(new Error("Socket not connected"));
-    }
+    this.sendToBrogue(message, callback);
 };
 
 
@@ -163,13 +184,8 @@ BrogueInterface.prototype.start = function () {
 
     try {
 
-        //TODO: send screen redraw cmd, not inventory
         var sendBuf = new Buffer(5);
-        sendBuf[0] = 0; //keystroke
-        sendBuf[1] = 0; //upper byte
-        sendBuf[2] = 105; //i
-        sendBuf[3] = 0; //mod
-        sendBuf[4] = 0; //mod
+        sendBuf[0] = SCREEN_REFRESH;
 
         this.brogueSocket = unixdgram.createSocket('unix_dgram');
 

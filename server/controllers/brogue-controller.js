@@ -153,6 +153,8 @@ _.extend(BrogueController.prototype, {
 
             this.controllers.lobby.stopUserDataListen();
 
+            this.brogueInterface.sendRefreshScreen(null);
+
             if(this.readOnly) {
                 this.setState(brogueState.PLAYING);
             }
