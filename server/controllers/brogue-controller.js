@@ -5,6 +5,10 @@ var Controller = require('./controller-base');
 var brogueState = require('../enum/brogue-state');
 var allUsers = require('../user/all-users');
 
+var config = require('../config');
+var path = require('path');
+var fs = require('fs');
+
 var brogueComms = require('../brogue/brogue-comms');
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
@@ -62,6 +66,15 @@ _.extend(BrogueController.prototype, {
         }
     },
 
+    endBrogueSession: function() {
+        this.sendMessage("quit", true);
+        this.setState(brogueState.INACTIVE);
+        this.controllers.lobby.sendAllUserData();
+        this.controllers.lobby.userDataListen();
+
+        this.removeBrogueListeners();
+    },
+
     removeBrogueListeners: function() {
         if(this.brogueInterface) {
             console.log("Removing data listener. Before " + this.brogueInterface.brogueEvents.listeners('data').length);
@@ -78,23 +91,13 @@ _.extend(BrogueController.prototype, {
 
     brogueQuitListener: function () {
         console.log("Quit listener " + this.username);
-        this.sendMessage("quit", true);
-        this.setState(brogueState.INACTIVE);
-        this.controllers.lobby.sendAllUserData();
-        this.controllers.lobby.userDataListen();
-
-        this.removeBrogueListeners();
+        this.endBrogueSession();
     },
 
     brogueErrorListener: function () {
         console.log("Error listener" + this.username);
         //TODO: Maybe some UI for the user? This normally occurs on an orphaned process connecting, which is expected behaviour
-        this.sendMessage("quit", true);
-        this.setState(brogueState.INACTIVE);
-        this.controllers.lobby.sendAllUserData();
-        this.controllers.lobby.userDataListen();
-
-        this.removeBrogueListeners();
+        this.endBrogueSession();
     },
 
     brogueEventListener: function (event) {
@@ -140,8 +143,36 @@ _.extend(BrogueController.prototype, {
 
             this.username = brogueSessionName; //for debugging
 
-            //(could do this in callback style, since it's kinda IO
-            this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName);
+            //Check input parameters and abort on error
+            if(data && data.seed) {
+                var seed = parseInt(data.seed, 10);
+
+                if (isNaN(seed) || seed < 1 || seed > 4294967295) {
+                    this.sendMessage("seed", {
+                                              result : "fail",
+                                              data : "Please enter a numerical seed between 1 and 4294967295"
+                    });
+                    return;
+                }
+            }
+
+            //This feels like the job of brogueInterface, however on initialisation brogueInterface can't
+            //send errors to the UI
+            if(data && data.savedGame) {
+                var childWorkingDir = config.path.GAME_DATA_DIR + this.username;
+                var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
+                try {
+                    fs.accessSync(savedGamePath, fs.F_OK);
+                }
+                catch (err) {
+                    this.controllers.error.send("Saved Game Not Found: '" + data.savedGame + "' does not exist");
+                    return;
+                }
+            }
+
+            //Connect to brogue interface
+
+            this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data);
 
             console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
@@ -160,6 +191,9 @@ _.extend(BrogueController.prototype, {
             this.statusListener = this.brogueStatusListener.bind(this);
             this.brogueInterface.addStatusListener(this.statusListener);
 
+            this.seedListener = this.brogueStatusListener.bind(this);
+            this.brogueInterface.addStatusListener(this.statusListener);
+
             console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.controllers.lobby.stopUserDataListen();
@@ -168,11 +202,18 @@ _.extend(BrogueController.prototype, {
             var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
             setTimeout(refreshMethod, 250);
 
-            if(this.readOnly) {
+            if (this.readOnly) {
                 this.setState(brogueState.WATCHING);
             }
             else {
                 this.setState(brogueState.PLAYING);
+            }
+
+            //If we got here via a seed or save game route, pass messages back to the UI
+            if(data && data.seed) {
+                this.sendMessage("seed", {
+                    result: "success"
+                });
             }
         },
         

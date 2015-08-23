@@ -143,56 +143,10 @@ BrogueInterface.prototype.getChildWorkingDir = function () {
 },
 
 
-BrogueInterface.prototype.start = function () {
+BrogueInterface.prototype.start = function (data) {
 
     console.log("BrogueInterface.start");
 
-    var childWorkingDir = this.getChildWorkingDir();
-    var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
-
-    /*
-    //TODO: paths containing data (i.e. seeded mode etc.)
-    if (data) {
-        if (data.savedGame) {
-            var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
-            fs.access(savedGamePath, fs.F_OK, function (err) {
-                if (err) {
-                    self.controllers.error.send("Saved Game Not Found: '" + data.savedGame + "' does not exist");
-                    return;
-                }
-
-                args.push("-o");
-                args.push(data.savedGame);
-
-                self.spawnChildProcess(args, childWorkingDir);
-            });
-        }
-        else if (data.seed || data.seed === ""){
-            var seed = parseInt(data.seed, 10);
-
-            if (isNaN(seed) || seed < 1 || seed > 4294967295){
-                self.sendMessage("seed", {
-                    result : "fail",
-                    data : "Please enter a numerical seed between 1 and 4294967295"
-                });
-                return;
-            }
-
-            self.sendMessage("seed", {
-                result : "success"
-            });
-
-            args.push("-s");
-            args.push(seed);
-
-            this.spawnChildProcess(args, childWorkingDir);
-        }
-        else{
-            this.controllers.error.send("Message data incorrectly set: " + JSON.stringify(data));
-        }
-    }
-    else {
-    */
     //Support reconnect
 
     //Test if we can send to server socket, if so, no need to spawn a new process, just attach
@@ -213,11 +167,35 @@ BrogueInterface.prototype.start = function () {
         this.attachChildProcess();
     }
     catch(e) {
+
         //TODO: remove debug
         console.error("failed to connect to socket, spawning new process " + e);
 
-        this.spawnChildProcess(args, childWorkingDir);
+        this.newBrogueProcess(data);
     }
+};
+
+BrogueInterface.prototype.newBrogueProcess = function(data) {
+
+    var childWorkingDir = this.getChildWorkingDir();
+    var args = ["--no-menu"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
+
+    //Input has been sanity checked in the controller. Any errors from brogue should be caught by the usual handlers
+    if (data) {
+        if (data.savedGame) {
+
+            args.push("-o");
+            args.push(data.savedGame);
+        }
+        else if (data.seed || data.seed === "") {
+            var seed = parseInt(data.seed, 10);
+
+            args.push("-s");
+            args.push(seed);
+        }
+    }
+
+    this.spawnChildProcess(args, childWorkingDir);
 };
 
 BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
@@ -329,7 +307,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
     client_read.on('error', function(err) {
         console.error('Error when reading from client socket' + err);
         //Not identified any cases where this can happen yet but assume it's terminal
-        self.disconnected = true;
+        self.disconnectBrogue(self);
         self.brogueEvents.emit('error', 'Error when reading from client socket');
     });
 
@@ -345,7 +323,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
         console.error('Error when writing to client socket: ' + err);
         //This occurs when we connected to an orphaned brogue process and it exits
         //Therefore we set ourselves into an ended state so a new game can be started
-        self.disconnected = true;
+        self.disconnectBrogue(self);
 
         self.brogueEvents.emit('error', 'Error when writing to client socket');
     });
