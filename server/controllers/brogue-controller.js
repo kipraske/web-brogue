@@ -1,15 +1,16 @@
+var path = require('path');
+var fs = require('fs');
 var _ = require('underscore');
 
 var router = require('./router');
+var config = require('../config');
+
 var Controller = require('./controller-base');
 var brogueState = require('../enum/brogue-state');
 var allUsers = require('../user/all-users');
-
-var config = require('../config');
-var path = require('path');
-var fs = require('fs');
-
 var brogueComms = require('../brogue/brogue-comms');
+var gameRecord = require('../database/game-record-model')
+var brogueConstants = require('../brogue/brogue-constants.js');
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 
@@ -102,6 +103,30 @@ _.extend(BrogueController.prototype, {
 
     brogueEventListener: function (event) {
         console.log("Event listener " + this.username + " d1: " + event.data1 + " d2: " + event.data2 + " msg: " + event.message);
+
+        //Add record to the database (only if owner of game)
+        //TODO: Maybe just one eventId for end game events?
+        if(!this.readOnly &&
+            event.eventId === brogueConstants.GAMEOVER_QUIT ||
+            event.eventId === brogueConstants.GAMEOVER_DEATH ||
+            event.eventId === brogueConstants.GAMEOVER_VICTORY ||
+            event.eventId === brogueConstants.GAMEOVER_SUPERVICTORY) {
+
+            var self = this;
+            var thisGameRecord = {
+                username: this.controllers.auth.currentUserName,
+                score: event.data1,
+                result: event.eventId,
+                description: event.message
+            };
+
+            gameRecord.create(thisGameRecord, function (err) {
+                if (err) {
+                    self.controllers.error.send(JSON.stringify(err));
+                    return;
+                }
+            });
+        }
     },
 
     brogueStatusListener: function (status) {

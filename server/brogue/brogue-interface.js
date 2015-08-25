@@ -4,10 +4,11 @@
 var events = require('events');
 var unixdgram = require('unix-dgram');
 var childProcess = require('child_process');
-
-var config = require('../config');
 var path = require('path');
 var fs = require('fs');
+
+var config = require('../config');
+var brogueConstants = require('./brogue-constants.js');
 
 var SERVER_SOCKET = 'server-socket';
 var CLIENT_SOCKET = 'client-socket';
@@ -25,10 +26,7 @@ var KEY_INPUT_SIZE = 5;
 
 var SCREEN_REFRESH = 50;
 
-var GAMEOVER_QUIT = 0;
-var GAMEOVER_DEATH = 1;
-var GAMEOVER_VICTORY = 2;
-var GAMEOVER_SUPERVICTORY = 3;
+
 
 function BrogueInterface(username) {
     this.username = username;
@@ -290,9 +288,9 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     message: eventStr
                 };
 
-                self.processBrogueEvents(self, eventData);
-
                 self.brogueEvents.emit('event', eventData);
+
+                self.processBrogueEvents(self, eventData);
 
                 //Remove this status update from the dataAccumulator
                 if (i + CELL_MESSAGE_SIZE < self.dataAccumulator.length) {
@@ -365,10 +363,10 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
     console.log("Processing brogue events in interface");
 
     //Kill the brogue process on quit (save a keypress and make sure it dies)
-    if(eventData.eventId === GAMEOVER_QUIT ||
-        eventData.eventId === GAMEOVER_DEATH ||
-        eventData.eventId === GAMEOVER_VICTORY ||
-        eventData.eventId === GAMEOVER_SUPERVICTORY) {
+    if(eventData.eventId === brogueConstants.GAMEOVER_QUIT ||
+        eventData.eventId === brogueConstants.GAMEOVER_DEATH ||
+        eventData.eventId === brogueConstants.GAMEOVER_VICTORY ||
+        eventData.eventId === brogueConstants.GAMEOVER_SUPERVICTORY) {
 
         console.log("Killing brogue on quit.");
 
