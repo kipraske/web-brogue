@@ -191,9 +191,6 @@ _.extend(BrogueController.prototype, {
             this.statusListener = this.brogueStatusListener.bind(this);
             this.brogueInterface.addStatusListener(this.statusListener);
 
-            this.seedListener = this.brogueStatusListener.bind(this);
-            this.brogueInterface.addStatusListener(this.statusListener);
-
             console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.controllers.lobby.stopUserDataListen();
