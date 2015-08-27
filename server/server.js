@@ -19,15 +19,40 @@ httpServerDomain.on("error", function (err) {
 httpServerDomain.run(function () {
 
     var express = require("express");
+    var paginate = require("express-paginate");
+    var GameRecord = require("./database/game-record-model");
+
     var app = express();
 
     app.use(express.static(config.path.CLIENT_DIR));
+    app.use(paginate.middleware(10, 50));
 
 // TODO - configure cookie session, the value is saved in the db, we just need to hook it up
 
 //routes
     app.get("/", function (req, res) {
         res.sendFile(config.path.CLIENT_DIR + "/index.html");
+    });
+
+    app.get("/api/games/:username", function (req, res) {
+
+
+        GameRecord.paginate({ username: req.params.username }, { page: req.query.page, limit: req.query.limit }, function(err, gameRecords, pageCount, itemCount) {
+
+            if (err) return next(err);
+
+            res.format({
+                json: function() {
+                    // inspired by Stripe's API response for list objects
+                    res.json({
+                        object: 'list',
+                        has_more: paginate.hasNextPages(req)(pageCount),
+                        data: gameRecords
+                    });
+                }
+            });
+
+        });
     });
 
     var httpServer = app.listen(config.port.HTTP, function () {
