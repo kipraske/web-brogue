@@ -36,7 +36,6 @@ httpServerDomain.run(function () {
 
     app.get("/api/games/:username", function (req, res) {
 
-
         GameRecord.paginate({ username: req.params.username }, { page: req.query.page, limit: req.query.limit }, function(err, gameRecords, pageCount, itemCount) {
 
             if (err) return next(err);

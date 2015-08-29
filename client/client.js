@@ -15,17 +15,19 @@ require([
     "tests/debug-mode",
     "dataIO/socket",
     "dataIO/router",
+    "models/high-scores",
     "views/view-activation-helpers",
     "views/auth-view",
     "views/play-view",
     "views/header-view",
     "views/current-games-view",
     "views/saved-games-view",
+    "views/high-scores-view",
     "views/console-view",
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, debugMode, socket, router, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, debugMode, socket, router, highScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -42,7 +44,14 @@ require([
         seedView : new SeedPopupView(),
         duplicateBrogueView : new DuplicateBroguePopupView()
     };
-    
+
+
+    var highScoresModel = new highScoresModel();
+    highScoresModel.fetch();
+    var highScoresView = new HighScoresView({model: highScoresModel});
+
+    //setInterval(function() {    highScoresModel.fetch();     }, 1000);
+
     // set up routes for the websocket connection
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
@@ -56,7 +65,7 @@ require([
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
         "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)
     });
-    
+
     // clean up application
     $(window).on("unload", function(){
         socket.close();

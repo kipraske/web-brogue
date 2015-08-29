@@ -31,11 +31,14 @@
                         </div>
                         <div id="current-games" class="current-games"></div>
                         <div id="saved-games" class="saved-games inactive"></div>
+                        <div id="high-scores" class="high-scores" />
+
 		</div>
                 <div id="console" class="console inactive" tabindex="0">
                     <input type="text" id="console-keyboard" class="console-keyboard" />
                 </div>
-                
+
+
 		<div id="popup" class="popup inactive"></div>
                 <div id="popup-overlay" class="popup-overlay inactive"></div>
 		
@@ -67,6 +70,25 @@
 			<div id="auth-message"></div>
 		</form>
 		</script>
+
+        <script id="high-scores-heading" type="text/template">
+            <h2>High Scores</h2>
+            <table id="high-scores-table">
+                <tr id="high-scores-table-heading">
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Score</th>
+                    <th>Description</th>
+                </tr>
+            </table>
+        </script>
+
+                <script id="high-scores-row" type="text/template">
+                    <td><%= username %></td>
+                    <td><%= date %></td>
+                    <td><%= score %></td>
+                    <td><%= description %></td>
+                </script>
 		
 		<script id="welcome" type="text/template">
 			<div>Logged in as <%= username %> | <a id="logout" href="#logout">Logout</a></div>
