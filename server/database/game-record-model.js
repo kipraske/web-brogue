@@ -6,6 +6,8 @@ var gameRecordSchema = mongoose.Schema({
     date: { type: Date, default: Date.now },
     seed: Number,
     score: String,
+    level: Number,
+    easyMode: Boolean,
     result: Number,
     description: String
 });

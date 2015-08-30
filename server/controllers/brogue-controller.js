@@ -104,7 +104,7 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueEventListener: function (event) {
-        console.log("Event listener " + this.username + " d1: " + event.data1 + " d2: " + event.data2 + " msg: " + event.message);
+        console.log("Event listener " + this.username + " data: " + JSON.stringify(event));
 
         //Add record to the database (only if owner of game)
         //TODO: Maybe just one eventId for end game events?
@@ -118,8 +118,10 @@ _.extend(BrogueController.prototype, {
             var thisGameRecord = {
                 username: this.controllers.auth.currentUserName,
                 score: event.data1,
-                seed: event.data2,
+                seed: event.seed,
+                level: event.level,
                 result: event.eventId,
+                easyMode: Boolean(event.easyMode),
                 description: event.message
             };
 

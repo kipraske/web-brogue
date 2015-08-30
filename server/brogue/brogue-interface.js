@@ -300,12 +300,13 @@ BrogueInterface.prototype.attachChildEvents = function () {
                 var eventEnd = i + EVENT_DATA_LENGTH;
 
                 for(var j = messageStart; j < eventEnd; j++) {
+                    console.log(self.dataAccumulator[j]);
                     if(self.dataAccumulator[j] == 0) {
                         break;
                     }
                 }
 
-                var messageLength = j - messageStart;
+                var messageLength = j - 1;
 
                 var eventStr = self.dataAccumulator.slice(messageStart, messageLength).toString('utf8');
 
