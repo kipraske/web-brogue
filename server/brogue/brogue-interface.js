@@ -27,8 +27,6 @@ var KEY_INPUT_SIZE = 5;
 
 var SCREEN_REFRESH = 50;
 
-
-
 function BrogueInterface(username) {
     this.username = username;
     this.dataRemainder = new Buffer(0);
