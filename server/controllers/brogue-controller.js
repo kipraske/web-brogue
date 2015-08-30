@@ -118,6 +118,7 @@ _.extend(BrogueController.prototype, {
             var thisGameRecord = {
                 username: this.controllers.auth.currentUserName,
                 score: event.data1,
+                seed: event.data2,
                 result: event.eventId,
                 description: event.message
             };

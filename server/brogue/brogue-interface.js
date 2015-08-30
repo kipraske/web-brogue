@@ -17,6 +17,7 @@ var CELL_MESSAGE_SIZE = 10;
 
 var EVENT_BYTE_FLAG = 254;
 var EVENT_DATA_OFFSET = 2;
+var EVENT_DATA_LENGTH = 100;
 
 var STATUS_BYTE_FLAG = 255;
 var STATUS_DATA_OFFSET = 2;
@@ -279,12 +280,43 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 3] * 256 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 4];
 
-                var eventStr = self.dataAccumulator.slice(i + EVENT_DATA_OFFSET + 5, 100 - 4 - EVENT_DATA_OFFSET).toString('utf8');
+                var level =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 5] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 6];
+
+                var gold =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 7] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 8];
+
+                var seed =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 9] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 10];
+
+                var easyMode =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 11] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 12];
+
+                var messageStart = i + EVENT_DATA_OFFSET + 13;
+                var eventEnd = i + EVENT_DATA_LENGTH;
+
+                for(var j = messageStart; j < eventEnd; j++) {
+                    if(self.dataAccumulator[j] == 0) {
+                        break;
+                    }
+                }
+
+                var messageLength = j - messageStart;
+
+                var eventStr = self.dataAccumulator.slice(messageStart, messageLength).toString('utf8');
 
                 var eventData = {
                     eventId: eventId,
                     data1: eventData1,
                     data2: eventData2,
+                    gold: gold,
+                    level: level,
+                    seed: seed,
+                    easyMode: easyMode,
                     message: eventStr
                 };
 

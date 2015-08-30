@@ -313,13 +313,21 @@ static void notify_event(short eventId, short data1, short data2, const char *st
   statusOutputBuffer[4] = data1;
   statusOutputBuffer[5] = data2 >> 8 & 0xff;
   statusOutputBuffer[6] = data2;
+  statusOutputBuffer[7] = rogue.depthLevel >> 8 & 0xff;
+  statusOutputBuffer[8] = rogue.depthLevel;
+  statusOutputBuffer[9] = rogue.gold >> 8 & 0xff;
+  statusOutputBuffer[10] = rogue.gold;
+  statusOutputBuffer[11] = rogue.seed >> 8 & 0xff;
+  statusOutputBuffer[12] = rogue.seed;
+  statusOutputBuffer[13] = rogue.easyMode >> 8 & 0xff;
+  statusOutputBuffer[14] = rogue.easyMode;
 
   // The rest is filler so we keep consistent output size
 
   int j;
-  for (j = 7; j < EVENT_SIZE; j++){
-      statusOutputBuffer[j] = str[j-7];
-      if(!str[j - 7])
+  for (j = 15; j < EVENT_SIZE; j++){
+      statusOutputBuffer[j] = str[j - 15];
+      if(!str[j - 15])
         break;
   }
 
