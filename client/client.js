@@ -13,6 +13,7 @@ require([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     "tests/debug-mode",
     "dataIO/socket",
     "dataIO/router",
@@ -28,7 +29,7 @@ require([
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, debugMode, socket, router, highScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, dispatcher, debugMode, socket, router, highScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -46,19 +47,22 @@ require([
         duplicateBrogueView : new DuplicateBroguePopupView()
     };
 
-
     var highScoresModel = new highScoresModel();
     highScoresModel.fetch();
+    setInterval(function() { highScoresModel.fetch(); }, 5 * 60 * 1000);
     var highScoresView = new HighScoresView({model: highScoresModel});
 
-    //setInterval(function() {    highScoresModel.fetch();     }, 1000);
+    // use dispatcher to co-ordinate multi-view actions on routed commands
+    dispatcher.on("quit", highScoresView.refresh, highScoresView);
+    dispatcher.on("quit", consoleView.exitToLobby, consoleView);
+    dispatcher.on("quit", console.log("event: quit"));
 
     // set up routes for the websocket connection
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console),
         "brogue" : consoleView.queueUpdateCellModelData.bind(consoleView),
-        "quit" : consoleView.exitToLobby.bind(consoleView),
+        "quit" : function() { dispatcher.trigger("quit") },
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
         "auth" : authView.handleMessage.bind(authView),

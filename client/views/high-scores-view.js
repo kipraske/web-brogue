@@ -30,6 +30,10 @@ define([
             }, this);
 
             return this;
+        },
+
+        refresh: function() {
+            this.model.fetch();
         }
     });
 

@@ -4,11 +4,12 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     'dataIO/send-keypress',
     "views/console-cell-view",
     "models/console-cell",
     "views/view-activation-helpers"
-], function($, _, Backbone, sendKeypressEvent, ConsoleCellView, CellModel, activate) {
+], function($, _, Backbone, dispatcher, sendKeypressEvent, ConsoleCellView, CellModel, activate) {
 
     var _CONSOLE_ROWS = 34;
     var _CONSOLE_COLUMNS = 100;
