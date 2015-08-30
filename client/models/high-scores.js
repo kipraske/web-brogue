@@ -7,7 +7,7 @@ define([
 ], function($, _, Backbone) {
 
     var HighScores = Backbone.Collection.extend({
-        url: '/api/games/flend',
+        url: '/api/games',
         parse: function(data) {
             console.log("Parsing high scores API");
             console.log(JSON.stringify(data.data));
