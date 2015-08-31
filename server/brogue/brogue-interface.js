@@ -214,19 +214,20 @@ BrogueInterface.prototype.attachChildProcess = function() {
 };
 
 BrogueInterface.prototype.attachChildIdleKiller = function() {
-    setInterval(this.checkIdleTimeAndKill.bind(this), IDLE_KILLER_INTERVAL);
+    this.intervalKiller = setInterval(this.checkIdleTimeAndKill.bind(this), IDLE_KILLER_INTERVAL);
 };
 
 BrogueInterface.prototype.checkIdleTimeAndKill = function() {
     var idleTime = new Date().getTime() - this.lastActiveTime;
-    console.log("Idle timeout " + idleTime);
-    console.log("Last used time " + this.lastActiveTime);
+
     if(idleTime > IDLE_KILLER_TIMEOUT) {
-        console.log("Killing brogue on timeout");
+        clearTimeout(this.intervalKiller);
+
         this.killBrogue(this);
         this.disconnectBrogue(this);
 
-        this.brogueEvents.emit('error', 'Brogue process timed out due to inactivity');
+        //Do not send the 'error' event, since it's likely that no controller is listening any more, and the 'error' event will crash the server
+        this.brogueEvents.emit('quit', 'Brogue process timed out due to inactivity');
     }
 };
 
@@ -360,7 +361,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
         console.error('Error when reading from client socket' + err);
         //Not identified any cases where this can happen yet but assume it's terminal
         self.disconnectBrogue(self);
-        self.brogueEvents.emit('error', 'Error when reading from client socket');
+        self.brogueEvents.emit('quit', 'Error when reading from client socket');
     });
 
     client_read.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
@@ -377,7 +378,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
         //Therefore we set ourselves into an ended state so a new game can be started
         self.disconnectBrogue(self);
 
-        self.brogueEvents.emit('error', 'Error when writing to client socket');
+        self.brogueEvents.emit('quit', 'Error when writing to client socket - normally brogue has exited');
     });
 
     //Not applicable when connecting to an orphaned process
@@ -395,7 +396,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
             self.killBrogue(self);
             self.disconnectBrogue(self);
 
-            self.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
+            self.brogueEvents.emit('quit', 'Message could not be sent to brogue process - Error: ' + err);
         });
     }
 };

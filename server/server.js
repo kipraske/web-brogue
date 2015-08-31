@@ -57,7 +57,8 @@ websocketServerDomain.on("error", function (err) {
         util.log("Socket server exception is EPIPE: Likely caused by trying to read or write to a stream which has been closed");
     }
     else{
-        console.log(err.stack);
+        console.log("Error: \n" + JSON.stringify(err));
+        console.log("Stack: \n" + err.stack);
         process.exit(1);
     }
 });
