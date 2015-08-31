@@ -20,7 +20,8 @@ var config = {
         TIMEOUT_INTERVAL : 300000
     },
     auth : {
-        secret: 'asecret'
+        secret: 'asecret',
+        tokenExpiryTime: 90 * 24 * 60 * 60 * 1000
     }
 };
 

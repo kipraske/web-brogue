@@ -22,8 +22,6 @@ define([
 
             var userNameStr = event.target.innerHTML;
             var userName = userNameStr.split(' ', 2)[1];
-            console.log(userNameStr);
-            console.log(userName);
 
             send("brogue", "start", {username: userName});
             this.goToConsole();

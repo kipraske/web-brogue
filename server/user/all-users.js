@@ -3,7 +3,6 @@
 var _ = require('underscore');
 
 var sessions = require('client-sessions');
-var bCrypt = require('bcrypt-nodejs');
 
 var config = require('../config');
 var brogueState = require('../enum/brogue-state');
@@ -24,9 +23,7 @@ module.exports = {
     
     addUser : function(userName){
         userCount++;
-        var hiddenSalt = bCrypt.genSaltSync(8);
         this.users[userName] = {
-            //sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
             brogueState : brogueState.INACTIVE,
             brogueProcess : null,
             lastUpdateTime : process.hrtime(),
@@ -72,11 +69,11 @@ module.exports = {
     createSessionToken: function (username) {
         var sessionOpts = {
             cookieName: 'mySession', // cookie name dictates the key name added to the request object
-            secret: config.auth.secret // should be a large unguessable string
+            secret: config.auth.secret, // should be a large unguessable string
+            duration: config.auth.tokenExpiryTime
         };
 
         var encodedToken = sessions.util.encode(sessionOpts, username, sessionOpts.duration);
-        console.log(encodedToken);
 
         return encodedToken;
     },
@@ -88,7 +85,6 @@ module.exports = {
         };
 
         var decodedToken = sessions.util.decode(sessionOpts, token);
-        console.log(JSON.stringify(decodedToken));
 
         return decodedToken;
     }

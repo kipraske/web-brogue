@@ -4,11 +4,12 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "util",
     "dataIO/send-generic",
     "dataIO/router",
     "models/auth",
     "views/view-activation-helpers"
-], function ($, _, Backbone, send, router, AuthenticationModel, activate) {
+], function ($, _, Backbone, util, send, router, AuthenticationModel, activate) {
 
     var AuthenticationView = Backbone.View.extend({
         el: "#auth",
@@ -26,7 +27,11 @@ define([
         },
         initialize: function () {
 
-            // TODO - if we are already logged on via cookie than we can render the other one
+            var storedToken = util.getItem('sessionId');
+
+            if(storedToken) {
+                send("auth", "login", { token: storedToken });
+            }
 
             this.render("login");
         },
@@ -82,14 +87,15 @@ define([
             switch (message.data.message) {
                 case "logged-in" :
                     activate.loggedIn();
-                    
+
+                    this.model.set({
+                        username: message.data.username
+                    });
+
                     var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
                     router.route(headerMessage);
 
-                    if(this.storageAvailable('localStorage')) {
-                        var storage = window['localStorage'];
-                        storage.setItem('sessionAuth', 'hello');
-                    }
+                    util.setItem('sessionId', message.data.token);
 
                     break;
                 case "registered" :
@@ -101,18 +107,6 @@ define([
                     break;
             }
 
-        },
-        storageAvailable: function(type) {
-            try {
-                var storage = window[type],
-                    x = '__storage_test__';
-                storage.setItem(x, x);
-                storage.removeItem(x);
-                return true;
-            }
-            catch(e) {
-                return false;
-            }
         }
     });
 

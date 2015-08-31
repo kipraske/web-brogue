@@ -74,7 +74,18 @@ _.extend(AuthController.prototype, {
                     return;
                 }
                 else {
-                    //TODO: Check token duration
+                    var expiryTime = Number(decodedToken.createdAt) + Number(decodedToken.duration);
+
+                    //console.log("expiry: " + expiryTime + " now: " + new Date().getTime());
+
+                    if(expiryTime < new Date().getTime()) {
+                        self.sendMessage("auth", {
+                            result: "fail",
+                            data: "Token has expired"
+                        });
+                        return;
+                    }
+
                     this.processSuccessfulLogin(decodedToken.content);
                 }
             }
@@ -165,6 +176,7 @@ _.extend(AuthController.prototype, {
             result: "success",
             data: {
                 message: "logged-in",
+                username: username,
                 token: allUsers.createSessionToken(username)
             }
         });
