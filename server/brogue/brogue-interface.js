@@ -27,6 +27,9 @@ var KEY_INPUT_SIZE = 5;
 
 var SCREEN_REFRESH = 50;
 
+var IDLE_KILLER_INTERVAL = 10 * 1000;
+var IDLE_KILLER_TIMEOUT = 10 * 1000;
+
 function BrogueInterface(username) {
     this.username = username;
     this.dataRemainder = new Buffer(0);
@@ -207,6 +210,24 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
 
 BrogueInterface.prototype.attachChildProcess = function() {
     this.attachChildEvents();
+    this.attachChildIdleKiller();
+};
+
+BrogueInterface.prototype.attachChildIdleKiller = function() {
+    setInterval(this.checkIdleTimeAndKill.bind(this), IDLE_KILLER_INTERVAL);
+};
+
+BrogueInterface.prototype.checkIdleTimeAndKill = function() {
+    var idleTime = new Date().getTime() - this.lastActiveTime;
+    console.log("Idle timeout " + idleTime);
+    console.log("Last used time " + this.lastActiveTime);
+    if(idleTime > IDLE_KILLER_TIMEOUT) {
+        console.log("Killing brogue on timeout");
+        this.killBrogue(this);
+        this.disconnectBrogue(this);
+
+        this.brogueEvents.emit('error', 'Brogue process timed out due to inactivity');
+    }
 };
 
 BrogueInterface.prototype.attachChildEvents = function () {
@@ -225,6 +246,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
         //Speed debugging
         //var d = new Date();
         //console.error(d.getTime());
+
+        self.lastActiveTime = new Date().getTime();
 
         // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
         // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
