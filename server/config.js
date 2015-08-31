@@ -18,8 +18,10 @@ var config = {
     lobby : {
         UPDATE_INTERVAL : 1000,
         TIMEOUT_INTERVAL : 300000
+    },
+    auth : {
+        secret: 'asecret'
     }
-    
 };
 
 module.exports = config;

@@ -2,7 +2,10 @@
 
 var _ = require('underscore');
 
+var sessions = require('client-sessions');
 var bCrypt = require('bcrypt-nodejs');
+
+var config = require('../config');
 var brogueState = require('../enum/brogue-state');
 var brogueStatus = require('../enum/brogue-status-types');
 
@@ -23,7 +26,7 @@ module.exports = {
         userCount++;
         var hiddenSalt = bCrypt.genSaltSync(8);
         this.users[userName] = {
-            sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
+            //sessionID : userCount + bCrypt.hashSync(userName + hiddenSalt, bCrypt.genSaltSync(8)),
             brogueState : brogueState.INACTIVE,
             brogueProcess : null,
             lastUpdateTime : process.hrtime(),
@@ -64,5 +67,30 @@ module.exports = {
     killUserProcess : function(userName){
         this.users[userName].brogueProcess.kill('SIGINT');
         this.users[userName].brogueProcess = null;
+    },
+
+    createSessionToken: function (username) {
+        var sessionOpts = {
+            cookieName: 'mySession', // cookie name dictates the key name added to the request object
+            secret: config.auth.secret // should be a large unguessable string
+        };
+
+        var encodedToken = sessions.util.encode(sessionOpts, username, sessionOpts.duration);
+        console.log(encodedToken);
+
+        return encodedToken;
+    },
+
+    decodeSessionToken: function (token) {
+        var sessionOpts = {
+            cookieName: 'mySession', // cookie name dictates the key name added to the request object
+            secret: config.auth.secret // should be a large unguessable string
+        };
+
+        var decodedToken = sessions.util.decode(sessionOpts, token);
+        console.log(JSON.stringify(decodedToken));
+
+        return decodedToken;
     }
+
 };

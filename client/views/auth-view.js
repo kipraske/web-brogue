@@ -79,13 +79,18 @@ define([
                 return;
             }
 
-            switch (message.data) {
+            switch (message.data.message) {
                 case "logged-in" :
                     activate.loggedIn();
                     
                     var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
                     router.route(headerMessage);
-                    
+
+                    if(this.storageAvailable('localStorage')) {
+                        var storage = window['localStorage'];
+                        storage.setItem('sessionAuth', 'hello');
+                    }
+
                     break;
                 case "registered" :
                     this.render("login");
@@ -96,6 +101,18 @@ define([
                     break;
             }
 
+        },
+        storageAvailable: function(type) {
+            try {
+                var storage = window[type],
+                    x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            }
+            catch(e) {
+                return false;
+            }
         }
     });
 
