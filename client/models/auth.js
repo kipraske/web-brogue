@@ -6,7 +6,7 @@ define([
     'backbone'
 ], function($, _, Backbone) {
     
-    var AuthenticataionModel = Backbone.Model.extend({
+    var AuthenticationModel = Backbone.Model.extend({
         
         // Doesn't do much but store the current username to pass along to the other views
         defaults: {
@@ -14,6 +14,6 @@ define([
         }
     });
 
-    return AuthenticataionModel;
+    return AuthenticationModel;
 
 });

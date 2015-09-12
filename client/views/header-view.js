@@ -29,7 +29,7 @@ define([
         setUserData : function(username){
             this.userModel.set({
                 username : username
-            })
+            });
             
             this.render();
             

@@ -4,11 +4,12 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     "dataIO/send-generic",
     "dataIO/router",
     "models/auth",
     "views/view-activation-helpers"
-], function ($, _, Backbone, send, router, AuthenticationModel, activate) {
+], function ($, _, Backbone, dispatcher, send, router, AuthenticationModel, activate) {
 
     var AuthenticationView = Backbone.View.extend({
         el: "#auth",
@@ -75,17 +76,16 @@ define([
             
             if (message.result === "logout"){
                 this.render("login");
+                dispatcher.trigger("logout");
                 activate.resetAll();
                 return;
             }
 
             switch (message.data) {
-                case "logged-in" :
+                case "logged-in":
                     activate.loggedIn();
-                    
-                    var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
-                    router.route(headerMessage);
-                    
+                    dispatcher.trigger("login", this.model.get('username'));
+
                     break;
                 case "registered" :
                     this.render("login");

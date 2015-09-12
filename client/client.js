@@ -55,9 +55,12 @@ require([
     // use dispatcher to co-ordinate multi-view actions on routed commands
     dispatcher.on("quit", highScoresView.refresh, highScoresView);
     dispatcher.on("quit", consoleView.exitToLobby, consoleView);
-    dispatcher.on("quit", console.log("event: quit"));
+    dispatcher.on("quit", function(obj) { console.log("event: quit, msg: " + obj.msg) } );
 
-    // set up routes for the websocket connection
+    dispatcher.on("login", headerView.setUserData, headerView);
+    dispatcher.on("login", highScoresView.setUserName, highScoresView);
+
+    // set up routes for the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console),
@@ -66,7 +69,6 @@ require([
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
         "auth" : authView.handleMessage.bind(authView),
-        "header" : headerView.setUserData.bind(headerView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
         "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)
     });

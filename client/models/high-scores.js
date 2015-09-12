@@ -10,6 +10,15 @@ define([
         url: '/api/games',
         parse: function(data) {
             return data.data;
+        },
+        setAllScores: function() {
+            this.url = 'api/games';
+        },
+        setUserScores: function() {
+            this.url = 'api/games/' + this.username;
+        },
+        setUserName: function(username) {
+            this.username = username;
         }
     });
 
