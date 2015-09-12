@@ -27,6 +27,9 @@ var KEY_INPUT_SIZE = 5;
 
 var SCREEN_REFRESH = 50;
 
+var IDLE_KILLER_INTERVAL = 10 * 1000;
+var IDLE_KILLER_TIMEOUT = 10 * 1000;
+
 function BrogueInterface(username) {
     this.username = username;
     this.dataRemainder = new Buffer(0);
@@ -207,6 +210,25 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
 
 BrogueInterface.prototype.attachChildProcess = function() {
     this.attachChildEvents();
+    this.attachChildIdleKiller();
+};
+
+BrogueInterface.prototype.attachChildIdleKiller = function() {
+    this.intervalKiller = setInterval(this.checkIdleTimeAndKill.bind(this), IDLE_KILLER_INTERVAL);
+};
+
+BrogueInterface.prototype.checkIdleTimeAndKill = function() {
+    var idleTime = new Date().getTime() - this.lastActiveTime;
+
+    if(idleTime > IDLE_KILLER_TIMEOUT) {
+        clearTimeout(this.intervalKiller);
+
+        this.killBrogue(this);
+        this.disconnectBrogue(this);
+
+        //Do not send the 'error' event, since it's likely that no controller is listening any more, and the 'error' event will crash the server
+        this.brogueEvents.emit('quit', 'Brogue process timed out due to inactivity');
+    }
 };
 
 BrogueInterface.prototype.attachChildEvents = function () {
@@ -225,6 +247,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
         //Speed debugging
         //var d = new Date();
         //console.error(d.getTime());
+
+        self.lastActiveTime = new Date().getTime();
 
         // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
         // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
@@ -337,7 +361,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
         console.error('Error when reading from client socket' + err);
         //Not identified any cases where this can happen yet but assume it's terminal
         self.disconnectBrogue(self);
-        self.brogueEvents.emit('error', 'Error when reading from client socket');
+        self.brogueEvents.emit('quit', 'Error when reading from client socket');
     });
 
     client_read.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
@@ -354,7 +378,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
         //Therefore we set ourselves into an ended state so a new game can be started
         self.disconnectBrogue(self);
 
-        self.brogueEvents.emit('error', 'Error when writing to client socket');
+        self.brogueEvents.emit('quit', 'Error when writing to client socket - normally brogue has exited');
     });
 
     //Not applicable when connecting to an orphaned process
@@ -372,7 +396,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
             self.killBrogue(self);
             self.disconnectBrogue(self);
 
-            self.brogueEvents.emit('error', 'Message could not be sent to brogue process - Error: ' + err);
+            self.brogueEvents.emit('quit', 'Message could not be sent to brogue process - Error: ' + err);
         });
     }
 };

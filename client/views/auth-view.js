@@ -5,11 +5,12 @@ define([
     "underscore",
     "backbone",
     "dispatcher",
+    "util",
     "dataIO/send-generic",
     "dataIO/router",
     "models/auth",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, send, router, AuthenticationModel, activate) {
+], function ($, _, Backbone, dispatcher, util, send, router, AuthenticationModel, activate) {
 
     var AuthenticationView = Backbone.View.extend({
         el: "#auth",
@@ -27,7 +28,11 @@ define([
         },
         initialize: function () {
 
-            // TODO - if we are already logged on via cookie than we can render the other one
+            var storedToken = util.getItem('sessionId');
+
+            if(storedToken) {
+                send("auth", "login", { token: storedToken });
+            }
 
             this.render("login");
         },
@@ -81,10 +86,20 @@ define([
                 return;
             }
 
-            switch (message.data) {
-                case "logged-in":
+            switch (message.data.message) {
+                case "logged-in" :
                     activate.loggedIn();
+
+                    this.model.set({
+                        username: message.data.username
+                    });
+
                     dispatcher.trigger("login", this.model.get('username'));
+
+                    //var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
+                    //router.route(headerMessage);
+
+                    util.setItem('sessionId', message.data.token);
 
                     break;
                 case "registered" :

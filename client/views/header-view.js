@@ -4,9 +4,10 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "util",
     "dataIO/send-generic",
     "models/user"
-], function ($, _, Backbone, send, UserModel) {
+], function ($, _, Backbone, util, send, UserModel) {
 
     var HeaderView = Backbone.View.extend({
         el: "#header",
@@ -39,6 +40,9 @@ define([
         
         logout: function(e) {
             e.preventDefault();
+
+            util.removeItem('sessionId');
+
             send("auth", "logout");
         },
         

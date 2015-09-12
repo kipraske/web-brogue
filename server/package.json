@@ -23,6 +23,7 @@
     "ws": "^0.7.1",
     "node-unix-dgram": "bnoordhuis/node-unix-dgram",
     "mongoose-paginate": "^4.0.0",
-    "express-paginate": "^0.0.8"
+    "express-paginate": "^0.0.8",
+    "client-sessions": "^0.7.0"
   }
 }
