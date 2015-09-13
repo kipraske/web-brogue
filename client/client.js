@@ -53,19 +53,20 @@ require([
     var highScoresView = new HighScoresView({model: highScoresModel});
 
     // use dispatcher to co-ordinate multi-view actions on routed commands
-    dispatcher.on("quit", highScoresView.refresh, highScoresView);
+    dispatcher.on("quit", highScoresView.quit, highScoresView);
     dispatcher.on("quit", consoleView.exitToLobby, consoleView);
-    dispatcher.on("quit", function(obj) { console.log("event: quit, msg: " + obj.msg) } );
 
-    dispatcher.on("login", headerView.setUserData, headerView);
-    dispatcher.on("login", highScoresView.setUserName, highScoresView);
+    dispatcher.on("login", headerView.login, headerView);
+    dispatcher.on("login", highScoresView.login, highScoresView);
 
-    // set up routes for the websocket connection (only)
+    dispatcher.on("logout", highScoresView.logout, highScoresView);
+
+    // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
         "error" : console.error.bind(console),
         "brogue" : consoleView.queueUpdateCellModelData.bind(consoleView),
-        "quit" : function() { dispatcher.trigger("quit") },
+        "quit" : function(data) { dispatcher.trigger("quit", data) },
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
         "auth" : authView.handleMessage.bind(authView),

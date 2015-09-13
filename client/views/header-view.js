@@ -4,10 +4,11 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     "util",
     "dataIO/send-generic",
     "models/user"
-], function ($, _, Backbone, util, send, UserModel) {
+], function ($, _, Backbone, dispatcher, util, send, UserModel) {
 
     var HeaderView = Backbone.View.extend({
         el: "#header",
@@ -27,21 +28,20 @@ define([
             this.$el.html(this.template(this.userModel.toJSON()));
         },
         
-        setUserData : function(username){
+        login : function(username){
             this.userModel.set({
                 username : username
             });
-            
+
             this.render();
-            
-            // TODO get session info to get the rest of the options and save in the user model
-            
         },
         
         logout: function(e) {
             e.preventDefault();
 
             util.removeItem('sessionId');
+
+            dispatcher.trigger("logout");
 
             send("auth", "logout");
         },

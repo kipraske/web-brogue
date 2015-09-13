@@ -94,7 +94,7 @@ define([
                         username: message.data.username
                     });
 
-                    dispatcher.trigger("login", this.model.get('username'));
+                    dispatcher.trigger("login", message.data.username);
 
                     //var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
                     //router.route(headerMessage);

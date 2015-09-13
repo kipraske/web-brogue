@@ -19,6 +19,9 @@ define([
         },
         setUserName: function(username) {
             this.username = username;
+        },
+        clearUserName: function() {
+            delete this.username;
         }
     });
 
