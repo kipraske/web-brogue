@@ -27,6 +27,8 @@
 #include "Rogue.h"
 #include "IncludeGlobals.h"
 
+extern boolean noSaves;
+
 // Populates path[][] with a list of coordinates starting at origin and traversing down the map. Returns the number of steps in the path.
 short getPlayerPathOnMap(short path[1000][2], short **map, short originX, short originY) {
 	short dir, x, y, steps;
@@ -274,14 +276,16 @@ short actionMenu(short x, boolean playingBack) {
             sprintf(buttons[buttonCount].text, "    %s---", darkGrayColorEscape);
             buttons[buttonCount].flags &= ~B_ENABLED;
             buttonCount++;
-            
-            if (KEYBOARD_LABELS) {
-                sprintf(buttons[buttonCount].text, "  %sS: %sSuspend game and quit  ",	yellowColorEscape, whiteColorEscape);
-            } else {
-                strcpy(buttons[buttonCount].text, "  Suspend game and quit  ");
+
+            if(!noSaves) {
+                if (KEYBOARD_LABELS) {
+                    sprintf(buttons[buttonCount].text, "  %sS: %sSuspend game and quit  ",	yellowColorEscape, whiteColorEscape);
+                } else {
+                    strcpy(buttons[buttonCount].text, "  Suspend game and quit  ");
+                }
+                buttons[buttonCount].hotkey[0] = SAVE_GAME_KEY;
+                buttonCount++;
             }
-            buttons[buttonCount].hotkey[0] = SAVE_GAME_KEY;
-            buttonCount++;
             if (KEYBOARD_LABELS) {
                 sprintf(buttons[buttonCount].text, "  %sO: %sOpen suspended game  ",		yellowColorEscape, whiteColorEscape);
             } else {
@@ -2530,6 +2534,9 @@ void executeKeystroke(signed long keystroke, boolean controlKey, boolean shiftKe
 		case SAVE_GAME_KEY:
 			if (rogue.playbackMode) {
 				return;
+			}
+			if (noSaves) {
+			  return;
 			}
 			if (confirm("Suspend this game? (This feature is still in beta.)", false)) {
 				saveGame();

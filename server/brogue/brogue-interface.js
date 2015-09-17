@@ -178,7 +178,7 @@ BrogueInterface.prototype.start = function (data) {
 BrogueInterface.prototype.newBrogueProcess = function(data) {
 
     var childWorkingDir = this.getChildWorkingDir();
-    var args = ["--no-menu", "--no-recording", "--no-scores"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
+    var args = ["--no-menu", "--no-recording", "--no-scores", "--no-saves"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
 
     //Input has been sanity checked in the controller. Any errors from brogue should be caught by the usual handlers
     if (data) {
