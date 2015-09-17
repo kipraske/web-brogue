@@ -23,6 +23,8 @@ struct brogueConsole currentConsole;
 
 boolean serverMode = false;
 boolean noMenu = false;
+boolean noScores = false;
+boolean noRecording = false;
 unsigned long int firstSeed = 0;
 
 void dumpScores();
@@ -55,6 +57,8 @@ static void printCommandlineHelp() {
 	"--noteye-hack              ignore SDL-specific application state checks\n"
 #endif
 	"--no-menu      -M          never display the menu (automatically pick new game)\n"
+	"--no-scores								never display high scores\n"
+	"--no-recording							never prompt to save recording\n"
 #ifdef BROGUE_CURSES
 	"--term         -t          run in ncurses-based terminal mode\n"
 #endif
@@ -120,6 +124,16 @@ int main(int argc, char *argv[])
 			noMenu = true;
 			continue;
 		}
+
+		if(strcmp(argv[i], "--no-scores") == 0) {
+    	noScores = true;
+    	continue;
+    }
+
+    if(strcmp(argv[i], "--no-recording") == 0) {
+    	noRecording = true;
+      continue;
+    }
 
 		if(strcmp(argv[i], "--noteye-hack") == 0) {
 			serverMode = true;

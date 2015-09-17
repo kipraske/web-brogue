@@ -26,6 +26,9 @@
 #include <math.h>
 #include <time.h>
 
+extern boolean noScores;
+extern boolean noRecording;
+
 void rogueMain() {
 	previousGameSeed = 0;
 	initializeBrogueSaveLocation();
@@ -1170,11 +1173,13 @@ void gameOver(char *killedBy, boolean useCustomPhrasing) {
 	}
 	
 	if (!rogue.playbackMode) {
-		if (saveHighScore(theEntry)) {
+		if (saveHighScore(theEntry) && !noScores) {
 			printHighScores(true);
 		}
 		blackOutScreen();
-		saveRecording();
+		if(!noRecording) {
+			saveRecording();
+		}
 
 	if(!rogue.quit) {
 			notifyEvent(GAMEOVER_DEATH, theEntry.score, 0, theEntry.description);
@@ -1290,10 +1295,14 @@ void victory(boolean superVictory) {
 	rogue.playbackMode = false;
 	displayMoreSign();
 	rogue.playbackMode = isPlayback;
-	
-	saveRecording();
-	
-	printHighScores(qualified);
+
+	if(!noRecording) {
+		saveRecording();
+	}
+
+	if(!noScores) {
+		printHighScores(qualified);
+	}
 
 	if(superVictory) {
 		notifyEvent(GAMEOVER_SUPERVICTORY, theEntry.score, 0, theEntry.description);
