@@ -24,6 +24,7 @@
     "node-unix-dgram": "bnoordhuis/node-unix-dgram",
     "mongoose-paginate": "^4.0.0",
     "express-paginate": "^0.0.8",
-    "client-sessions": "^0.7.0"
+    "client-sessions": "^0.7.0",
+    "morgan": "^1.6.1"
   }
 }

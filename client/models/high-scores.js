@@ -17,6 +17,12 @@ define([
         setUserScores: function() {
             this.url = 'api/games/' + this.username;
         },
+        setDailyScores: function() {
+            this.url = 'api/dailygames';
+        },
+        setMonthlyScores: function() {
+            this.url = 'api/monthlygames';
+        },
         setUserName: function(username) {
             this.username = username;
         },

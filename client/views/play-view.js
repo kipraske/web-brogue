@@ -17,6 +17,7 @@ define([
             "click #start-brogue-seed" : "startBrogueSeed",
             "click #show-saved-games" : "showSavedGames",
             "click #show-current-games" : "showCurrentGames",
+            "click #show-high-scores" : "showHighScores"
         },
         startBrogue: function(event){
             event.preventDefault();
@@ -41,6 +42,11 @@ define([
         showCurrentGames : function(event){
             event.preventDefault();
             activate.currentGames();
+        },
+
+        showHighScores: function(event) {
+            event.preventDefault();
+            activate.highScores();
         },
         
         goToConsole : function(){

@@ -25,11 +25,12 @@ require([
     "views/current-games-view",
     "views/saved-games-view",
     "views/high-scores-view",
+    "views/all-scores-view",
     "views/console-view",
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, dispatcher, debugMode, socket, router, highScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, dispatcher, debugMode, socket, router, HighScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -47,10 +48,15 @@ require([
         duplicateBrogueView : new DuplicateBroguePopupView()
     };
 
-    var highScoresModel = new highScoresModel();
+    var highScoresModel = new HighScoresModel();
     highScoresModel.fetch();
     setInterval(function() { highScoresModel.fetch(); }, 5 * 60 * 1000);
     var highScoresView = new HighScoresView({model: highScoresModel});
+
+    var allScoresModel = new HighScoresModel();
+    allScoresModel.fetch();
+    setInterval(function() { allScoresModel.fetch(); }, 5 * 60 * 1000);
+    var allScoresView = new AllScoresView({model: allScoresModel});
 
     // use dispatcher to co-ordinate multi-view actions on routed commands
     dispatcher.on("quit", highScoresView.quit, highScoresView);
@@ -58,8 +64,10 @@ require([
 
     dispatcher.on("login", headerView.login, headerView);
     dispatcher.on("login", highScoresView.login, highScoresView);
+    dispatcher.on("login", allScoresView.login, allScoresView);
 
     dispatcher.on("logout", highScoresView.logout, highScoresView);
+    dispatcher.on("logout", allScoresView.logout, allScoresView);
 
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({

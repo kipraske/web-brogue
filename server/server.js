@@ -19,11 +19,13 @@ httpServerDomain.on("error", function (err) {
 httpServerDomain.run(function () {
 
     var express = require("express");
+    var morgan = require("morgan");
     var highScoreApi = require("./api/high-score-api");
 
     var app = express();
 
     app.use(express.static(config.path.CLIENT_DIR));
+    app.use(morgan("combined"));
 
 // TODO - configure cookie session, the value is saved in the db, we just need to hook it up
 

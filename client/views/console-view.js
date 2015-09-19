@@ -185,6 +185,7 @@ define([
         
         exitToLobby : function(message){
             activate.lobby();
+            activate.currentGames();
             this.clearConsole();
         }
     });

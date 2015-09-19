@@ -1,4 +1,4 @@
-// Embedded high scores view
+// Full high scores view
 
 define([
     "jquery",
@@ -7,12 +7,14 @@ define([
     "views/high-scores-item-view.js"
 ], function ($, _, Backbone, HighScoreItemView) {
 
-    var HighScoresView = Backbone.View.extend({
-        el: '#high-scores',
-        headingTemplate: _.template($('#high-scores-heading').html()),
+    var AllScoresView = Backbone.View.extend({
+        el: '#all-scores-view',
+        headingTemplate: _.template($('#all-scores-heading').html()),
 
         events: {
-            "click #user-scores" : "selectUserScores",
+            "click #user-high-scores" : "selectUserScores",
+            "click #daily-high-scores" : "selectDailyScores",
+            "click #monthly-high-scores" : "selectMonthlyScores",
             "click #all-scores" : "selectAllScores"
         },
 
@@ -24,8 +26,8 @@ define([
         render: function() {
 
             this.$el.html(this.headingTemplate({ username: this.model.username }));
-            var table = $('#high-scores-table');
-            $('high-scores-table-heading').siblings().empty();
+            var table = $('#all-scores-table');
+            $('all-scores-table-heading').siblings().empty();
 
             this.model.each(function(score) {
                 var highScoreView = new HighScoreItemView({ model: score });
@@ -57,26 +59,40 @@ define([
             this.refresh();
         },
 
+        selectAllScores: function(event) {
+
+            event.preventDefault();
+
+            this.model.setAllScores();
+            this.refresh();
+        },
+
         selectUserScores: function(event) {
 
             event.preventDefault();
-            console.log('selectUserScores');
 
             this.model.setUserScores();
             this.refresh();
         },
 
-        selectAllScores: function(event) {
+        selectDailyScores: function(event) {
 
             event.preventDefault();
-            console.log('selectAllScores');
 
-            this.model.setAllScores();
+            console.log("selectDailyScores");
+            this.model.setDailyScores();
+            this.refresh();
+        },
+
+        selectMonthlyScores: function(event) {
+
+            event.preventDefault();
+
+            this.model.setMonthlyScores();
             this.refresh();
         }
     });
 
-    return HighScoresView;
+    return AllScoresView;
 
 });
-
