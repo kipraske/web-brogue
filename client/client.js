@@ -5,7 +5,26 @@ require.config({
         jquery : "libs/jquery",
         underscore : "libs/underscore",
         backbone : "libs/backbone",
-        moment: "libs/moment"
+        moment: "libs/moment",
+        backbonePaginator: "libs/backbone.paginator",
+        backgrid: "libs/backgrid",
+        backgridPaginator: "libs/backgrid-paginator"
+    },
+    shim: {
+        'backbone': {
+            deps: ['underscore', 'jquery'],
+            exports: "Backbone"
+        },
+
+        'backgrid': {
+            deps: ['backbone'],
+            exports: "Backgrid"
+        },
+
+        'backgridPaginator': {
+            deps: ['backbone', 'backgrid'],
+            exports: 'Backgrid.Paginator'
+        }
     }
 });
 
@@ -13,6 +32,9 @@ require([
     "jquery",
     "underscore",
     "backbone",
+    "backbonePaginator",
+    "backgrid",
+    "backgridPaginator",
     "dispatcher",
     "tests/debug-mode",
     "dataIO/socket",
@@ -30,7 +52,7 @@ require([
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, dispatcher, debugMode, socket, router, HighScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();

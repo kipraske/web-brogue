@@ -3,13 +3,27 @@ var paginate = require("express-paginate");
 
 module.exports = function(app) {
 
+    var sortFromQueryParams = function(req, defaultSort) {
+        if (req.query.sort) {
+            if (req.query.order && req.query.order === "desc") {
+                return "-" + req.query.sort;
+            }
+            else {
+                return req.query.sort;
+            }
+        }
+        else {
+            return defaultSort;
+        }
+    };
+
     app.use(paginate.middleware(10, 50));
 
     app.get("/api/games", function (req, res) {
         GameRecord.paginate({}, {
             page: req.query.page,
             limit: req.query.limit,
-            sortBy: '-date'
+            sortBy: sortFromQueryParams(req, '-date')
         }, function (err, gameRecords, pageCount, itemCount) {
 
             if (err) return next(err);
@@ -18,8 +32,9 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        has_more: paginate.hasNextPages(req)(pageCount),
-                        data: gameRecords
+                        data: gameRecords,
+                        pageCount: pageCount,
+                        itemCount: itemCount
                     });
                 }
             });
@@ -45,7 +60,7 @@ module.exports = function(app) {
             },
             {   page: req.query.page,
                 limit: req.query.limit,
-                sortBy: '-score'
+                sortBy: sortFromQueryParams(req, '-score')
         }, function (err, gameRecords, pageCount, itemCount) {
 
             if (err) return next(err);
@@ -54,8 +69,9 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        has_more: paginate.hasNextPages(req)(pageCount),
-                        data: gameRecords
+                        data: gameRecords,
+                        pageCount: pageCount,
+                        itemCount: itemCount
                     });
                 }
             });
@@ -81,7 +97,7 @@ module.exports = function(app) {
             },
             {   page: req.query.page,
                 limit: req.query.limit,
-                sortBy: '-score'
+                sortBy: sortFromQueryParams(req, '-score')
             }, function (err, gameRecords, pageCount, itemCount) {
 
                 if (err) return next(err);
@@ -90,8 +106,9 @@ module.exports = function(app) {
                     json: function () {
                         res.json({
                             object: 'list',
-                            has_more: paginate.hasNextPages(req)(pageCount),
-                            data: gameRecords
+                            data: gameRecords,
+                            pageCount: pageCount,
+                            itemCount: itemCount
                         });
                     }
                 });
@@ -103,7 +120,7 @@ module.exports = function(app) {
         GameRecord.paginate({username: req.params.username}, {
             page: req.query.page,
             limit: req.query.limit,
-            sortBy: '-date'
+            sortBy: sortFromQueryParams(req, '-date')
         }, function (err, gameRecords, pageCount, itemCount) {
 
             if (err) return next(err);
@@ -112,8 +129,9 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        has_more: paginate.hasNextPages(req)(pageCount),
-                        data: gameRecords
+                        data: gameRecords,
+                        pageCount: pageCount,
+                        itemCount: itemCount
                     });
                 }
             });

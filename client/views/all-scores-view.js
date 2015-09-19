@@ -21,10 +21,64 @@ define([
         initialize: function() {
             this.listenTo(this.model, "add", this.render);
             this.listenTo(this.model, "change", this.render);
+
+            this.grid = new Backgrid.Grid({
+                columns: [
+                    {
+                        name: "username",
+                        label: "User name",
+                        cell: "string",
+                        sortable: false,
+                        editable: false
+                    }, {
+                        name: "date",
+                        label: "Date",
+                        cell: "string",
+                        sortable: true,
+                        editable: false
+                    }, {
+                        name: "score",
+                        label: "Score",
+                        cell: "integer",
+                        sortable: true,
+                        editable: false
+                    }, {
+                        name: "level",
+                        label: "Level",
+                        cell: "integer",
+                        sortable: true,
+                        editable: false
+                    }, {
+                        name: "seed",
+                        label: "Seed",
+                        cell: "string",
+                        sortable: true,
+                        editable: false
+                    }, {
+                        name: "description",
+                        label: "Message",
+                        cell: "string",
+                        sortable: false,
+                        editable: false
+                    }],
+
+                collection: this.model
+            });
+
+            this.paginator = new Backgrid.Extension.Paginator({
+                collection: this.model
+            });
+
         },
 
         render: function() {
 
+            this.$el.html(this.headingTemplate({ username: this.model.username }));
+
+            $("#all-scores-grid").append(this.grid.render().$el);
+            $("#all-scores-paginator").append(this.paginator.render().$el);
+
+            /*
             this.$el.html(this.headingTemplate({ username: this.model.username }));
             var table = $('#all-scores-table');
             $('all-scores-table-heading').siblings().empty();
@@ -35,7 +89,7 @@ define([
 
                 table.append($tr);
             }, this);
-
+*/
             return this;
         },
 
