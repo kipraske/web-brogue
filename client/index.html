@@ -1,190 +1,190 @@
 <!doctype html>
 <html>
-	<head>
-                <title>WebBrogue</title>
-                <link rel="icon" href="assets/brogue-icon.ico" type="image/icon" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-                <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-		<link href="style.css" rel="stylesheet" type="text/css" />
-		<script data-main="client.js" src="libs/require.js" type="text/javascript"></script>
-	</head>
-	<body>
-                <noscript> This page will not work without JavaScript. Sorry. Feel free to download brogue and play it on your own computer at <a href="//sites.google.com/site/broguegame/">sites.google.com/site/broguegame/</a> </noscript>
-		<div id="header" class="header inactive"></div>
-		<div id="lobby">
-			<img class="banner" src="assets/brogue-banner.png" />
-                        <div id="loading" class="loading">Loading...</div>
-			<div id="auth" class="auth"></div>
-			<div id="play" class="play inactive">
-				<h2>Play Brogue 1.7.4</h2>
-                                <ul>
-                                    <li><a id="start-brogue" href="#brogue">Start New Game</a></li>
-                                    <li><a id="start-brogue-seed" href="#brogue">Start New Game With Seed</a></li>
-                                    <!--<li><a id="show-saved-games" href="#show-saved-games">Load Saved Game</a></li>-->
-                                    <li><a id="show-current-games" href="#show-current-games"> See Current Games </a></li>
-                                    <li><a id="show-high-scores" href="#show-high-scores"> See High Scores</a></li>
-                                </ul>
-			</div>
-                        <div id="about" class="about inactive">
-                            <h2> About </h2>
-                            <p>Welcome to WebBrogue! Brogue is a Roguelike game by Brian Walker. You can get more information about the game as well as how to play at <a href="//sites.google.com/site/broguegame/">sites.google.com/site/broguegame/</a>.</p>
-                            <p>This site is currently maintained by Kip Raske.  The source code for this server can be found <a href="//github.com/kipraske/web-brogue">on github</a>, so feel free to contribute or add any issues you may find. </p>
-                        </div>
-                        <div id="current-games" class="current-games"></div>
-                        <div id="saved-games" class="saved-games inactive"></div>
-                        <div id="mini-scores" class="mini-scores"></div>
-                        <div id="all-scores" class="all-scores"></div>
+<head>
+    <title>WebBrogue</title>
+    <link rel="icon" href="assets/brogue-icon.ico" type="image/icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script data-main="client.js" src="libs/require.js" type="text/javascript"></script>
+</head>
+<body>
+<noscript> This page will not work without JavaScript. Sorry. Feel free to download brogue and play it on your own computer at <a href="//sites.google.com/site/broguegame/">sites.google.com/site/broguegame/</a> </noscript>
+<div id="header" class="header inactive"></div>
+<div id="lobby">
+    <img class="banner" src="assets/brogue-banner.png" />
+    <div id="loading" class="loading">Loading...</div>
+    <div id="auth" class="auth"></div>
+    <div id="play" class="play inactive">
+        <h2>Play Brogue 1.7.4</h2>
+        <ul>
+            <li><a id="start-brogue" href="#brogue">Start New Game</a></li>
+            <li><a id="start-brogue-seed" href="#brogue">Start New Game With Seed</a></li>
+            <!--<li><a id="show-saved-games" href="#show-saved-games">Load Saved Game</a></li>-->
+            <li><a id="show-current-games" href="#show-current-games"> See Current Games </a></li>
+            <li><a id="show-high-scores" href="#show-high-scores"> See High Scores</a></li>
+        </ul>
+    </div>
+    <div id="about" class="about inactive">
+        <h2> About </h2>
+        <p>Welcome to WebBrogue! Brogue is a Roguelike game by Brian Walker. You can get more information about the game as well as how to play at <a href="//sites.google.com/site/broguegame/">sites.google.com/site/broguegame/</a>.</p>
+        <p>This site is currently maintained by Kip Raske.  The source code for this server can be found <a href="//github.com/kipraske/web-brogue">on github</a>, so feel free to contribute or add any issues you may find. </p>
+    </div>
+    <div id="current-games" class="current-games"></div>
+    <div id="saved-games" class="saved-games inactive"></div>
+    <div id="mini-scores" class="mini-scores"></div>
+    <div id="all-scores" class="all-scores"></div>
 
-		</div>
-                <div id="console" class="console inactive" tabindex="0">
-                    <input type="text" id="console-keyboard" class="console-keyboard" />
-                </div>
+</div>
+<div id="console" class="console inactive" tabindex="0">
+    <input type="text" id="console-keyboard" class="console-keyboard" />
+</div>
 
 
-		<div id="popup" class="popup inactive"></div>
-                <div id="popup-overlay" class="popup-overlay inactive"></div>
-		
-		<!-- Templates -->
-		<script id="login" type="text/template">
-                <h2>Login to Play</h2>
-		<form>
-			<label for="username">User Name: </label>
-			<input type="text" name="username" id="username" />
-			<label for="password">Password: </label>
-			<input type="password" name="password" id="password" />
-                        <a id="to-register" href="#register">Register</a>
-			<button type="submit" id="login-button">Login</button>
-			<div id="auth-message"></div>
-		</form>
-		</script>
-		
-		<script id="register" type="text/template">
-                <h2>Register a New User</h2>
-		<form>
-			<label for="username">User Name: </label>
-			<input type="text" name="username" id="username" />
-			<label for="password">Password: </label>
-			<input type="password" name="password" id="password" />
-			<label for="password-repeat">Repeat Password: </label>
-			<input type="password" name="password-repeat" id="password-repeat" />
-                        <a id="to-login" href="#login">Login</a>
-			<button type="submit" id="register-button">Register</button>
-			<div id="auth-message"></div>
-		</form>
-		</script>
+<div id="popup" class="popup inactive"></div>
+<div id="popup-overlay" class="popup-overlay inactive"></div>
 
-        <script id="all-scores-heading" type="text/template">
-            <h2>High Scores</h2>
-            <ul>
-                <li><a id="all-scores-daily" href="#all-scores-daily">Daily Top Scores</a></li>
-                <li><a id="all-scores-monthly" href="#all-scores-monthly">Monthly Top Scores</a></li>
-                <li><a id="all-scores-all" href="#all-scores-all">All Top Scores</a></li>
-                <% if (username) { %>
-                <li><a id="all-scores-user" href="#all-scores-user"><%= username %> Top Scores</a></li>
-                <% } %>
-            </ul>
-            <table id="all-scores-table">
-                <tr id="all-scores-table-heading">
-                    <th>User</th>
-                    <th>Date</th>
-                    <th>Score</th>
-                    <th>Description</th>
-                </tr>
-            </table>
-        </script>
+<!-- Templates -->
+<script id="login" type="text/template">
+    <h2>Login to Play</h2>
+    <form>
+        <label for="username">User Name: </label>
+        <input type="text" name="username" id="username" />
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" />
+        <a id="to-register" href="#register">Register</a>
+        <button type="submit" id="login-button">Login</button>
+        <div id="auth-message"></div>
+    </form>
+</script>
 
-                <script id="mini-scores-heading" type="text/template">
-                    <h2>Recent Games</h2>
-                    <ul>
-                        <li><a id="mini-scores-all" href="#all-scores">All scores</a></li>
-                        <% if (username) { %>
-                        <li><a id="mini-scores-user" href="#user-scores"><%= username %> scores</a></li>
-                        <% } %>
-                    </ul>
-                    <table id="mini-scores-table">
-                        <tr id="mini-scores-table-heading">
-                            <th>User</th>
-                            <th>Date</th>
-                            <th>Score</th>
-                            <th>Description</th>
-                        </tr>
-                    </table>
-                </script>
+<script id="register" type="text/template">
+    <h2>Register a New User</h2>
+    <form>
+        <label for="username">User Name: </label>
+        <input type="text" name="username" id="username" />
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" />
+        <label for="password-repeat">Repeat Password: </label>
+        <input type="password" name="password-repeat" id="password-repeat" />
+        <a id="to-login" href="#login">Login</a>
+        <button type="submit" id="register-button">Register</button>
+        <div id="auth-message"></div>
+    </form>
+</script>
 
-                <script id="high-scores-row" type="text/template">
-                    <td><%= username %></td>
-                    <td><%= date %></td>
-                    <td><%= score %></td>
-                    <td><%= description %></td>
-                </script>
-		
-		<script id="welcome" type="text/template">
-			<div>Logged in as <%= username %> | <a id="logout" href="#logout">Logout</a></div>
-		</script>
-		
-                <script id="current-games-heading" type ="text/template">
-                    <h2>Current Games</h2>
-                    <% if (isEmpty) { %>
-                        <p> There are no other users playing at this time</p>
-                    <% } else { %>
-                        <table id="current-games-table">
-                            <tr>
-                                <th>User</th>
-                                <th>Idle</th>
-                                <th>Level</th>
-                                <th>Gold</th>
-                                <th>Seed</th>
-                            </tr>
-                        </table>
-                    <% } %>
-                </script>
-                
-		<script id="current-games-row" type="text/template">
-                    <td><%= userName %></td>
-                    <td><%= formattedIdle %></td>
-                    <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
-                    <td><%= gold %></td>
-                    <td><%= seed %></td>
-                    <td><a id="observe-game" href="#brogue">Observe <%= userName %></a></td>
-		</script>
-		
-		<script id="saved-games-heading" type ="text/template">
-                    <h2>Saved Games</h2>
-                    <% if (isEmpty) { %>
-                        <p>You currently do not have any saved games</p>
-                    <% } else { %>
-                        <table id="saved-games-table">
-                            <tr>
-                                <th>Saved Game</th>
-                                <th>Date Modified</th>
-                            </tr>
-                        </table>
-                    <% } %>
-                </script>
-                
-		<script id="file-row" type="text/template">
-                    <td><a class="file-link" href="#"><%= fileName %></a></td>
-                    <td><%= formattedModified %></td>
-		</script>
-                
-                <script id="seed-popup" type="text/template">
-                    <div id="popup-close" class="close"> X </div>
-                    <form>
-                        <label for="seed">Seed: </label>
-                        <input id="seed" name="seed" type="text" />
-                        <button type="submit" id="seed-button">Play Brogue</button>
-                        <div id='seed-validation'></div>
-                    </form>
-		</script>
-                
-                <script id="duplicate-brogue-popup" type="text/template">
-                    <div id="popup-close" class="close"> X </div>
-                    <form>
-                        <div> It appears that you have a brogue game open in another window somewhere. What would you like to do with your existing game?</div>
-                            <label for="duplicate-brogue-choice-1"><input type="radio" value="mirror" name="duplicate-brogue-choice" id="duplicate-brogue-choice-1" checked="checked"> Mirror your current game here in this window.
-                            <label for="duplicate-brogue-choice-2"><input type="radio" value="kill" name="duplicate-brogue-choice" id="duplicate-brogue-choice-2"> Kill your existing brogue game and go back to the lobby</label>
-                        <button type="submit" id="duplicate-brogue-button"> Ok </button>
-                    </form>
-		</script>
-	</body>
+<script id="all-scores-heading" type="text/template">
+    <h2>High Scores</h2>
+    <ul>
+        <li><a id="all-scores-daily" href="#all-scores-daily">Daily Top Scores</a></li>
+        <li><a id="all-scores-monthly" href="#all-scores-monthly">Monthly Top Scores</a></li>
+        <li><a id="all-scores-all" href="#all-scores-all">All Top Scores</a></li>
+        <% if (username) { %>
+        <li><a id="all-scores-user" href="#all-scores-user"><%= username %> Top Scores</a></li>
+        <% } %>
+    </ul>
+    <table id="all-scores-table">
+        <tr id="all-scores-table-heading">
+            <th>User</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Description</th>
+        </tr>
+    </table>
+</script>
+
+<script id="mini-scores-heading" type="text/template">
+    <h2>Recent Games</h2>
+    <ul>
+        <li><a id="mini-scores-all" href="#all-scores">All scores</a></li>
+        <% if (username) { %>
+        <li><a id="mini-scores-user" href="#user-scores"><%= username %> scores</a></li>
+        <% } %>
+    </ul>
+    <table id="mini-scores-table">
+        <tr id="mini-scores-table-heading">
+            <th>User</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Description</th>
+        </tr>
+    </table>
+</script>
+
+<script id="high-scores-row" type="text/template">
+    <td><%= username %></td>
+    <td><%= date %></td>
+    <td><%= score %></td>
+    <td><%= description %></td>
+</script>
+
+<script id="welcome" type="text/template">
+    <div>Logged in as <%= username %> | <a id="logout" href="#logout">Logout</a></div>
+</script>
+
+<script id="current-games-heading" type ="text/template">
+    <h2>Current Games</h2>
+    <% if (isEmpty) { %>
+    <p> There are no other users playing at this time</p>
+    <% } else { %>
+    <table id="current-games-table">
+        <tr>
+            <th>User</th>
+            <th>Idle</th>
+            <th>Level</th>
+            <th>Gold</th>
+            <th>Seed</th>
+        </tr>
+    </table>
+    <% } %>
+</script>
+
+<script id="current-games-row" type="text/template">
+    <td><%= userName %></td>
+    <td><%= formattedIdle %></td>
+    <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
+    <td><%= gold %></td>
+    <td><%= seed %></td>
+    <td><a id="observe-game" href="#brogue">Observe <%= userName %></a></td>
+</script>
+
+<script id="saved-games-heading" type ="text/template">
+    <h2>Saved Games</h2>
+    <% if (isEmpty) { %>
+    <p>You currently do not have any saved games</p>
+    <% } else { %>
+    <table id="saved-games-table">
+        <tr>
+            <th>Saved Game</th>
+            <th>Date Modified</th>
+        </tr>
+    </table>
+    <% } %>
+</script>
+
+<script id="file-row" type="text/template">
+    <td><a class="file-link" href="#"><%= fileName %></a></td>
+    <td><%= formattedModified %></td>
+</script>
+
+<script id="seed-popup" type="text/template">
+    <div id="popup-close" class="close"> X </div>
+    <form>
+        <label for="seed">Seed: </label>
+        <input id="seed" name="seed" type="text" />
+        <button type="submit" id="seed-button">Play Brogue</button>
+        <div id='seed-validation'></div>
+    </form>
+</script>
+
+<script id="duplicate-brogue-popup" type="text/template">
+    <div id="popup-close" class="close"> X </div>
+    <form>
+        <div> It appears that you have a brogue game open in another window somewhere. What would you like to do with your existing game?</div>
+        <label for="duplicate-brogue-choice-1"><input type="radio" value="mirror" name="duplicate-brogue-choice" id="duplicate-brogue-choice-1" checked="checked"> Mirror your current game here in this window.
+            <label for="duplicate-brogue-choice-2"><input type="radio" value="kill" name="duplicate-brogue-choice" id="duplicate-brogue-choice-2"> Kill your existing brogue game and go back to the lobby</label>
+            <button type="submit" id="duplicate-brogue-button"> Ok </button>
+    </form>
+</script>
+</body>
 </html>

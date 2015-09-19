@@ -50,7 +50,7 @@ label {
 input {
     display: block;
     margin-bottom: 10px;
-    
+
 }
 
 input[type="radio"]{
@@ -80,7 +80,7 @@ button {
     margin: 1em 0 0 0;
 }
 
-.auth, 
+.auth,
 .play,
 .about,
 .current-games,
@@ -100,7 +100,7 @@ button {
 }
 
 .auth input {
-    width: 100%; 
+    width: 100%;
 }
 
 .auth button{
@@ -138,29 +138,29 @@ button {
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .about{
         width: 225px;
     }
-    
+
     .auth,
     .play,
     .about{
         float: left;
         clear: left;
     }
-    
+
     .auth form{
         margin: 0 10%;
     }
-    
+
     .auth.logged-in{
         float: none;
         clear: both;
         width: auto;
         text-align: right;
     }
-    
+
     .current-games,
     .saved-games,
     .mini-scores,
@@ -180,9 +180,9 @@ button {
     -moz-box-sizing: border-box;
     overflow : hidden;
     font-family: Source Code Pro, monospace;
-   -moz-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .console.full-height {
