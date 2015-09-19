@@ -8,12 +8,12 @@ define([
 ], function ($, _, Backbone, HighScoreItemView) {
 
     var HighScoresView = Backbone.View.extend({
-        el: '#high-scores',
-        headingTemplate: _.template($('#high-scores-heading').html()),
+        el: '#mini-scores',
+        headingTemplate: _.template($('#mini-scores-heading').html()),
 
         events: {
-            "click #user-scores" : "selectUserScores",
-            "click #all-scores" : "selectAllScores"
+            "click #mini-scores-user" : "selectUserScores",
+            "click #mini-scores-all" : "selectAllScores"
         },
 
         initialize: function() {
@@ -24,8 +24,8 @@ define([
         render: function() {
 
             this.$el.html(this.headingTemplate({ username: this.model.username }));
-            var table = $('#high-scores-table');
-            $('high-scores-table-heading').siblings().empty();
+            var table = $('#mini-scores-table');
+            $('mini-scores-table-heading').siblings().empty();
 
             this.model.each(function(score) {
                 var highScoreView = new HighScoreItemView({ model: score });

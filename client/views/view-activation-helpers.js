@@ -15,13 +15,13 @@ define(['jquery'], function($){
         },
         
         currentGames : function(){
-            $('#saved-games, #all-scores-view').addClass('inactive');
-            $('#current-games, #high-scores').removeClass('inactive');
+            $('#saved-games, #all-scores').addClass('inactive');
+            $('#current-games, #mini-scores').removeClass('inactive');
         },
 
         highScores : function(){
-            $('#saved-games, #current-games, #high-scores').addClass('inactive');
-            $('#all-scores-view').removeClass('inactive');
+            $('#saved-games, #current-games, #mini-scores').addClass('inactive');
+            $('#all-scores').removeClass('inactive');
         },
         
         console : function(){
@@ -40,8 +40,8 @@ define(['jquery'], function($){
         },
         
         resetAll: function(){
-            $('#header, #play, #saved-games, #all-scores-view').addClass("inactive");
-            $('#lobby, #auth, #current-games, #high-scores').removeClass("inactive");
+            $('#header, #play, #saved-games, #all-scores').addClass("inactive");
+            $('#lobby, #auth, #current-games, #mini-scores').removeClass("inactive");
         }
     }
     

@@ -24,7 +24,7 @@ require([
     "views/header-view",
     "views/current-games-view",
     "views/saved-games-view",
-    "views/high-scores-view",
+    "views/mini-scores-view",
     "views/all-scores-view",
     "views/console-view",
     "views/console-keystroke-processing-view",

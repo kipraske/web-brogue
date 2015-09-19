@@ -14,7 +14,9 @@ define(['dataIO/router'], function(router){
     socket.binaryType = "arraybuffer";
     
     socket.onclose = function(event){
-        alert("Your socket has unexpectedly closed. Refresh the page to reconnect.");
+
+        //Remove for development
+        //alert("Your socket has unexpectedly closed. Refresh the page to reconnect.");
     };
     
     socket.onmessage = function(event){

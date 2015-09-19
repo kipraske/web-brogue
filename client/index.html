@@ -32,8 +32,8 @@
                         </div>
                         <div id="current-games" class="current-games"></div>
                         <div id="saved-games" class="saved-games inactive"></div>
-                        <div id="high-scores" class="high-scores"></div>
-                        <div id="all-scores-view" class="all-scores-view"></div>
+                        <div id="mini-scores" class="mini-scores"></div>
+                        <div id="all-scores" class="all-scores"></div>
 
 		</div>
                 <div id="console" class="console inactive" tabindex="0">
@@ -76,11 +76,11 @@
         <script id="all-scores-heading" type="text/template">
             <h2>High Scores</h2>
             <ul>
-                <li><a id="daily-high-scores" href="#daily-high-scores">Daily Top Scores</a></li>
-                <li><a id="monthly-high-scores" href="#monthly-high-scores">Monthly Top Scores</a></li>
-                <li><a id="all-high-scores" href="#all-high-scores">All Top Scores</a></li>
+                <li><a id="all-scores-daily" href="#all-scores-daily">Daily Top Scores</a></li>
+                <li><a id="all-scores-monthly" href="#all-scores-monthly">Monthly Top Scores</a></li>
+                <li><a id="all-scores-all" href="#all-scores-all">All Top Scores</a></li>
                 <% if (username) { %>
-                <li><a id="user-high-scores" href="#user-high-scores"><%= username %> Top Scores</a></li>
+                <li><a id="all-scores-user" href="#all-scores-user"><%= username %> Top Scores</a></li>
                 <% } %>
             </ul>
             <table id="all-scores-table">
@@ -93,16 +93,16 @@
             </table>
         </script>
 
-                <script id="high-scores-heading" type="text/template">
+                <script id="mini-scores-heading" type="text/template">
                     <h2>Recent Games</h2>
                     <ul>
-                        <li><a id="all-scores" href="#all-scores">All scores</a></li>
+                        <li><a id="mini-scores-all" href="#all-scores">All scores</a></li>
                         <% if (username) { %>
-                        <li><a id="user-scores" href="#user-scores"><%= username %> scores</a></li>
+                        <li><a id="mini-scores-user" href="#user-scores"><%= username %> scores</a></li>
                         <% } %>
                     </ul>
-                    <table id="high-scores-table">
-                        <tr id="high-scores-table-heading">
+                    <table id="mini-scores-table">
+                        <tr id="mini-scores-table-heading">
                             <th>User</th>
                             <th>Date</th>
                             <th>Score</th>

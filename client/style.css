@@ -85,7 +85,8 @@ button {
 .about,
 .current-games,
 .saved-games,
-.high-scores {
+.mini-scores,
+.all-scores {
     margin: 0 2.5%;
     width: 225px;
     box-sizing: border-box;
@@ -108,13 +109,15 @@ button {
 
 .current-games,
 .saved-games,
-.high-scores {
+.mini-scores,
+.all-scores {
     width: 100%;
 }
 
 .current-games table,
 .saved-games table,
-.high-scores table {
+.mini-scores table,
+.all-scores table {
     width: 95%;
 }
 
@@ -122,8 +125,10 @@ button {
 .current-games td,
 .saved-games th,
 .saved-games td,
-.high-scores th,
-.high-scores td {
+.mini-scores th,
+.mini-scores td,
+.all-scores th,
+.all-scores td {
     text-align: left;
 }
 
@@ -158,7 +163,8 @@ button {
     
     .current-games,
     .saved-games,
-    .high-scores {
+    .mini-scores,
+    .all-scores {
         margin: 0 2.5% 0 7.5%;
         padding-left: 250px;
     }

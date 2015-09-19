@@ -8,14 +8,14 @@ define([
 ], function ($, _, Backbone, HighScoreItemView) {
 
     var AllScoresView = Backbone.View.extend({
-        el: '#all-scores-view',
+        el: '#all-scores',
         headingTemplate: _.template($('#all-scores-heading').html()),
 
         events: {
-            "click #user-high-scores" : "selectUserScores",
-            "click #daily-high-scores" : "selectDailyScores",
-            "click #monthly-high-scores" : "selectMonthlyScores",
-            "click #all-scores" : "selectAllScores"
+            "click #all-scores-user" : "selectUserScores",
+            "click #all-scores-daily" : "selectDailyScores",
+            "click #all-scores-monthly" : "selectMonthlyScores",
+            "click #all-scores-all" : "selectAllScores"
         },
 
         initialize: function() {
