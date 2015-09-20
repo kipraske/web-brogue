@@ -167,8 +167,13 @@ button {
     .all-scores {
         margin: 0 2.5% 0 7.5%;
         padding-left: 250px;
+        width: -moz-calc(100% - 250px);
+        width: -webkit-calc(100% - 250px);
+        width: calc(100% - 250px);
     }
 }
+
+
 
 /*=====================================
  * 2.0 Console
