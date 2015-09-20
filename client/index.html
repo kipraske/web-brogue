@@ -30,7 +30,7 @@
     <div id="about" class="about inactive">
         <h2> About </h2>
         <p>Welcome to WebBrogue! Brogue is a Roguelike game by Brian Walker. You can get more information about the game as well as how to play at <a href="//sites.google.com/site/broguegame/">sites.google.com/site/broguegame/</a>.</p>
-        <p>This site is currently maintained by Kip Raske.  The source code for this server can be found <a href="//github.com/kipraske/web-brogue">on github</a>, so feel free to contribute or add any issues you may find. </p>
+        <p>This site is currently maintained by Tom Ford and was originally designed by Kip Raske. The source code for this server can be found <a href="//github.com/flend/web-brogue">on github</a>, so feel free to contribute or add any issues you may find. </p>
     </div>
     <div id="current-games" class="current-games"></div>
     <div id="saved-games" class="saved-games inactive"></div>
@@ -80,21 +80,13 @@
     <ul>
         <li><a id="all-scores-daily" href="#all-scores-daily">Daily Top Scores</a></li>
         <li><a id="all-scores-monthly" href="#all-scores-monthly">Monthly Top Scores</a></li>
-        <li><a id="all-scores-all" href="#all-scores-all">All Top Scores</a></li>
+        <li><a id="all-scores-all" href="#all-scores-all">All-time Top Scores</a></li>
         <% if (username) { %>
         <li><a id="all-scores-user" href="#all-scores-user">My Top Scores (<%= username %>)</a></li>
         <% } %>
     </ul>
     <div id="all-scores-grid" />
     <div id="all-scores-paginator" />
-    <!--<table id="all-scores-table">
-        <tr id="all-scores-table-heading">
-            <th>User</th>
-            <th>Date</th>
-            <th>Score</th>
-            <th>Description</th>
-        </tr>
-    </table>-->
 </script>
 
 <script id="mini-scores-heading" type="text/template">
@@ -105,14 +97,7 @@
         <li><a id="mini-scores-user" href="#user-scores">My games (<%= username %>)</a></li>
         <% } %>
     </ul>
-    <table id="mini-scores-table">
-        <tr id="mini-scores-table-heading">
-            <th>User</th>
-            <th>Date</th>
-            <th>Score</th>
-            <th>Description</th>
-        </tr>
-    </table>
+    <div id="mini-scores-grid" />
 </script>
 
 <script id="high-scores-row" type="text/template">

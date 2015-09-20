@@ -4,8 +4,7 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    "views/high-scores-item-view.js"
-], function ($, _, Backbone, HighScoreItemView) {
+], function ($, _, Backbone) {
 
     var AllScoresView = Backbone.View.extend({
         el: '#all-scores',
@@ -78,18 +77,6 @@ define([
             $("#all-scores-grid").append(this.grid.render().$el);
             $("#all-scores-paginator").append(this.paginator.render().$el);
 
-            /*
-            this.$el.html(this.headingTemplate({ username: this.model.username }));
-            var table = $('#all-scores-table');
-            $('all-scores-table-heading').siblings().empty();
-
-            this.model.each(function(score) {
-                var highScoreView = new HighScoreItemView({ model: score });
-                var $tr = highScoreView.render().$el;
-
-                table.append($tr);
-            }, this);
-*/
             return this;
         },
 
