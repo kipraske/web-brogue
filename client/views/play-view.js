@@ -4,10 +4,11 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     "dataIO/send-generic",
     "dataIO/router",
     "views/view-activation-helpers",
-], function ($, _, Backbone, send, router, activate) {
+], function ($, _, Backbone, dispatcher, send, router, activate) {
     
     var PlayView = Backbone.View.extend({
         el: "#play",
@@ -47,6 +48,7 @@ define([
         showHighScores: function(event) {
             event.preventDefault();
             activate.highScores();
+            dispatcher.trigger("all-scores");
         },
         
         goToConsole : function(){

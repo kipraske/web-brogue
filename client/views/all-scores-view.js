@@ -31,7 +31,7 @@ define([
                         sortable: false,
                         editable: false
                     }, {
-                        name: "date",
+                        name: "prettyDate",
                         label: "Date",
                         cell: "string",
                         sortable: true,
@@ -109,6 +109,11 @@ define([
             this.render();
         },
 
+        activate: function() {
+            //Model may be in an old-state, so refresh
+            this.setAllScores();
+        },
+
         quit: function() {
             this.refresh();
         },
@@ -116,8 +121,12 @@ define([
         selectAllScores: function(event) {
 
             event.preventDefault();
+            this.setAllScores();
+        },
 
-            this.model.setAllScores();
+        setAllScores: function() {
+
+            this.model.setAllTopScores();
             this.refresh();
         },
 
@@ -125,7 +134,7 @@ define([
 
             event.preventDefault();
 
-            this.model.setUserScores();
+            this.model.setUserTopScores();
             this.refresh();
         },
 
@@ -134,7 +143,7 @@ define([
             event.preventDefault();
 
             console.log("selectDailyScores");
-            this.model.setDailyScores();
+            this.model.setDailyTopScores();
             this.refresh();
         },
 
@@ -142,7 +151,7 @@ define([
 
             event.preventDefault();
 
-            this.model.setMonthlyScores();
+            this.model.setMonthlyTopScores();
             this.refresh();
         }
     });

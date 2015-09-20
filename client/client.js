@@ -91,6 +91,8 @@ require([
     dispatcher.on("logout", highScoresView.logout, highScoresView);
     dispatcher.on("logout", allScoresView.logout, allScoresView);
 
+    dispatcher.on("all-scores", allScoresView.activate, allScoresView);
+
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions

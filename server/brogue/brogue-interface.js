@@ -27,8 +27,8 @@ var KEY_INPUT_SIZE = 5;
 
 var SCREEN_REFRESH = 50;
 
-var IDLE_KILLER_INTERVAL = 10 * 1000;
-var IDLE_KILLER_TIMEOUT = 10 * 1000;
+var IDLE_KILLER_INTERVAL = 1 * 24 * 60 * 60 * 1000;
+var IDLE_KILLER_TIMEOUT = 14 * 24 * 60 * 60 * 1000;
 
 function BrogueInterface(username) {
     this.username = username;
