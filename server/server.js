@@ -4,6 +4,7 @@ var domain = require("domain");
 
 var config = require("./config");
 var util = require("util");
+var fs = require("fs");
 
 var mongoose = require("mongoose");
 mongoose.connect(config.db.url);
@@ -25,7 +26,9 @@ httpServerDomain.run(function () {
     var app = express();
 
     app.use(express.static(config.path.CLIENT_DIR));
-    app.use(morgan("combined"));
+
+    var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
+    app.use(morgan('combined', {stream: accessLogStream}));
 
     /*
     //CORS middleware for testing
