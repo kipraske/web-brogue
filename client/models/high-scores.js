@@ -4,8 +4,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'backbonePaginator',
     'moment'
-], function($, _, Backbone, Moment) {
+], function($, _, Backbone, BackbonePaginator, Moment) {
 
     var HighScores = Backbone.PageableCollection.extend({
         url: '/api/games',
