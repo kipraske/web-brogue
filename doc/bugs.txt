@@ -4,3 +4,16 @@ If you create a new user, that user does not exist but their directory exists, y
 Server Error: {"errno":-17,"code":"EEXIST","path":"/home/flend/web-brogue/game-data/flend"}
 at the client
 
+Bug 2
+
+The google console font does not have a glyph for:
+Undiscovered items
+Goblin totems
+
+Bug 3
+
+The seed is truncated in the high score table
+
+Bug 4
+
+Animations are too fast to be seen
