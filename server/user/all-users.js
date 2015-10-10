@@ -25,14 +25,13 @@ module.exports = {
         userCount++;
         this.users[userName] = {
             brogueState : brogueState.INACTIVE,
-            brogueProcess : null,
             lastUpdateTime : process.hrtime(),
             lobbyData : {
                 idle : 0,
                 deepestLevel : 0,
                 seed : 0,
                 gold : 0,
-                easyMode : false,
+                easyMode : false
             }
         };
     },
@@ -52,6 +51,7 @@ module.exports = {
     },
     
     updateLobbyStatus : function(userName, updateFlag, updateValue) {
+
         if (updateFlag === brogueStatus.SEED){
             // just need to report update once per push
             this.users[userName].lastUpdateTime = process.hrtime();
@@ -59,11 +59,6 @@ module.exports = {
         
         var lobbyItem = brogueStatusMap[updateFlag];
         this.users[userName].lobbyData[lobbyItem] = updateValue;
-    },
-    
-    killUserProcess : function(userName){
-        this.users[userName].brogueProcess.kill('SIGINT');
-        this.users[userName].brogueProcess = null;
     },
 
     createSessionToken: function (username) {

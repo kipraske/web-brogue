@@ -135,11 +135,19 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueStatusListener: function (status) {
-        if(!this.readOnly && allUsers.isUserValid(this.controllers.auth.currentUserName)) {
+        if(!this.readOnly) {
+            if(!allUsers.isUserValid(this.controllers.auth.currentUserName)) {
+                //This is a funny exception to deal with the case when the user has logged out from one window
+                //but is still playing
+                allUsers.addUser(this.controllers.auth.currentUserName);
+            }
+
+            //We may have a different state due to logging in again in a different window, but PLAYING should take priority
+            this.setState(brogueState.PLAYING);
             allUsers.updateLobbyStatus(
                 this.controllers.auth.currentUserName,
-                status.updateFlag,
-                status.updateValue);
+                status.flag,
+                status.value);
         }
     },
 
