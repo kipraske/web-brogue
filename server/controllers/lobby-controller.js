@@ -45,6 +45,7 @@ _.extend(LobbyController.prototype, {
         var returnLobbyData;
 
         for (var userName in allUsers.users){
+
             // Only send data to the lobby of the users who are actually playing a game
             if (allUsers.users[userName].brogueState === brogueState.PLAYING || includeEveryone){              
                 if (!returnLobbyData) {

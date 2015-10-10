@@ -82,7 +82,6 @@ BrogueInterface.prototype.sendRefreshScreen = function(callback) {
 
     var messageArray = new Buffer(5);
     messageArray[0] = SCREEN_REFRESH;
-    console.log("sending refresh");
     this.sendToBrogue(messageArray, callback);
 };
 
@@ -145,8 +144,6 @@ BrogueInterface.prototype.getChildWorkingDir = function () {
 
 BrogueInterface.prototype.start = function (data) {
 
-    console.log("BrogueInterface.start");
-
     //Support reconnect
 
     //Test if we can send to server socket, if so, no need to spawn a new process, just attach
@@ -160,7 +157,7 @@ BrogueInterface.prototype.start = function (data) {
         this.brogueSocket = unixdgram.createSocket('unix_dgram');
 
         this.brogueSocket.send(sendBuf, 0, 5, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function () {
-            console.error("ok to connect to socket - callback"); //TODO: remove
+            //ok to connect to socket - callback
         });
 
         //Okay to connect through socket to running process
@@ -168,9 +165,7 @@ BrogueInterface.prototype.start = function (data) {
     }
     catch(e) {
 
-        //TODO: remove debug
-        console.error("failed to connect to socket, spawning new process " + e);
-
+        //failed to connect to socket, spawning new process
         this.newBrogueProcess(data);
     }
 };
@@ -291,7 +286,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
             }
             else if(self.dataAccumulator[i] === EVENT_BYTE_FLAG) {
                 var eventId = self.dataAccumulator[i + EVENT_DATA_OFFSET];
-                console.log("EVENT found");
 
                 // We need to send bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
                 var eventData1 =
@@ -322,7 +316,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
                 var eventEnd = i + EVENT_DATA_LENGTH;
 
                 for(var j = messageStart; j < eventEnd; j++) {
-                    console.log(self.dataAccumulator[j]);
                     if(self.dataAccumulator[j] == 0) {
                         break;
                     }
@@ -387,7 +380,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
         self.brogueChild.on('exit', function (code) {
             // go back to lobby in the event something happens to the child process
             self.disconnectBrogue(self);
-            console.log('Brogue Process exiting');
 
             self.brogueEvents.emit('quit');
         });
@@ -415,15 +407,12 @@ BrogueInterface.prototype.disconnectBrogue = function(self) {
 
 BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
     //Analyse brogue messages and do suitable processing, before passing back to the controller
-    console.log("Processing brogue events in interface");
 
     //Kill the brogue process on quit (save a keypress and make sure it dies)
     if(eventData.eventId === brogueConstants.GAMEOVER_QUIT ||
         eventData.eventId === brogueConstants.GAMEOVER_DEATH ||
         eventData.eventId === brogueConstants.GAMEOVER_VICTORY ||
         eventData.eventId === brogueConstants.GAMEOVER_SUPERVICTORY) {
-
-        console.log("Killing brogue on quit.");
 
         self.killBrogue(self);
         self.disconnectBrogue(self);

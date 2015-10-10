@@ -46,8 +46,6 @@ define([
                 element.prettyDate = this.formatDate(element.date);
             }, this);
 
-            console.log(JSON.stringify(records));
-
             return resp.data;
         },
 

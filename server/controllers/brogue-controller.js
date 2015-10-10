@@ -44,7 +44,6 @@ _.extend(BrogueController.prototype, {
         }
 
         if(this.readOnly) {
-            console.log("Ignoring command for observe game.");
             return;
         }
 
@@ -80,10 +79,10 @@ _.extend(BrogueController.prototype, {
 
         //Is called on cleanup when WS connection dies, but may have already dropped listeners
         if(this.brogueInterface) {
-            console.log("Removing data listener. Before " + this.brogueInterface.brogueEvents.listeners('data').length);
+            //console.log("Removing data listener. Before " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.brogueInterface.removeDataListener(this.dataListener);
-            console.log("Removing data listener. After " + this.brogueInterface.brogueEvents.listeners('data').length);
+            //console.log("Removing data listener. After " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.brogueInterface.removeStatusListener(this.statusListener);
             this.brogueInterface.removeQuitListener(this.quitListener);
@@ -93,18 +92,18 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueQuitListener: function () {
-        console.log("Quit listener " + this.username);
+        //console.log("Quit listener " + this.username);
         this.endBrogueSession();
     },
 
     brogueErrorListener: function () {
-        console.log("Error listener" + this.username);
+        //console.log("Error listener" + this.username);
         //TODO: Maybe some UI for the user? This normally occurs on an orphaned process connecting, which is expected behaviour
         this.endBrogueSession();
     },
 
     brogueEventListener: function (event) {
-        console.log("Event listener " + this.username + " data: " + JSON.stringify(event));
+        //console.log("Event listener " + this.username + " data: " + JSON.stringify(event));
 
         //Add record to the database (only if owner of game)
         //TODO: Maybe just one eventId for end game events?
@@ -158,11 +157,6 @@ _.extend(BrogueController.prototype, {
     handlerCollection: {
         start: function (data) {
 
-            console.log("brogue-controller.start");
-            if(data) {
-                console.log("Username supplied " + data.username);
-            }
-
             var brogueSessionName;
 
             //Work out if this is the user playing their own game or just observing
@@ -212,7 +206,7 @@ _.extend(BrogueController.prototype, {
 
             this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data);
 
-            console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
+            //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.dataListener = this.brogueDataListener.bind(this);
             this.brogueInterface.addDataListener(this.dataListener);
@@ -229,7 +223,7 @@ _.extend(BrogueController.prototype, {
             this.statusListener = this.brogueStatusListener.bind(this);
             this.brogueInterface.addStatusListener(this.statusListener);
 
-            console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
+            //console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
             this.controllers.lobby.stopUserDataListen();
 

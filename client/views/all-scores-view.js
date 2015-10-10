@@ -129,7 +129,6 @@ define([
 
             event.preventDefault();
 
-            console.log("selectDailyScores");
             this.model.setDailyTopScores();
             this.refresh();
         },

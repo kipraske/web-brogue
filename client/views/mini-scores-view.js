@@ -101,7 +101,6 @@ define([
         selectUserScores: function(event) {
 
             event.preventDefault();
-            console.log('selectUserScores');
 
             this.model.setUserScores();
             this.refresh();
@@ -110,7 +109,6 @@ define([
         selectAllScores: function(event) {
 
             event.preventDefault();
-            console.log('selectAllScores');
 
             this.model.setAllScores();
             this.refresh();
