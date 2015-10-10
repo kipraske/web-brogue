@@ -108,11 +108,11 @@ _.extend(BrogueController.prototype, {
 
         //Add record to the database (only if owner of game)
         //TODO: Maybe just one eventId for end game events?
-        if(!this.readOnly &&
+        if(!this.readOnly && (
             event.eventId === brogueConstants.GAMEOVER_QUIT ||
             event.eventId === brogueConstants.GAMEOVER_DEATH ||
             event.eventId === brogueConstants.GAMEOVER_VICTORY ||
-            event.eventId === brogueConstants.GAMEOVER_SUPERVICTORY) {
+            event.eventId === brogueConstants.GAMEOVER_SUPERVICTORY)) {
 
             var self = this;
             var thisGameRecord = {
