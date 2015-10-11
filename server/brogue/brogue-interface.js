@@ -300,19 +300,23 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 5] * 256 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 6];
 
-                var gold =
+                var easyMode =
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 7] * 256 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 8];
 
-                var seed =
-                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 9] * 256 +
-                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 10];
-
-                var easyMode =
+                var gold =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 9] * 16777216 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 10] * 65536 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 11] * 256 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 12];
 
-                var messageStart = i + EVENT_DATA_OFFSET + 13;
+                var seed =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 13] * 16777216 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 14] * 65536 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 15] * 256 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 16];
+
+                var messageStart = i + EVENT_DATA_OFFSET + 17;
                 var eventEnd = i + EVENT_DATA_LENGTH;
 
                 for(var j = messageStart; j < eventEnd; j++) {

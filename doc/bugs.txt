@@ -10,10 +10,6 @@ The google console font does not have a glyph for:
 Undiscovered items
 Goblin totems
 
-Bug 3
-
-The seed is truncated in the high score table
-
 Bug 4
 
 Animations are too fast to be seen
