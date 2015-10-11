@@ -266,7 +266,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
         data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
 
         //check for status updates in data and update user object.
-        for (var i = 0; i < sizeOfCellsToSend; i += CELL_MESSAGE_SIZE){
+        var i = 0;
+        while(i < sizeOfCellsToSend) {
             if (self.dataAccumulator[i] === STATUS_BYTE_FLAG){
                 var updateFlag = self.dataAccumulator[i + STATUS_DATA_OFFSET];
 
@@ -280,8 +281,12 @@ BrogueInterface.prototype.attachChildEvents = function () {
                 self.brogueEvents.emit('status', {flag: updateFlag, value: updateValue});
 
                 //Remove this status update from the dataAccumulator
-                if(i + CELL_MESSAGE_SIZE < self.dataAccumulator.length) {
+                if(i + CELL_MESSAGE_SIZE <= self.dataAccumulator.length) {
                     self.dataAccumulator.copy(self.dataAccumulator, i, i + CELL_MESSAGE_SIZE);
+                    self.dataAccumulator = self.dataAccumulator.slice(0, self.dataAccumulator.length - CELL_MESSAGE_SIZE);
+                }
+                else {
+                    i += CELL_MESSAGE_SIZE;
                 }
             }
             else if(self.dataAccumulator[i] === EVENT_BYTE_FLAG) {
@@ -345,12 +350,21 @@ BrogueInterface.prototype.attachChildEvents = function () {
                 self.processBrogueEvents(self, eventData);
 
                 //Remove this status update from the dataAccumulator
-                if (i + CELL_MESSAGE_SIZE < self.dataAccumulator.length) {
-                    self.dataAccumulator.copy(self.dataAccumulator, i, i + CELL_MESSAGE_SIZE);
+                if (i + EVENT_DATA_LENGTH <= self.dataAccumulator.length) {
+                    self.dataAccumulator.copy(self.dataAccumulator, i, i + EVENT_DATA_LENGTH);
+                    self.dataAccumulator = self.dataAccumulator.slice(0, self.dataAccumulator.length - EVENT_DATA_LENGTH);
                 }
+                else {
+                    i += EVENT_DATA_LENGTH;
+                }
+            }
+            else {
+                //No status message
+                i += CELL_MESSAGE_SIZE;
             }
         }
 
+        //Send any remaining data onwards to the console
         self.brogueEvents.emit('data', self.dataAccumulator);
     });
 
