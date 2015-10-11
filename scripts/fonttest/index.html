@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>All assigned Unicode v6.3.0 symbols</title>
+<script src="http://mathias.html5.org/data/unicode/format?version=6.3.0&property=Assigned&type=symbols&prepend=window.symbols%20%3D%20&append=%3B"></script>
+<link href='https://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'></link>
+<style>
+body {
+background-color: linen;
+font-family: 'Droid Sans Mono', ;
+}
+
+</style>
+<script>
+
+var foo = function() {  
+
+  var i = 0;
+  var j = 0;
+
+  //Unicode characters used in brogue
+
+  var chars = [	'\u00b7', '~', '\u2237', '\u25c7', 
+   '\u22CF', '"', '=', '>', '<', '#', '+',
+   '\'',
+'\'',
+',',
+',',':','\u03A8',
+'\u2648',
+
+':',
+'|',
+'/',
+'\\',
+'\u00df','=','&',
+
+
+	'"','@','\u2640',
+	';',
+	'\u266A', '\u26AA', '\uffee', '\u03DE',
+	'!',
+	'[',
+	'\u2191',
+	'\\',
+	'~',
+	'*',
+	'\u25cf',
+	'\u2641',
+	'\u25cf',
+'\u00da','-',
+'\u2191','\u2193','\u2190','\u2192','\u2206','\u2207', '\u03A9',
+'\u03B8', '\u03BB', '\u03DF', '\u03DE', '\u29EB', '\u2A2F',
+'\\',
+'\\',
+'/',
+'/',
+	'|',
+'|',
+	'-',
+	'-',
+
+'\u25c6',
+'\u25c7'];
+  var str = [];
+
+  console.log(chars.length);
+
+  //All unicode characters
+
+  for(i = 0; i < chars.length; i++) {
+     str = "#" + chars[i].charCodeAt(0).toString(16) + ":" + chars[i];
+     var para = document.createElement("p");
+     var node = document.createTextNode(str);
+     para.appendChild(node);
+
+     var element = document.getElementById("div1");
+     element.appendChild(para);
+
+     console.log(str);	 					   
+  }
+
+
+  for(i = 0; i < 256 * 16; i++) {
+     str = "";
+     for(j = 0; j < 16; j++) {
+        str = str + window.symbols[i * 16 + j];
+     }
+
+     var start = i * 16;
+     var para = document.createElement("p");
+     var node = document.createTextNode(start.toString(16) + ": " + str);
+     para.appendChild(node);
+
+     var element = document.getElementById("div1");
+     element.appendChild(para);
+
+     console.log(str);
+  }
+}
+</script>
+</head>
+<body onload="foo()">
+<div id="div1" class="fontdiv"></div>
+</body>
+</html>

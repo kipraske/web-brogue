@@ -190,7 +190,7 @@
 #define FOOD_CHAR		';'
 #define SCROLL_CHAR		0x266A//'?'		// 0x039E
 //#define RING_CHAR		0x26AA //0xffee
-#define RING_CHAR		0xffee
+#define RING_CHAR		0x26AA
 #define CHARM_CHAR      0x03DE
 #define POTION_CHAR		'!'
 #define ARMOR_CHAR		'['
@@ -199,7 +199,7 @@
 #define WAND_CHAR		'~'
 #define GOLD_CHAR		'*'
 #define GEM_CHAR		0x25cf
-#define TOTEM_CHAR		0x26b2
+#define TOTEM_CHAR		0x2641
 #define TURRET_CHAR		0x25cf
 #define UNICORN_CHAR    0x00da
 #define KEY_CHAR		'-'
@@ -215,7 +215,7 @@
 #define THETA_CHAR			0x03B8
 #define LAMDA_CHAR			0x03BB
 #define KOPPA_CHAR			0x03DF//0x03DE
-#define LOZENGE_CHAR		0x29EB
+#define LOZENGE_CHAR		0x25C6
 #define CROSS_PRODUCT_CHAR	0x2A2F
 
 #define CHAIN_TOP_LEFT		'\\'
@@ -227,8 +227,8 @@
 #define CHAIN_LEFT			'-'
 #define CHAIN_RIGHT			'-'
 
-#define BAD_MAGIC_CHAR		0x29F2
-#define GOOD_MAGIC_CHAR		0x29F3
+#define BAD_MAGIC_CHAR		0x25C6
+#define GOOD_MAGIC_CHAR		0x25C7
 
 #else
 
