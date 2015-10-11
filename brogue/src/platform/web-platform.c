@@ -62,7 +62,7 @@ static void gameLoop()
 
 
 static void open_logfile() {
-  logfile = fopen ("brogue-web.txt", "w");
+  logfile = fopen ("brogue-web.txt", "a");
   if (logfile == NULL) {
     fprintf(stderr, "Logfile not created, errno = %d\n", errno);
   }
@@ -107,14 +107,7 @@ static void setup_sockets() {
 //Returns -1 if no data available (if in non-blocking mode)
 int read_from_socket(char *buf, int size) {
 
-  char msg[80];
-  write_to_log("Blocking on receiving from socket\n");
-
   int bytes_received = recvfrom(rfd, buf, size, 0, NULL, NULL);
-
-  snprintf(msg, 80, "Received %ld bytes, keypress %c\n", (long) bytes_received, buf[2]);
-  write_to_log(msg);
-
   return bytes_received;
 }
 
@@ -122,7 +115,6 @@ static void flush_output_buffer() {
 
   char msg[80];
   snprintf(msg, 80, "Flushing at %i\n", output_buffer_pos);
-  write_to_log(msg);
 
   int no_bytes_sent;
   no_bytes_sent = sendto(wfd, output_buffer, output_buffer_pos, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
@@ -148,18 +140,12 @@ static void write_to_socket(char *buf, int size) {
   }
 
   output_buffer_pos += size;
-
-  char msg[80];
-  snprintf(msg, 80, "Output pos now %i\n", output_buffer_pos);
-  write_to_log(msg);
 }
 
 static void web_plotChar(uchar inputChar,
 			  short xLoc, short yLoc,
 			  short foreRed, short foreGreen, short foreBlue,
 			  short backRed, short backGreen, short backBlue) {
-
-    write_to_log("web_plotChar\n");
 
     // just pack up the output and ship it off to the webserver
     char outputBuffer[OUTPUT_SIZE];
@@ -220,10 +206,6 @@ static void sendStatusUpdate() {
 // This function is used both for checking input and pausing
 static boolean web_pauseForMilliseconds(short milliseconds)
 {
-  char msg[80];
-  snprintf(msg, 80, "web_pauseForMillisecond %d\n", milliseconds);
-  write_to_log(msg);
-
   usleep(milliseconds);
 
   //Poll for input data
@@ -241,8 +223,6 @@ static boolean web_pauseForMilliseconds(short milliseconds)
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
-
-  write_to_log("web_nextKeyOrMouseEvent\n");
 
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
@@ -295,9 +275,6 @@ static boolean modifier_held(int modifier) {
 }
 
 static void notify_event(short eventId, short data1, short data2, const char *str) {
-  char msg[160];
-  snprintf(msg, 160, "event id: %d, d1: %d, d2: %d, str: %s", eventId, data1, data2, str);
-  write_to_log(msg);
 
   char statusOutputBuffer[EVENT_SIZE];
 
