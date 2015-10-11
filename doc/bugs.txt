@@ -7,3 +7,8 @@ at the client
 Bug 4
 
 Animations are too fast to be seen
+
+Bug 5
+
+After finishing a game and starting a new one, the 'current games' entry still had the old amount of gold
+The front end is receiving the wrong value via WS
