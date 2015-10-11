@@ -25,6 +25,9 @@ Starting the server should be as simple as starting up mongoDB and starting the 
 1. To start the mongodb daemon type `mongod`
 2. To start our server type `node server/app.js` or jus `node server/` from the root directory
 
+You will probably want to edit server/config.js to set the ports and the server secret.
+Note that client/dataIO/socket.js also needs to have the websocket port that you have set hardcoded.
+
 If everything is running correctly it should say "Server listening on port 80"
 
 Upgrading Brogue
@@ -38,6 +41,8 @@ To upgrade brogue, grab the latest version of the brogue source code from https:
 * Update the makefile
 
 Future updates to brogue will likely not prevent any of these updates from being added, though care must be given if the platform-dependant logic changes for some reason.
+
+Subsequent to this, I (flend) have made rather more extensive brogue edits. I don't anticipate it being hard to apply these to a newer brogue and I will make a diff.
 
 Server Configuration
 --------------------------------
