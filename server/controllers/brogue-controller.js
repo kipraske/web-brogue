@@ -188,20 +188,6 @@ _.extend(BrogueController.prototype, {
                 }
             }
 
-            //This feels like the job of brogueInterface, however on initialisation brogueInterface can't
-            //send errors to the UI
-            if(data && data.savedGame) {
-                var childWorkingDir = config.path.GAME_DATA_DIR + this.username;
-                var savedGamePath = path.normalize(childWorkingDir + "/" + data.savedGame);
-                try {
-                    fs.accessSync(savedGamePath, fs.F_OK);
-                }
-                catch (err) {
-                    this.controllers.error.send("Saved Game Not Found: '" + data.savedGame + "' does not exist");
-                    return;
-                }
-            }
-
             //Connect to brogue interface
 
             this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data);
