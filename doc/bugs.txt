@@ -12,6 +12,10 @@ Animations are too fast to be seen
 
 FIXED
 
+#7
+
+The Aries character for foliage bizarrely is always purple on mobile Chrome
+
 #6
 
 Observing a game resets the idle counter
