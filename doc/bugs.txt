@@ -1,3 +1,5 @@
+OPEN
+
 #1
 
 If you create a new user, that user does not exist but their directory exists, you get:
@@ -12,6 +14,8 @@ Animations are too fast to be seen
 
 After finishing a game and starting a new one, the 'current games' entry still had the old amount of gold
 The front end is receiving the wrong value via WS
+
+FIXED
 
 #6
 

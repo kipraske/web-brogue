@@ -39,6 +39,7 @@ static int wfd, rfd;
 static FILE *logfile;
 static char output_buffer[OUTPUT_BUFFER_SIZE];
 static int output_buffer_pos = 0;
+static int refresh_screen_only = 0;
 
 static void open_logfile();
 static void close_logfile();
@@ -229,9 +230,12 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     
     // We must avoid the main menu, so we spawn this process with noMenu, and quit instead of going to the menu
     if (noMenu && rogue.nextGame == NG_NOTHING) rogue.nextGame = NG_QUIT;
-    
+
     // Send a status update of game variables we want on the client
-    sendStatusUpdate();
+    if(!refresh_screen_only) {
+      sendStatusUpdate();
+    }
+    refresh_screen_only = 0;
 
     // Flush output buffer
     flush_output_buffer();
@@ -243,10 +247,14 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
 
     if (returnEvent->eventType == REFRESH_SCREEN) {
 
-     //Custom event type - brogue should ignore
+      //Custom event type - brogue should ignore, not status update
       refreshScreen();
+      //Don't send a status update if this was only a screen refresh (may be sent by observer)
+      refresh_screen_only = 1;
+      return;
     }
-    else if (returnEvent->eventType == KEYSTROKE) {
+
+    if (returnEvent->eventType == KEYSTROKE) {
 
         unsigned short keyCharacter = inputBuffer[1] << 8 | inputBuffer[2];
         
