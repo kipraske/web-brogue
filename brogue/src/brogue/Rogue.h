@@ -172,8 +172,9 @@
 #define BONES_CHAR		','
 #define MUD_CHAR		','
 #define WEB_CHAR		':'
-//#define FOLIAGE_CHAR	0x03A8 // lower-case psi
-#define FOLIAGE_CHAR	0x2648 // Aries symbol
+//#define FOLIAGE_CHAR	0x03A8 // upper-case psi
+//#define FOLIAGE_CHAR	0x2648 // Aries symbol (not supported on many browsers)
+#define FOLIAGE_CHAR	0x03C8 // Aries symbol
 #define VINE_CHAR       ':'
 #define ALTAR_CHAR		'|'
 #define LEVER_CHAR      '/'
