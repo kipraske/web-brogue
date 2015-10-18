@@ -83,6 +83,7 @@ button {
 .auth,
 .play,
 .about,
+.lobby-chat,
 .current-games,
 .saved-games,
 .mini-scores,
@@ -104,6 +105,19 @@ button {
 }
 
 .auth button{
+    float: right;
+}
+
+.lobby-chat form {
+    width: 225px;
+    margin: 0 auto;
+}
+
+.lobby-chat input {
+    width: 100%;
+}
+
+.lobby-chat button {
     float: right;
 }
 
@@ -145,6 +159,7 @@ button {
 
     .auth,
     .play,
+    .lobby-chat,
     .about{
         float: left;
         clear: left;

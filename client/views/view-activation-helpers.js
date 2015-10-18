@@ -16,12 +16,12 @@ define(['jquery'], function($){
         
         currentGames : function(){
             $('#saved-games, #all-scores').addClass('inactive');
-            $('#current-games, #mini-scores').removeClass('inactive');
+            $('#current-games, #mini-scores, #chat').removeClass('inactive');
         },
 
         highScores : function(){
             $('#saved-games, #current-games, #mini-scores').addClass('inactive');
-            $('#all-scores').removeClass('inactive');
+            $('#all-scores, #chat').removeClass('inactive');
         },
         
         console : function(){

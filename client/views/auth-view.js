@@ -20,7 +20,7 @@ define([
             "click #login-button": "loginSubmit",
             "click #register-button": "registerSubmit",
             "click #to-register": "changeToRegister",
-            "click #to-login": "changeToLogin",
+            "click #to-login": "changeToLogin"
         },
         templates: {
             login: _.template($('#login').html()),

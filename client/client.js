@@ -41,8 +41,10 @@ require([
     "dataIO/socket",
     "dataIO/router",
     "models/high-scores",
+    "models/chat",
     "views/view-activation-helpers",
     "views/auth-view",
+    "views/chat-view",
     "views/play-view",
     "views/header-view",
     "views/current-games-view",
@@ -53,7 +55,7 @@ require([
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, activate, AuthView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, activate, AuthView, ChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -65,6 +67,7 @@ require([
     var currentGamesView = new CurrentGamesView();
     var savedGamesView = new SavedGamesView();
     var consoleView = new ConsoleView();
+    var chatView = new ChatView({model: new ChatModel()});
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
         seedView : new SeedPopupView(),
@@ -102,6 +105,7 @@ require([
         "quit" : function(data) { dispatcher.trigger("quit", data) },
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
+        "chat": chatView.chatMessage.bind(chatView),
         "auth" : authView.handleMessage.bind(authView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
         "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)

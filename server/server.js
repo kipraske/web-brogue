@@ -58,7 +58,7 @@ httpServerDomain.run(function () {
 
     io.on('connection', function (socket) {
 
-        var controllerFactory = require("./controllers/controller-factory")
+        var controllerFactory = require("./controllers/controller-factory");
         var controllerCleanUp = require("./controllers/cleanup-controllers.js");
         var Router = require("./controllers/router");
 
@@ -67,7 +67,8 @@ httpServerDomain.run(function () {
             "lobby",
             "authentication",
             "saved-games",
-            "brogue"
+            "brogue",
+            "chat"
         ]);
 
         var router = new Router(controllers);
