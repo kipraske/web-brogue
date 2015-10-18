@@ -45,6 +45,7 @@ require([
     "views/view-activation-helpers",
     "views/auth-view",
     "views/chat-view",
+    "views/console-chat-view",
     "views/play-view",
     "views/header-view",
     "views/current-games-view",
@@ -55,7 +56,7 @@ require([
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, activate, AuthView, ChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -68,6 +69,7 @@ require([
     var savedGamesView = new SavedGamesView();
     var consoleView = new ConsoleView();
     var chatView = new ChatView({model: new ChatModel()});
+    var consoleChatView = new ConsoleChatView({model: new ChatModel()});
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
         seedView : new SeedPopupView(),
@@ -99,6 +101,9 @@ require([
 
     dispatcher.on("all-scores", allScoresView.activate, allScoresView);
 
+    dispatcher.on("chat", chatView.chatMessage, chatView);
+    dispatcher.on("chat", consoleChatView.chatMessage, consoleChatView);
+
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
@@ -107,7 +112,7 @@ require([
         "quit" : function(data) { dispatcher.trigger("quit", data) },
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
         "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
-        "chat": chatView.chatMessage.bind(chatView),
+        "chat": function(data) { dispatcher.trigger("chat", data) },
         "auth" : authView.handleMessage.bind(authView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
         "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)

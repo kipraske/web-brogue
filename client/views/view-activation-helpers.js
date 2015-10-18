@@ -26,12 +26,12 @@ define(['jquery'], function($){
         
         console : function(){
             $('#header, #lobby').addClass("inactive");
-            $("#console").removeClass("inactive").focus();
+            $("#console, #console-holder, #console-chat").removeClass("inactive").focus();
         },
         
         lobby: function(){
             $('#header, #lobby').removeClass("inactive");
-            $("#console").addClass("inactive");
+            $("#console-holder, #console, #console-chat").addClass("inactive");
         },
         
         loggedIn: function(){

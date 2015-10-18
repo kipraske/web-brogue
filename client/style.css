@@ -91,7 +91,7 @@ button {
     margin: 0 2.5%;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    word-wrap:break-word;
+    word-wrap: break-word;
 }
 
 .auth,
@@ -205,7 +205,8 @@ button {
  * 2.0 Console
  *===================================*/
 
-.console {
+.console,
+.console-holder {
     position : relative;
     box-sizing : border-box;
     -moz-box-sizing: border-box;
@@ -214,6 +215,11 @@ button {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+.console-holder {
+    height: 100vh;
+    width: 100%;
 }
 
 .console.full-height {
@@ -246,6 +252,50 @@ button {
     text-align: center;
 }
 
+
+.console-chat {
+    margin: 0 2.5%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    word-wrap: break-word;
+    width: 275px;
+}
+
+.console-chat form {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.console-chat input {
+    width: 100%;
+}
+
+.console-chat button {
+    float: right;
+}
+
+.console-chat-messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: 20vh;
+    max-height: 20vh;
+    overflow: auto;
+    font-size: 75%;
+}
+
+
+@media screen and (min-width: 700px) {
+
+    .console-chat {
+        float: right;
+    }
+
+    .console.full-width {
+        width : 100%;
+        padding-right: 300px;
+    }
+}
 /*=====================================
  * 3.0 Popup
  *===================================*/

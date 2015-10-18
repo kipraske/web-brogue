@@ -73,6 +73,8 @@ define([
         calculateConsoleSize: function() {
             _consoleWidth = this.$el.width();
             _consoleHeight = this.$el.height();
+            console.log("height " + _consoleHeight);
+            console.log("width " + _consoleWidth);
         },
         calculateConsoleCellSize: function() {
             _consoleCellWidthPercent = 100 / _CONSOLE_COLUMNS;
