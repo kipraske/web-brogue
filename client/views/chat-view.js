@@ -25,7 +25,7 @@ define([
 
             var messagesList = '';
 
-            _.each(this.model.chatMessages, function (elem) {
+            _.each(this.model.getMessages(), function (elem) {
                 messagesList = messagesList.concat('<li>' + elem + '</li>');
             });
 
@@ -45,18 +45,20 @@ define([
             event.preventDefault();
 
             if(!this.model.canChat()) {
-                return;
+
+                this.model.addChatMessage("Please login to chat.");
+            }
+            else {
+                var inputText = $('#lobby-chat-input').val();
+                var messageToSend = this.truncateString(inputText, 140);
+
+                send("chat", "message", { channel: "lobby", data: messageToSend });
+
+                this.model.addChatMessageWithUserAndTime(messageToSend);
             }
 
-            var inputText = $('#lobby-chat-input').val();
-            var messageToSend = this.truncateString(inputText, 140);
-
-            send("chat", "message", { channel: "lobby", data: messageToSend });
-
-            this.model.addChatMessageWithUserAndTime(messageToSend);
-
-            this.render();
-            $('#lobby-chat-input').focus();
+           this.render();
+           $('#lobby-chat-input').focus();
         },
         login : function(username) {
             this.model.setUsername(username);

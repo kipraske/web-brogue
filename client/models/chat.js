@@ -9,6 +9,7 @@ define([
 
         chatMessages: [],
         username: null,
+        maxMessages: 100,
 
         addChatMessage: function(message) {
             this.chatMessages.push(message);
@@ -28,7 +29,11 @@ define([
         },
 
         canChat: function () {
-            return username !== null;
+            return this.username !== null;
+        },
+
+        getMessages: function () {
+            return this.chatMessages.slice(-this.maxMessages);
         }
     });
 
