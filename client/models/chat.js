@@ -15,8 +15,17 @@ define([
             this.chatMessages.push(message);
         },
 
-        addChatMessageWithUserAndTime: function(message) {
-            var fullMessage = "(" + this.username + " " + this.formatDate(new Date()) + "): " + message;
+        addStatusMessageWithTime: function(message) {
+            var fullMessage = "(system" + " " + this.formatDate(new Date()) + "): " + message;
+            this.addChatMessage(fullMessage);
+        },
+
+        addChatMessageWithThisUserAndTime: function(message) {
+            this.addChatMessageWithUserAndTime(this.username, message);
+        },
+
+        addChatMessageWithUserAndTime: function(username, message) {
+            var fullMessage = "(" + username + " " + this.formatDate(new Date()) + "): " + message;
             this.addChatMessage(fullMessage);
         },
 

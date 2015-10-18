@@ -36,7 +36,14 @@ define([
 
         chatMessage: function (message) {
 
-            this.model.addChatMessageWithUserAndTime(message);
+            if(message.type) {
+                if(message.type === "message") {
+                    this.model.addChatMessageWithUserAndTime(message.username, message.data);
+                }
+                if(message.type === "status") {
+                    this.model.addStatusMessageWithTime(message.data);
+                }
+            }
 
             this.render(); //should be unnecessary - need to set up watch
         },
@@ -54,7 +61,7 @@ define([
 
                 send("chat", "message", { channel: "lobby", data: messageToSend });
 
-                this.model.addChatMessageWithUserAndTime(messageToSend);
+                this.model.addChatMessageWithThisUserAndTime(messageToSend);
             }
 
            this.render();

@@ -143,6 +143,9 @@ _.extend(AuthController.prototype, {
             });
         },
         logout: function (data) {
+
+            this.controllers.chat.broadcastLogoutMessage();
+
             allUsers.removeUser(this.currentUserName);
             this.currentUserName = "";
             this.currentUserData = {};
@@ -180,8 +183,9 @@ _.extend(AuthController.prototype, {
                 token: allUsers.createSessionToken(username)
             }
         });
-    },
 
+        this.controllers.chat.broadcastLoginMessage();
+    }
 });
 
 module.exports = AuthController;
