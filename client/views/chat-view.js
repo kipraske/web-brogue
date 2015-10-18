@@ -30,25 +30,41 @@ define([
             });
 
             this.$el.html(this.template({messageListItems: messagesList}));
+
+            $('#lobby-chat-messages').scrollTop(1E10);
         },
 
         chatMessage: function (message) {
 
-            this.model.chatMessages.push(message.data);
-            this.render(); //should be unnecessary
+            this.model.addChatMessageWithUserAndTime(message);
+
+            this.render(); //should be unnecessary - need to set up watch
         },
         chatSend: function (event) {
 
             event.preventDefault();
+
+            if(!this.model.canChat()) {
+                return;
+            }
 
             var inputText = $('#lobby-chat-input').val();
             var messageToSend = this.truncateString(inputText, 140);
 
             send("chat", "message", { channel: "lobby", data: messageToSend });
 
-            this.model.chatMessages.push(messageToSend);
+            this.model.addChatMessageWithUserAndTime(messageToSend);
 
             this.render();
+            $('#lobby-chat-input').focus();
+        },
+        login : function(username) {
+            this.model.setUsername(username);
+
+            this.render();
+        },
+        logout: function() {
+            this.model.setUsername(null);
         },
         truncateString: function (str, length) {
             return str.length > length ? str.substring(0, length - 3) + '...' : str

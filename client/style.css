@@ -17,7 +17,7 @@ Table Of Contents
 
 /* 0.1 Base Styles ------------------*/
 
-body{
+body {
     margin: 0;
     padding: 0;
     background-color: #000000;
@@ -25,17 +25,17 @@ body{
     color: #ffffff;
 }
 
-a{
+a {
     color: #aaaaaa;
 }
 
-a:hover{
+a:hover {
     color: #ffffff;
 }
 
 /* 0.2 Control Styles ---------------*/
 
-.inactive{
+.inactive {
     display : none;
 }
 
@@ -44,7 +44,7 @@ a:hover{
 label {
     display: block;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 75%;
 }
 
 input {
@@ -53,7 +53,7 @@ input {
 
 }
 
-input[type="radio"]{
+input[type="radio"] {
     display: inline;
 }
 
@@ -65,7 +65,7 @@ button {
  * 1.0 Lobby
  *===================================*/
 
-.loading{
+.loading {
     text-align: center;
 }
 
@@ -89,14 +89,20 @@ button {
 .mini-scores,
 .all-scores {
     margin: 0 2.5%;
-    width: 225px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     word-wrap:break-word;
 }
 
-.auth form{
-    width: 225px;
+.auth,
+.play,
+.about,
+.lobby-chat {
+    width: 375px;
+}
+
+.auth form {
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -104,12 +110,12 @@ button {
     width: 100%;
 }
 
-.auth button{
+.auth button {
     float: right;
 }
 
 .lobby-chat form {
-    width: 225px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -119,6 +125,16 @@ button {
 
 .lobby-chat button {
     float: right;
+}
+
+.lobby-chat-messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: 20vh;
+    max-height: 20vh;
+    overflow: auto;
+    font-size: 75%;
 }
 
 .current-games,
@@ -132,7 +148,7 @@ button {
 .saved-games table,
 .mini-scores table,
 .all-scores table {
-    width: 95%;
+    width: 100%;
 }
 
 .current-games th,
@@ -146,30 +162,26 @@ button {
     text-align: left;
 }
 
-@media screen and (min-width: 700px){
+@media screen and (min-width: 700px) {
     .banner {
         width: auto;
         margin-left: auto;
         margin-right: auto;
     }
 
-    .about{
-        width: 225px;
-    }
-
     .auth,
     .play,
     .lobby-chat,
-    .about{
+    .about {
         float: left;
         clear: left;
     }
 
-    .auth form{
+    .auth form {
         margin: 0 10%;
     }
 
-    .auth.logged-in{
+    .auth.logged-in {
         float: none;
         clear: both;
         width: auto;
@@ -181,10 +193,9 @@ button {
     .mini-scores,
     .all-scores {
         margin: 0 2.5% 0 7.5%;
-        padding-left: 250px;
-        width: -moz-calc(100% - 250px);
-        width: -webkit-calc(100% - 250px);
-        width: calc(100% - 250px);
+        padding-left: 400px;
+        /* accounts for margin */
+        width: 90%;
     }
 }
 
@@ -220,7 +231,7 @@ button {
 .console.partial-width {}
 
 /*hidden in the corner so we can still give it focus*/
-.console-keyboard{
+.console-keyboard {
     position:fixed;
     width: 1px;
     height: 1px;
@@ -229,7 +240,7 @@ button {
     overflow: hidden;
 }
 
-.console-cell{
+.console-cell {
     position : absolute;
     overflow: hidden;
     text-align: center;
@@ -239,7 +250,7 @@ button {
  * 3.0 Popup
  *===================================*/
 
-.popup{
+.popup {
     position: fixed;
     z-index: 2;
     top: 50%;
@@ -267,7 +278,7 @@ button {
     cursor: pointer;
 }
 
-.popup-overlay{
+.popup-overlay {
     position: fixed;
     z-index: 1;
     top:0;
@@ -276,6 +287,6 @@ button {
     bottom:0;
 }
 
-.popup button{
+.popup button {
     float: right;
 }
