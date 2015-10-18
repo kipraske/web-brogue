@@ -17,22 +17,8 @@ Router.prototype = {
     prepareRecievedData : function(rawMessage) {
         return JSON.parse(rawMessage);
     },
-    route : function(rawMessage){
-                
-        if (rawMessage instanceof Buffer){
-            this.routeCollection["brogue"].handleIncomingMessage(rawMessage);
-            return;
-        }
-        
-        try{
-            var message = JSON.parse(rawMessage);
-        }
-        catch(ex){ 
-            this.routeCollection["error"].handleIncomingMessage(rawMessage);
-            return;
-        }
+    route : function(message){
 
-        //Route non-binary messages
         if (this.routeCollection[message.controller]) {
             this.routeCollection[message.controller].handleIncomingMessage(message);
         }

@@ -27,37 +27,6 @@ BrogueController.prototype = new Controller();
 _.extend(BrogueController.prototype, {
     controllerName: "brogue",
     handleIncomingMessage: function (message) {
-        if (message instanceof Buffer) {
-            this.handleIncomingBinaryMessage(message);
-        }
-        else
-        {
-            this.handleIncomingJSONMessage(message);
-        }
-    },
-
-    handleIncomingBinaryMessage : function(message){
-
-        if(!this.brogueInterface) {
-            this.controllers.error.send("Not connected to brogue session");
-            return;
-        }
-
-        if(this.readOnly) {
-            return;
-        }
-
-        var self = this;
-
-        this.brogueInterface.handleIncomingBinaryMessage(message, function(err) {
-
-            if(err) {
-                self.controllers.error.send(err.message);
-            }
-        });
-    },
-    
-    handleIncomingJSONMessage: function (message) {
         if (this.handlerCollection[message.type]) {
             this.handlerCollection[message.type].call(this, message.data);
         }
@@ -155,6 +124,26 @@ _.extend(BrogueController.prototype, {
     },
 
     handlerCollection: {
+        c: function(data) {
+            //Send a control message to brogue
+            if(!this.brogueInterface) {
+                this.controllers.error.send("Not connected to brogue session");
+                return;
+            }
+
+            if(this.readOnly) {
+                return;
+            }
+
+            var self = this;
+
+            this.brogueInterface.handleIncomingBinaryMessage(data, function(err) {
+
+                if(err) {
+                    self.controllers.error.send(err.message);
+                }
+            });
+        },
         start: function (data) {
 
             var brogueSessionName;

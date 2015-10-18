@@ -29,8 +29,9 @@ define([
         
         startBrogueSeed: function(event){
             event.preventDefault();
-            
-            var popupMessage = '{ "type" : "seed", "data" : "show popup" }';
+
+            //TODO: Don't use the server-side routing for this!
+            var popupMessage = { "type" : "seed", "data" : "show popup" };
             router.route(popupMessage);
         },
         

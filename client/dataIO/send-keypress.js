@@ -17,8 +17,10 @@ define(['dataIO/socket'], function(ws){
         messageArray[2] = keyCodePart2;
         messageArray[3] = ctrlKey;
         messageArray[4] = shiftKey;
-        
-        ws.send(messageArray.buffer);
+
+        var messageObj = { controller: 'brogue', type: 'c', data: messageArray.buffer };
+
+        ws.send(messageObj);
     }
     
     return send;

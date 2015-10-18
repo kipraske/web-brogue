@@ -12,9 +12,6 @@ define([
         },
         route: function (message) {
 
-            console.log("From server");
-            console.log(JSON.stringify(message));
-
             if (message.type === 'b') {
                 _handlers["brogue"](message.data);
             }

@@ -38,7 +38,7 @@ function Controller() {
         //var message = JSON.stringify(messageObject);
 
         //TODO: remove callbacks
-        this.socket.emit('msg', messageObject); //no callback
+        this.socket.send(messageObject); //no callback
     };
 }
 

@@ -8,9 +8,8 @@ define(['dataIO/socket'], function (ws) {
             type: type,
             data: data
         };
-        var message = JSON.stringify(messageObj);
-        
-        ws.send(message);
+
+        ws.send(messageObj);
     }
 
     return send;
