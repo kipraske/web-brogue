@@ -16,9 +16,9 @@ var brogueConstants = require('../brogue/brogue-constants.js');
 
 //TODO: Cleanup brogueInterface on controller exit
 
-function BrogueController(ws) {
+function BrogueController(socket) {
     this.controllerName = "brogue";
-    this.ws = ws;
+    this.socket = socket;
     this.controllers = null;
     this.readOnly = true;
 }
@@ -151,7 +151,7 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueDataListener: function (data) {
-        this.ws.send(data, {binary: true}, this.defaultSendCallback.bind(this));
+        this.sendMessage('b', data);
     },
 
     handlerCollection: {

@@ -8,7 +8,8 @@ require.config({
         moment: "libs/moment",
         backbonePaginator: "libs/backbone.paginator",
         backgrid: "libs/backgrid",
-        backgridPaginator: "libs/backgrid-paginator"
+        backgridPaginator: "libs/backgrid-paginator",
+        io: "libs/socket.io"
     },
     shim: {
         'backbone': {

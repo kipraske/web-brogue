@@ -7,9 +7,9 @@ var path = require('path');
 
 // Controller for displaying saved games for loading
 
-function SavedGamesController(ws) {
+function SavedGamesController(socket) {
     this.controllerName = "savedGames";
-    this.ws = ws;
+    this.socket = socket;
     this.controllers = null;
 }
 

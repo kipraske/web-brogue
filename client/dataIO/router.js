@@ -10,12 +10,15 @@ define([
         registerHandlers: function (handlerCollection) {
             _.extend(_handlers, handlerCollection);
         },
-        route: function (rawMessage) {
-            if (rawMessage instanceof ArrayBuffer) {
-                _handlers["brogue"](rawMessage);
+        route: function (message) {
+
+            console.log("From server");
+            console.log(JSON.stringify(message));
+
+            if (message.type === 'b') {
+                _handlers["brogue"](message.data);
             }
             else {
-                var message = JSON.parse(rawMessage);
 
                 if (message.type && _handlers[message.type]) {
                     _handlers[message.type](message.data);

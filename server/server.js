@@ -51,15 +51,51 @@ httpServerDomain.run(function () {
 
     highScoreApi(app);
 
+    var server = require('http').Server(app);
+    var io = require('socket.io')(server);
+
+    server.listen(config.port.HTTP);
+
+    io.on('connection', function (socket) {
+
+        var controllerFactory = require("./controllers/controller-factory")
+        var controllerCleanUp = require("./controllers/cleanup-controllers.js");
+        var Router = require("./controllers/router");
+
+        var controllers = controllerFactory(socket, [
+            "error",
+            "lobby",
+            "authentication",
+            "saved-games",
+            "brogue"
+        ]);
+
+        var router = new Router(controllers);
+
+        socket.on("message", function (message) {
+            router.route(message);
+        });
+
+        socket.on("disconnect", function (code, message) {
+            controllerCleanUp(controllers);
+        });
+
+        socket.on("error", function (err) {
+            util.log('Error emitted internally from web socket instance: ' + err);
+        });
+    });
+
+    /*
     var httpServer = app.listen(config.port.HTTP, function () {
         console.log("http server listening on port %s", config.port.HTTP);
     });
 
     httpServer.on("clientError", function (err, socket) {
         util.log("Error from client socket in http server: " + err);
-    });
+    });*/
 });
 
+/*
 // Web Socket Server
 websocketServerDomain = domain.create();
 websocketServerDomain.on("error", function (err) {
@@ -118,4 +154,4 @@ websocketServerDomain.run(function () {
     wss.on("error", function (err) {
         util.log('Error emitted internally from web socket server: ' + err);
     });
-});
+});*/

@@ -2,7 +2,7 @@
 
 function Controller() {
     this.controllerName = "";
-    this.ws;
+    this.socket;
     this.controllers;
     
     this.defaultSendCallback = function(err){
@@ -35,9 +35,10 @@ function Controller() {
             "data" : messageData
         };
 
-        var message = JSON.stringify(messageObject);
-        
-        this.ws.send(message, callback);
+        //var message = JSON.stringify(messageObject);
+
+        //TODO: remove callbacks
+        this.socket.emit('msg', messageObject); //no callback
     };
 }
 

@@ -7,9 +7,9 @@ var brogueState = require('../enum/brogue-state');
 
 // Controller for broadcasting lobby updates to all users who are currently in the lobby
 
-function LobbyController(ws) {
+function LobbyController(socket) {
     this.controllerName = "lobby";
-    this.ws = ws;
+    this.socket = socket;
     this.controllers = null;    
     this.broadcastInterval = null;
     
