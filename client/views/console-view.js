@@ -32,7 +32,6 @@ define([
             'focus' : 'giveKeyboardFocus'
         },
         initialize: function() {
-            this.$el.addClass("full-width");
             this.$el.addClass("full-height");
 
             this.calculateConsoleSize();

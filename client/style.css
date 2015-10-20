@@ -205,8 +205,7 @@ button {
  * 2.0 Console
  *===================================*/
 
-.console,
-.console-holder {
+.console {
     position : relative;
     box-sizing : border-box;
     -moz-box-sizing: border-box;
@@ -226,16 +225,6 @@ button {
     height : 100vh;
 }
 
-.console.partial-height {
-    height : 95vh;
-}
-
-.console.full-width {
-    width : 100%;
-}
-
-.console.partial-width {}
-
 /*hidden in the corner so we can still give it focus*/
 .console-keyboard {
     position:fixed;
@@ -254,11 +243,11 @@ button {
 
 
 .console-chat {
-    margin: 0 2.5%;
+    margin: 0 2.5% 0% 2.5%;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     word-wrap: break-word;
-    width: 275px;
+    width: 95%;
 }
 
 .console-chat form {
@@ -272,6 +261,7 @@ button {
 
 .console-chat button {
     float: right;
+    clear: left;
 }
 
 .console-chat-messages {
@@ -288,13 +278,16 @@ button {
 @media screen and (min-width: 700px) {
 
     .console-chat {
+        margin: 0 2.5%;
         float: right;
+        width: 20%;
     }
 
+/*
     .console.full-width {
         width : 100%;
         padding-right: 300px;
-    }
+    }*/
 }
 /*=====================================
  * 3.0 Popup
