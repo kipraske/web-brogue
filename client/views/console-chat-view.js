@@ -61,6 +61,14 @@ define([
            this.render();
            $('#console-chat-input').focus();
         },
+        login : function(username) {
+            this.model.setUsername(username);
+
+            this.render();
+        },
+        logout: function() {
+            this.model.setUsername(null);
+        },
         truncateString: function (str, length) {
             return str.length > length ? str.substring(0, length - 3) + '...' : str
         }

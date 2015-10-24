@@ -94,9 +94,11 @@ require([
     dispatcher.on("login", highScoresView.login, highScoresView);
     dispatcher.on("login", allScoresView.login, allScoresView);
     dispatcher.on("login", chatView.login, chatView);
+    dispatcher.on("login", consoleChatView.login, consoleChatView);
 
     dispatcher.on("logout", highScoresView.logout, highScoresView);
     dispatcher.on("logout", allScoresView.logout, allScoresView);
+    dispatcher.on("logout", consoleChatView.logout, consoleChatView);
     dispatcher.on("logout", chatView.logout, chatView);
 
     dispatcher.on("all-scores", allScoresView.activate, allScoresView);

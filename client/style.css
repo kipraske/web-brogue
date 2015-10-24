@@ -268,9 +268,9 @@ button {
 
 .console-chat-messages {
     list-style-type: none;
+    padding: 0;
     margin: 0;
     overflow: auto;
-    padding-bottom: 100px;
     height: calc( 100% - 200px );
     max-height: calc( 100% - 200px );
     font-size: 75%;
