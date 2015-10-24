@@ -271,7 +271,8 @@ button {
     margin: 0;
     overflow: auto;
     padding-bottom: 100px;
-    max-height: 80%;
+    height: calc( 100% - 200px );
+    max-height: calc( 100% - 200px );
     font-size: 75%;
     box-sizing: border-box;
 }
