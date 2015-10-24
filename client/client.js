@@ -104,6 +104,8 @@ require([
     dispatcher.on("chat", chatView.chatMessage, chatView);
     dispatcher.on("chat", consoleChatView.chatMessage, consoleChatView);
 
+    dispatcher.on("showConsole", consoleView.resize, consoleView);
+
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions

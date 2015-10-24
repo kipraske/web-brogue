@@ -247,7 +247,9 @@ button {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     word-wrap: break-word;
-    width: 95%;
+    visibility: hidden;
+    display: none;
+    height: 100%;
 }
 
 .console-chat form {
@@ -266,28 +268,23 @@ button {
 
 .console-chat-messages {
     list-style-type: none;
-    padding: 0;
     margin: 0;
-    height: 20vh;
-    max-height: 20vh;
     overflow: auto;
+    padding-bottom: 100px;
+    max-height: 80%;
     font-size: 75%;
+    box-sizing: border-box;
 }
 
 
 @media screen and (min-width: 700px) {
 
     .console-chat {
-        margin: 0 2.5%;
         float: right;
         width: 20%;
+        visibility: inherit;
+        display: inherit;
     }
-
-/*
-    .console.full-width {
-        width : 100%;
-        padding-right: 300px;
-    }*/
 }
 /*=====================================
  * 3.0 Popup

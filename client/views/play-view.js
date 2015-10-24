@@ -7,7 +7,7 @@ define([
     "dispatcher",
     "dataIO/send-generic",
     "dataIO/router",
-    "views/view-activation-helpers",
+    "views/view-activation-helpers"
 ], function ($, _, Backbone, dispatcher, send, router, activate) {
     
     var PlayView = Backbone.View.extend({
@@ -54,6 +54,7 @@ define([
         
         goToConsole : function(){
             activate.console();
+            dispatcher.trigger("showConsole");
         }
         
     });

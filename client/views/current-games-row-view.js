@@ -4,9 +4,10 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     "dataIO/send-generic",
-    "views/view-activation-helpers",
-], function ($, _, Backbone, send, activate) {
+    "views/view-activation-helpers"
+], function ($, _, Backbone, dispatcher, send, activate) {
 
     var CurrentGamesRowView = Backbone.View.extend({
         tagName: "tr",
@@ -35,6 +36,7 @@ define([
 
         goToConsole : function() {
             activate.console();
+            dispatcher.trigger("showConsole");
         },
 
     });

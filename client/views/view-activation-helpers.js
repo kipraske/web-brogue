@@ -26,12 +26,13 @@ define(['jquery'], function($){
         
         console : function(){
             $('#header, #lobby').addClass("inactive");
-            $("#console, #console-holder, #console-chat").removeClass("inactive").focus();
+            $("#console-holder").removeClass("inactive");
+            $("#console").focus();
         },
         
         lobby: function(){
             $('#header, #lobby').removeClass("inactive");
-            $("#console-holder, #console, #console-chat").addClass("inactive");
+            $("#console-holder").addClass("inactive");
         },
         
         loggedIn: function(){
@@ -40,10 +41,10 @@ define(['jquery'], function($){
         },
         
         resetAll: function(){
-            $('#header, #play, #saved-games, #all-scores').addClass("inactive");
+            $('#header, #play, #saved-games, #all-scores, #console-holder').addClass("inactive");
             $('#lobby, #auth, #current-games, #mini-scores').removeClass("inactive");
         }
-    }
+    };
     
     return activate;
     
