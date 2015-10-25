@@ -11,7 +11,10 @@ define([
 
     var UserModel = Backbone.Model.extend({
         defaults: {
-            username : ""
+            username : "",
+            observing: false,
+            observingUsername: "",
+            playing: false
         }
     });
 

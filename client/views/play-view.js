@@ -24,6 +24,7 @@ define([
             event.preventDefault();
             
             send("brogue", "start");
+            dispatcher.trigger("startGame");
             this.goToConsole();
         },
         

@@ -108,6 +108,10 @@ require([
 
     dispatcher.on("showConsole", consoleView.resize, consoleView);
 
+    dispatcher.on("startGame", headerView.startGame, headerView);
+    dispatcher.on("observeGame", headerView.observeGame, headerView);
+    dispatcher.on("leaveGame", headerView.leaveGame, headerView);
+
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions

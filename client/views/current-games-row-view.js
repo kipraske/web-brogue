@@ -25,6 +25,7 @@ define([
             var userName = userNameStr.split(' ', 2)[1];
 
             send("brogue", "start", {username: userName});
+            dispatcher.trigger("observeGame", {username: userName});
             this.goToConsole();
         },
 

@@ -7,15 +7,17 @@ define([
     "dispatcher",
     "util",
     "dataIO/send-generic",
-    "models/user"
-], function ($, _, Backbone, dispatcher, util, send, UserModel) {
+    "models/user",
+    "views/view-activation-helpers"
+], function ($, _, Backbone, dispatcher, util, send, UserModel, activate) {
 
     var HeaderView = Backbone.View.extend({
         el: "#header",
         userModel: new UserModel(),
 
         events: {
-            "click #logout": "logout"
+            "click #logout": "logout",
+            "click #headerLobby": "goToLobby"
         },
         
         template: _.template($('#welcome').html()),
@@ -45,6 +47,40 @@ define([
 
             send("auth", "logout");
         },
+
+        startGame: function() {
+            console.log("start game");
+            this.userModel.set({
+                playing: true,
+                observing: false
+            });
+            this.render();
+        },
+
+        leaveGame: function() {
+            console.log("leave game");
+            this.userModel.set({
+                playing: false,
+                observing: false
+            });
+            this.render();
+        },
+
+        goToLobby: function() {
+            activate.lobby();
+            activate.currentGames();
+            dispatcher.trigger("leaveGame");
+        },
+
+        observeGame: function(data) {
+            console.log("observe game" + JSON.stringify(username));
+            this.userModel.set({
+                playing: false,
+                observing: true,
+                observingUsername: data.username
+            });
+            this.render();
+        }
         
     });
 

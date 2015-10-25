@@ -217,12 +217,12 @@ button {
 }
 
 .console-holder {
-    height: 100vh;
+    height: 97vh;
     width: 100%;
 }
 
 .console.full-height {
-    height : 100vh;
+    height : 100%;
 }
 
 /*hidden in the corner so we can still give it focus*/
@@ -247,7 +247,7 @@ button {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     word-wrap: break-word;
-    height: 95%;
+    height: 90%;
 }
 
 .console-chat-inner {
