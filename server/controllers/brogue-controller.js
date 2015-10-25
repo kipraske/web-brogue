@@ -20,7 +20,6 @@ function BrogueController(socket) {
     this.controllerName = "brogue";
     this.socket = socket;
     this.controllers = null;
-    this.readOnly = true;
 }
 
 BrogueController.prototype = new Controller();
@@ -149,6 +148,7 @@ _.extend(BrogueController.prototype, {
         start: function (data) {
 
             var brogueSessionName;
+            this.readOnly = true;
 
             //Work out if this is the user playing their own game or just observing
             if(!data || !data.username) {
