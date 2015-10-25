@@ -7,12 +7,14 @@ define([
 
     var ChatModel = Backbone.Model.extend({
 
-        chatMessages: [],
-        username: null,
-        maxMessages: 100,
-
+        //defaults needs to be an object to get per-instance properties
+        defaults: function() { return {
+            chatMessages: [],
+            username: null,
+            maxMessages: 100
+        }},
         addChatMessage: function(message) {
-            this.chatMessages.push(message);
+            this.get("chatMessages").push(message);
         },
 
         addStatusMessageWithTime: function(message) {
@@ -21,7 +23,7 @@ define([
         },
 
         addChatMessageWithThisUserAndTime: function(message) {
-            this.addChatMessageWithUserAndTime(this.username, message);
+            this.addChatMessageWithUserAndTime(this.get("username"), message);
         },
 
         addChatMessageWithUserAndTime: function(username, message) {
@@ -34,15 +36,15 @@ define([
         },
 
         setUsername: function(username) {
-            this.username = username;
+            this.set("username", username);
         },
 
         canChat: function () {
-            return this.username !== null;
+            return this.get("username") !== null;
         },
 
         getMessages: function () {
-            return this.chatMessages.slice(-this.maxMessages);
+            return this.get("chatMessages").slice(-this.maxMessages);
         }
     });
 

@@ -5,13 +5,12 @@ define([
     "dispatcher",
     "util",
     "models/chat",
-    "dataIO/send-generic",
+    "dataIO/send-generic"
 ], function ($, _, Backbone, dispatcher, util, ChatModel, send) {
 
     var ConsoleChatView = Backbone.View.extend({
         el: "#console-chat",
         listElement: "#console-chat-messages",
-        model: new ChatModel(),
 
         events: {
             "click #console-chat-send-button": "chatSend"

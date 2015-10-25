@@ -41,6 +41,8 @@ _.extend(BrogueController.prototype, {
         this.controllers.lobby.sendAllUserData();
         this.controllers.lobby.userDataListen();
 
+        this.controllers.chat.enterLobby();
+
         this.removeBrogueListeners();
     },
 
@@ -200,7 +202,19 @@ _.extend(BrogueController.prototype, {
 
             //console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
+            //Stop lobby updates for this user
             this.controllers.lobby.stopUserDataListen();
+
+            //Enter this chat room
+            this.controllers.chat.enterRoom(brogueSessionName);
+
+            //Send a global chat update
+            if (this.readOnly) {
+                this.controllers.chat.broadcastObserve(brogueSessionName);
+            }
+            else {
+                this.controllers.chat.broadcastStartGame();
+            }
 
             //Refresh once the game has had a chance to start (if required)
             var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);

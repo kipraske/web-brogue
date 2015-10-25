@@ -11,7 +11,6 @@ define([
     var ChatView = Backbone.View.extend({
         el: "#lobby-chat",
         listElement: "#lobby-chat-messages",
-        model: new ChatModel(),
 
         events: {
             "click #lobby-chat-send-button": "chatSend"
