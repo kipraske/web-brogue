@@ -88,11 +88,15 @@
 </script>
 
 <script id="console-chat-template" type="text/template">
-    <h2>Chat</h2>
-    <ul id="console-chat-messages" class="console-chat-messages"><%= messageListItems %></ul>
-    <form action="">
-        <input id="console-chat-input" autocomplete="off" /><button type="submit", id="console-chat-send-button">Send</button>
-    </form>
+    <button id="console-chat-show-button" class="console-chat-buttons inactive">Show Chat</button>
+    <button id="console-chat-hide-button" class="console-chat-buttons">Hide Chat</button>
+    <div id="console-chat-inner" class="console-chat-inner">
+        <h2>Chat</h2>
+        <ul id="console-chat-messages" class="console-chat-messages"><%= messageListItems %></ul>
+        <form action="">
+            <input id="console-chat-input" autocomplete="off" /><button type="submit", id="console-chat-send-button">Send</button>
+        </form>
+    </div>
 </script>
 
 <script id="all-scores-heading" type="text/template">

@@ -241,24 +241,26 @@ button {
     text-align: center;
 }
 
-
 .console-chat {
-    margin: 0 2.5% 0% 2.5%;
+    visibility: hidden;
+    display: none;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     word-wrap: break-word;
-    visibility: hidden;
-    display: none;
+    height: 95%;
+}
+
+.console-chat-inner {
     height: 100%;
 }
 
 .console-chat form {
-    width: 100%;
+    width: 95%;
     margin: 0 auto;
 }
 
 .console-chat input {
-    width: 100%;
+    width: 95%;
 }
 
 .console-chat button {
@@ -271,9 +273,10 @@ button {
     padding: 0;
     margin: 0;
     overflow: auto;
-    height: calc( 100% - 200px );
-    max-height: calc( 100% - 200px );
+    height: calc( 100% - 100px );
+    max-height: calc( 100% - 100px );
     font-size: 75%;
+    width: 300px;
     box-sizing: border-box;
 }
 
@@ -282,7 +285,6 @@ button {
 
     .console-chat {
         float: right;
-        width: 20%;
         visibility: inherit;
         display: inherit;
     }

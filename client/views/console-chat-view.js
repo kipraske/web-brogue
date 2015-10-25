@@ -13,7 +13,9 @@ define([
         listElement: "#console-chat-messages",
 
         events: {
-            "click #console-chat-send-button": "chatSend"
+            "click #console-chat-send-button": "chatSend",
+            "click #console-chat-show-button": "chatShow",
+            "click #console-chat-hide-button": "chatHide"
         },
         template: _.template($('#console-chat-template').html()),
 
@@ -59,6 +61,16 @@ define([
 
            this.render();
            $('#console-chat-input').focus();
+        },
+        chatHide: function() {
+            $('#console-chat-inner').addClass("inactive");
+            $('#console-chat-hide-button').addClass("inactive");
+            $('#console-chat-show-button').removeClass("inactive");
+        },
+        chatShow: function() {
+            $('#console-chat-inner').removeClass("inactive");
+            $('#console-chat-hide-button').removeClass("inactive");
+            $('#console-chat-show-button').addClass("inactive");
         },
         login : function(username) {
             this.model.setUsername(username);

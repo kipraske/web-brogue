@@ -44,7 +44,7 @@ define([
         },
 
         getMessages: function () {
-            return this.get("chatMessages").slice(-this.maxMessages);
+            return this.get("chatMessages").slice(-this.get("maxMessages"));
         }
     });
 
