@@ -70,6 +70,9 @@ define([
             activate.lobby();
             activate.currentGames();
             dispatcher.trigger("leaveGame");
+
+            //Tell the server we are leaving the game
+            send("brogue", "leave");
         },
 
         observeGame: function(data) {

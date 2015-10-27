@@ -48,6 +48,12 @@ _.extend(ChatController.prototype, {
     broadcastStartGame: function() {
         this.broadcastUserStatusMessage("started a game.")
     },
+    broadcastLeaveGame: function() {
+        this.broadcastUserStatusMessage("left their game.")
+    },
+    broadcastStopObserve: function (gameName) {
+        this.broadcastUserStatusMessage("stopped observing " + gameName + ".")
+    },
     broadcastObserve: function (gameName) {
         this.broadcastUserStatusMessage("is observing " + gameName + ".")
     },

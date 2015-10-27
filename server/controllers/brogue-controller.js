@@ -9,7 +9,7 @@ var Controller = require('./controller-base');
 var brogueState = require('../enum/brogue-state');
 var allUsers = require('../user/all-users');
 var brogueComms = require('../brogue/brogue-comms');
-var gameRecord = require('../database/game-record-model')
+var gameRecord = require('../database/game-record-model');
 var brogueConstants = require('../brogue/brogue-constants.js');
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
@@ -36,6 +36,10 @@ _.extend(BrogueController.prototype, {
 
     endBrogueSession: function() {
         this.sendMessage("quit", true);
+        this.returnToLobby();
+    },
+
+    returnToLobby: function() {
         this.setState(brogueState.INACTIVE);
         this.controllers.lobby.sendAllUserData();
         this.controllers.lobby.userDataListen();
@@ -164,7 +168,7 @@ _.extend(BrogueController.prototype, {
                 brogueSessionName = data.username;
             }
 
-            this.username = brogueSessionName; //for debugging
+            this.username = brogueSessionName;
 
             //Check input parameters and abort on error
             if(data && data.seed) {
@@ -233,6 +237,18 @@ _.extend(BrogueController.prototype, {
                     result: "success"
                 });
             }
+        },
+
+        leave: function (data) {
+
+            if(this.readOnly) {
+                this.controllers.chat.broadcastStopObserve(this.username);
+            }
+            else {
+                this.controllers.chat.broadcastLeaveGame();
+            }
+
+            this.returnToLobby();
         },
         
         clean: function (data) {
