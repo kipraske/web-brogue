@@ -4,8 +4,7 @@ var path = require('path');
 
 var config = {
     port : {
-        HTTP : 8081,
-        WS : 8080
+        HTTP : 8080
     },
     path : {
         CLIENT_DIR : path.normalize(__dirname + "/../client/"),

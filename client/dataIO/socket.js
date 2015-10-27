@@ -3,7 +3,7 @@
 
 define(['dataIO/router', 'io'], function(router, io){
 
-    var socket = io.connect(window.location.hostname + ":8081");
+    var socket = io.connect(window.location.hostname + ":8080");
 
     socket.on('message', function(event) {
         router.route(event);

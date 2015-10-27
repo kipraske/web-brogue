@@ -8,13 +8,13 @@ at the client
 
 #4
 
-Animations are too fast to be seen
+Animations are too fast to be seen (sometimes)
+
+FIXED
 
 #8
 
 After logging out in another window (?) in-game chat leaks into lobby
-
-FIXED
 
 #7
 
