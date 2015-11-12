@@ -49,7 +49,7 @@ define([
         },
 
         startGame: function() {
-            console.log("start game");
+            //console.log("start game");
             this.userModel.set({
                 playing: true,
                 observing: false
@@ -58,7 +58,7 @@ define([
         },
 
         leaveGame: function() {
-            console.log("leave game");
+            //console.log("leave game");
             this.userModel.set({
                 playing: false,
                 observing: false
@@ -76,7 +76,7 @@ define([
         },
 
         observeGame: function(data) {
-            console.log("observe game" + JSON.stringify(username));
+            //console.log("observe game" + JSON.stringify(username));
             this.userModel.set({
                 playing: false,
                 observing: true,

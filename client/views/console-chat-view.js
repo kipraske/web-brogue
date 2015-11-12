@@ -11,6 +11,8 @@ define([
     var ConsoleChatView = Backbone.View.extend({
         el: "#console-chat",
         listElement: "#console-chat-messages",
+        inputElement: "#console-chat-input",
+        truncateStringLength: 1024,
 
         events: {
             "click #console-chat-send-button": "chatSend",
@@ -30,9 +32,12 @@ define([
                 messagesList = messagesList.concat('<li>' + elem + '</li>');
             });
 
+            var currentInput = $(this.inputElement).val();
+
             this.$el.html(this.template({messageListItems: messagesList}));
 
-            $('#console-chat-messages').scrollTop(1E10);
+            $(this.inputElement).val(currentInput);
+            $(this.listElement).scrollTop(1E10);
         },
 
         chatMessage: function (message) {
@@ -53,14 +58,15 @@ define([
             event.preventDefault();
 
             var inputText = $('#console-chat-input').val();
-            var messageToSend = this.truncateString(inputText, 140);
+            var messageToSend = this.truncateString(inputText, this.truncateStringLength);
 
             send("chat", "message", { channel: "console", data: messageToSend });
 
             this.model.addChatMessageWithThisUserAndTime(messageToSend);
 
-           this.render();
-           $('#console-chat-input').focus();
+            this.render();
+            $(this.inputElement).val('');
+            $(this.inputElement).focus();
         },
         chatHide: function() {
             $('#console-chat-inner').addClass("inactive");

@@ -10,7 +10,29 @@ at the client
 
 Animations are too fast to be seen (sometimes)
 
+#12
+
+Anonymous users can observe but:
+  - Don't get a header bar
+  - The chat alert is 'is observing' rather than 'anonymous user is observing'
+
+#13
+
+If 2 windows are logged in as the same user and the game ends, the high score is recorded twice
+
+#14
+
+Sometimes high scores appear not to be recorded - reason unclear - observed on live server
+
 FIXED
+
+#11
+
+Chat sentence cut off is too short and is cutting off valid sentences
+
+#10
+
+When someone speaks in chat, your input box is cleared
 
 #8
 

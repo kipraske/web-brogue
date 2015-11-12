@@ -11,6 +11,8 @@ define([
     var ChatView = Backbone.View.extend({
         el: "#lobby-chat",
         listElement: "#lobby-chat-messages",
+        inputElement: "#lobby-chat-input",
+        truncateStringLength: 1024,
 
         events: {
             "click #lobby-chat-send-button": "chatSend"
@@ -28,9 +30,12 @@ define([
                 messagesList = messagesList.concat('<li>' + elem + '</li>');
             });
 
-            this.$el.html(this.template({messageListItems: messagesList}));
+            var currentInput = $(this.inputElement).val();
 
-            $('#lobby-chat-messages').scrollTop(1E10);
+            this.$el.html(this.template({messageListItems: messagesList }));
+
+            $(this.inputElement).val(currentInput);
+            $(this.listElement).scrollTop(1E10);
         },
 
         chatMessage: function (message) {
@@ -56,7 +61,7 @@ define([
             }
             else {
                 var inputText = $('#lobby-chat-input').val();
-                var messageToSend = this.truncateString(inputText, 140);
+                var messageToSend = this.truncateString(inputText, this.truncateStringLength);
 
                 send("chat", "message", { channel: "lobby", data: messageToSend });
 
@@ -64,7 +69,8 @@ define([
             }
 
            this.render();
-           $('#lobby-chat-input').focus();
+           $(this.inputElement).val('');
+           $(this.inputElement).focus();
         },
         login : function(username) {
             this.model.setUsername(username);
