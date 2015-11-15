@@ -75,7 +75,7 @@ static void close_logfile() {
 
 static void write_to_log(const char *msg) {
   fprintf(logfile, msg);
-  //fflush(logfile);
+  fflush(logfile);
 }
 
 static void setup_sockets() {
@@ -285,6 +285,10 @@ static boolean modifier_held(int modifier) {
 static void notify_event(short eventId, short data1, short data2, const char *str) {
 
   char statusOutputBuffer[EVENT_SIZE];
+  char msg[80];
+
+  snprintf(msg, 80, "event: %i d1: %i d2: %i s: %s\n", eventId, data1, data2, str);
+  write_to_log(msg);
 
   // Coordinates of (254, 254) will let the server and client know that this is a event notification update rather than a cell update
   statusOutputBuffer[0] = 254;
