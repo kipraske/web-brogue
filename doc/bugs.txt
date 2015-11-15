@@ -22,9 +22,14 @@ If 2 windows are logged in as the same user and the game ends, the high score is
 
 #14
 
-Sometimes high scores appear not to be recorded - reason unclear - observed on live server
+If you are logged in during server restart and play, your highscore entry has no name
 
 FIXED
+
+#14
+
+Sometimes high scores appear not to be recorded - reason unclear - observed on live server
+This turned out to be due to the child process exit event triggering before the event listener had completed
 
 #11
 
