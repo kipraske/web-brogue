@@ -395,12 +395,9 @@ BrogueInterface.prototype.attachChildEvents = function () {
     //Not applicable when connecting to an orphaned process
     if(self.brogueChild) {
 
-        self.brogueChild.on('exit', function (code) {
-            // go back to lobby in the event something happens to the child process
-            // do not disconnect from brogue, since this sometimes triggers before the end-game event
-            // which otherwise will be missed
-
-            self.brogueEvents.emit('quit');
+        self.brogueChild.on('exit', function () {
+            // we no longer respond to this event. It sometimes triggers (and causes listeners to be removed)
+            // before all events are processed from brogue so reacting here can miss events
         });
 
         self.brogueChild.on('error', function (err) {
