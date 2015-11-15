@@ -90,6 +90,7 @@ _.extend(BrogueController.prototype, {
             var self = this;
             var thisGameRecord = {
                 username: this.controllers.auth.currentUserName,
+                date: event.date,
                 score: event.data1,
                 seed: event.seed,
                 level: event.level,
@@ -98,12 +99,17 @@ _.extend(BrogueController.prototype, {
                 description: event.message
             };
 
+            //Create save game record
             gameRecord.create(thisGameRecord, function (err) {
                 if (err) {
-                    self.controllers.error.send(JSON.stringify(err));
+                    if(!(err.code && err.code == 11000)) {
+                        self.controllers.error.send(JSON.stringify(err));
+                        //Ignore duplicate record fail (occurs when 2 windows logged into the same game)
+                    }
                     return;
                 }
             });
+
         }
     },
 

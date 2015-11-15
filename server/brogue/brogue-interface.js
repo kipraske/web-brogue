@@ -335,6 +335,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
                 var eventStr = self.dataAccumulator.slice(messageStart, messageLength).toString('utf8');
 
                 var eventData = {
+                    date: Date.now(),
                     eventId: eventId,
                     data1: eventData1,
                     data2: eventData2,

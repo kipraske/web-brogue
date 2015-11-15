@@ -12,6 +12,8 @@ var gameRecordSchema = mongoose.Schema({
     description: String
 });
 
+gameRecordSchema.index({ date: 1, username: -1 }, { unique: true });
+
 gameRecordSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('GameRecord', gameRecordSchema);

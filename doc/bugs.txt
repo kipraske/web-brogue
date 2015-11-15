@@ -16,15 +16,15 @@ Anonymous users can observe but:
   - Don't get a header bar
   - The chat alert is 'is observing' rather than 'anonymous user is observing'
 
-#13
-
-If 2 windows are logged in as the same user and the game ends, the high score is recorded twice
-
-#14
+#15
 
 If you are logged in during server restart and play, your highscore entry has no name
 
 FIXED
+
+#13
+
+If 2 windows are logged in as the same user and the game ends, the high score is recorded twice
 
 #14
 
