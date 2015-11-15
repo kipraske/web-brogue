@@ -397,7 +397,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
         self.brogueChild.on('exit', function (code) {
             // go back to lobby in the event something happens to the child process
-            self.disconnectBrogue(self);
+            // do not disconnect from brogue, since this sometimes triggers before the end-game event
+            // which otherwise will be missed
 
             self.brogueEvents.emit('quit');
         });
