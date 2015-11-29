@@ -27,6 +27,12 @@ define([
             register: _.template($('#register').html())
         },
         initialize: function () {
+            this.requestLogin();
+        },
+        render: function (templateName) {
+            this.$el.html(this.templates[templateName](this.model.toJSON()));
+        },
+        requestLogin: function () {
 
             var storedToken = util.getItem('sessionId');
 
@@ -35,9 +41,6 @@ define([
             }
 
             this.render("login");
-        },
-        render: function (templateName) {
-            this.$el.html(this.templates[templateName](this.model.toJSON()));
         },
         loginSubmit: function (event) {
             event.preventDefault();

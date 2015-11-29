@@ -112,6 +112,9 @@ require([
     dispatcher.on("observeGame", headerView.observeGame, headerView);
     dispatcher.on("leaveGame", headerView.leaveGame, headerView);
 
+    dispatcher.on("reconnect", authView.requestLogin, authView);
+    dispatcher.on("reconnect", consoleView.exitToLobby, consoleView);
+
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
