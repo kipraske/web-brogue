@@ -121,8 +121,8 @@ _.extend(BrogueController.prototype, {
                 allUsers.addUser(this.controllers.auth.currentUserName);
             }
 
-            //We may have a different state due to logging in again in a different window, but PLAYING should take priority
-            this.setState(brogueState.PLAYING);
+            //We may have a different state due to logging in again in a different window, but ACTIVE should take priority
+            this.setState(brogueState.ACTIVE);
             allUsers.updateLobbyStatus(
                 this.controllers.auth.currentUserName,
                 status.flag,
@@ -230,11 +230,8 @@ _.extend(BrogueController.prototype, {
             var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
             setTimeout(refreshMethod, 250);
 
-            if (this.readOnly) {
-                this.setState(brogueState.WATCHING);
-            }
-            else {
-                this.setState(brogueState.PLAYING);
+            if (!this.readOnly) {
+                this.setState(brogueState.ACTIVE);
             }
 
             //If we got here via a seed or save game route, pass messages back to the UI
@@ -260,6 +257,7 @@ _.extend(BrogueController.prototype, {
         clean: function (data) {
             
             // Called on logout or websocket close
+
             this.handlerCollection.kill.call(this, data);
             //Commented out temporarily so we can practice reconnecting - seems to be called on logout (window close)
             //this.handlerCollection.kill.call(this, data);
@@ -268,6 +266,10 @@ _.extend(BrogueController.prototype, {
         //TODO: If required, this needs to migrate to interface
         kill: function (data) {
 
+            if(!this.readOnly) {
+                allUsers.setState(this.username, brogueState.INACTIVE);
+            }
+
             //Just kill off the controller gracefully, leave the process (both observing and playing)
             this.removeBrogueListeners();
         },
@@ -275,9 +277,7 @@ _.extend(BrogueController.prototype, {
     
     setState : function(state){
 
-        if(allUsers.isUserValid(this.controllers.auth.currentUserName)) {
-            allUsers.users[this.controllers.auth.currentUserName].brogueState = state;
-        }
+        allUsers.setState(this.controllers.auth.currentUserName, state);
     },
 
 });

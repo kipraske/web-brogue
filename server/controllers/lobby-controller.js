@@ -3,7 +3,6 @@ var _ = require('underscore');
 var Controller = require('./controller-base');
 
 var allUsers = require('../user/all-users');
-var brogueState = require('../enum/brogue-state');
 
 // Controller for broadcasting lobby updates to all users who are currently in the lobby
 
@@ -39,26 +38,24 @@ _.extend(LobbyController.prototype, {
     stopUserDataListen: function(){
         clearInterval(this.broadcastInterval);
     },
-    sendAllUserData: function(includeEveryone){
+    sendAllUserData: function(){
         
         var self = this;
         var returnLobbyData;
 
-        for (var userName in allUsers.users){
+        for (var userName in allUsers.users) {
 
             // Only send data to the lobby of the users who are actually playing a game
-            if (allUsers.users[userName].brogueState === brogueState.PLAYING || includeEveryone){              
-                if (!returnLobbyData) {
-                    returnLobbyData = {};
-                }
-                
-                var userEntry = allUsers.users[userName];
-                returnLobbyData[userName] = userEntry.lobbyData;
-                
-                // update idle time
-                var timeDiff = process.hrtime(userEntry.lastUpdateTime)[0];
-                returnLobbyData[userName]["idle"] = timeDiff;
+            if (!returnLobbyData) {
+                returnLobbyData = {};
             }
+
+            var userEntry = allUsers.users[userName];
+            returnLobbyData[userName] = userEntry.lobbyData;
+
+            // update idle time
+            var timeDiff = process.hrtime(userEntry.lastUpdateTime)[0];
+            returnLobbyData[userName]["idle"] = timeDiff;
         }
         
         // In the event our periodic calling tries to send data to a closed socket

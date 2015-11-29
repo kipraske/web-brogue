@@ -3,8 +3,8 @@ var _ = require('underscore');
 var fs = require('fs');
 var Controller = require('./controller-base');
 var User = require('../user/user-model');
-var allUsers = require('../user/all-users');
 var cleanUp = require("./cleanup-controllers.js");
+var sessions = require('client-sessions');
 
 // Controller for handling user authentication over the web socket
 
@@ -14,7 +14,6 @@ function AuthController(socket) {
     this.controllers = null;
     
     this.currentUserName = "";
-    this.currentUserData = {};
 }
 
 AuthController.prototype = new Controller();
@@ -64,7 +63,7 @@ _.extend(AuthController.prototype, {
 
                 //Token-based login
 
-                var decodedToken = allUsers.decodeSessionToken(data.token);
+                var decodedToken = this.decodeSessionToken(data.token);
 
                 if(!decodedToken) {
                     self.sendMessage("auth", {
@@ -116,7 +115,7 @@ _.extend(AuthController.prototype, {
                     var newUser = new User();
                     newUser.username = data.username;
                     newUser.password = newUser.createHash(data.password);
-                    newUser.sessionId = allUsers.createSessionToken(newUser.username);
+                    newUser.sessionId = this.createSessionToken(newUser.username);
 
                     // each user needs their own directory for the brogue processes to run in
                     // Failure here is not handled well
@@ -146,9 +145,7 @@ _.extend(AuthController.prototype, {
 
             this.controllers.chat.broadcastLogoutMessage();
 
-            allUsers.removeUser(this.currentUserName);
             this.currentUserName = "";
-            this.currentUserData = {};
             this.controllers.brogue.handlerCollection.clean.call(this.controllers.brogue, null);
             this.sendMessage("auth", {
                 result: "logout",
@@ -156,8 +153,31 @@ _.extend(AuthController.prototype, {
             });
         }
     },
+
+    createSessionToken: function (username) {
+        var sessionOpts = {
+            cookieName: 'mySession', // cookie name dictates the key name added to the request object
+            secret: config.auth.secret, // should be a large unguessable string
+            duration: config.auth.tokenExpiryTime
+        };
+
+        var encodedToken = sessions.util.encode(sessionOpts, username, sessionOpts.duration);
+
+        return encodedToken;
+    },
+
+    decodeSessionToken: function (token) {
+        var sessionOpts = {
+            cookieName: 'mySession', // cookie name dictates the key name added to the request object
+            secret: config.auth.secret // should be a large unguessable string
+        };
+
+        var decodedToken = sessions.util.decode(sessionOpts, token);
+
+        return decodedToken;
+    },
     processSuccessfulLogin: function(username) {
-        if (this.currentUserData.sessionID) {
+        if (this.currentUserName) {
             this.sendMessage("auth", {
                 result: "fail",
                 data: "You are already logged in"
@@ -166,21 +186,13 @@ _.extend(AuthController.prototype, {
         }
 
         this.currentUserName = username;
-        var existingUserData = allUsers.getUser(username);
-
-        if (existingUserData) {
-            this.currentUserData = existingUserData;
-        }
-        else {
-            allUsers.addUser(username);
-        }
 
         this.sendMessage("auth", {
             result: "success",
             data: {
                 message: "logged-in",
                 username: username,
-                token: allUsers.createSessionToken(username)
+                token: this.createSessionToken(username)
             }
         });
 

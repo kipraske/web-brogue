@@ -2,8 +2,6 @@
 
 var _ = require('underscore');
 
-var sessions = require('client-sessions');
-
 var config = require('../config');
 var brogueState = require('../enum/brogue-state');
 var brogueStatus = require('../enum/brogue-status-types');
@@ -14,7 +12,8 @@ brogueStatusMap[brogueStatus.GOLD] = "gold";
 brogueStatusMap[brogueStatus.SEED] = "seed";
 brogueStatusMap[brogueStatus.EASY_MODE] = "easyMode";
 
-var userCount = 0;
+var IDLE_TICKER_INTERVAL_MS = 1 * 1000;
+var IDLE_TIME_MAXIMUM_SECONDS = 48 * 60 * 60;
 
 module.exports = {
     users : {},
@@ -22,7 +21,7 @@ module.exports = {
     // TODO - should probably split the user object defined here into its own module.  It is strange to be defining what a user is soley in "add user"
     
     addUser : function(userName){
-        userCount++;
+
         this.users[userName] = {
             brogueState : brogueState.INACTIVE,
             lastUpdateTime : process.hrtime(),
@@ -36,23 +35,45 @@ module.exports = {
         };
     },
     removeUser : function(userName){
-        delete this.users[userName];
-        userCount--;
+        if(this.isUserValid(userName)) {
+            delete this.users[userName];
+        }
     },
     getUser : function(userName){
-        return this.users[userName];
+        if(this.isUserValid(userName)) {
+            return this.users[userName];
+        }
     },
-    updateUser : function(userName, data){
-        var oldUserObject = this.getUser(userName);
-        this.users[userName] = _.extend(oldUserObject, data);
+    setState: function(userName, state) {
+        if(this.isUserValid(userName)) {
+            this.users[userName].brogueState = state;
+        }
     },
+    tickIdleUsers: function() {
+
+        var usersToRemoveDueToLongIdle = [];
+
+        for (var userName in this.users) {
+            var timeDiff = process.hrtime(this.users[userName].lastUpdateTime)[0];
+            this.users[userName].lobbyData.idle = timeDiff;
+
+            if(timeDiff > IDLE_TIME_MAXIMUM_SECONDS) {
+                usersToRemoveDueToLongIdle.push(userName);
+            }
+        }
+
+        for (var i = 0; i < usersToRemoveDueToLongIdle.length; i++) {
+            this.removeUser(usersToRemoveDueToLongIdle[i]);
+        }
+    },
+
     isUserValid : function(username) {
         return username in this.users;
     },
     
     updateLobbyStatus : function(userName, updateFlag, updateValue) {
 
-        if (updateFlag === brogueStatus.SEED){
+        if (updateFlag === brogueStatus.SEED) {
             // just need to report update once per push
             this.users[userName].lastUpdateTime = process.hrtime();
         }
@@ -61,27 +82,9 @@ module.exports = {
         this.users[userName].lobbyData[lobbyItem] = updateValue;
     },
 
-    createSessionToken: function (username) {
-        var sessionOpts = {
-            cookieName: 'mySession', // cookie name dictates the key name added to the request object
-            secret: config.auth.secret, // should be a large unguessable string
-            duration: config.auth.tokenExpiryTime
-        };
-
-        var encodedToken = sessions.util.encode(sessionOpts, username, sessionOpts.duration);
-
-        return encodedToken;
-    },
-
-    decodeSessionToken: function (token) {
-        var sessionOpts = {
-            cookieName: 'mySession', // cookie name dictates the key name added to the request object
-            secret: config.auth.secret // should be a large unguessable string
-        };
-
-        var decodedToken = sessions.util.decode(sessionOpts, token);
-
-        return decodedToken;
+    startIdleTicker: function () {
+        setInterval(this.tickIdleUsers.bind(this), IDLE_TICKER_INTERVAL_MS);
     }
-
 };
+
+module.exports.startIdleTicker();
