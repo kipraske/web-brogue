@@ -115,7 +115,7 @@ _.extend(AuthController.prototype, {
                     var newUser = new User();
                     newUser.username = data.username;
                     newUser.password = newUser.createHash(data.password);
-                    newUser.sessionId = this.createSessionToken(newUser.username);
+                    newUser.sessionId = self.createSessionToken(newUser.username);
 
                     // each user needs their own directory for the brogue processes to run in
                     // Failure here is not handled well
