@@ -36,6 +36,7 @@ _.extend(BrogueController.prototype, {
 
     endBrogueSession: function() {
         this.sendMessage("quit", true);
+        allUsers.removeUser(this.username);
         this.returnToLobby();
     },
 
