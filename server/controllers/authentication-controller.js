@@ -91,6 +91,15 @@ _.extend(AuthController.prototype, {
         },
         register: function (data) {
             var self = this;
+
+            if(data.username.trim() === "" || data.password.trim() === "") {
+                self.sendMessage("auth", {
+                    result: "fail",
+                    data: "Sorry, username or password cannot be blank"
+                });
+                return;
+            }
+
             User.findOne({'username': data.username}, function (err, user) {
                 if (err) {
                     self.controllers.error.send(JSON.stringify(err));

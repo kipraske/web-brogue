@@ -56,7 +56,16 @@ define([
         },
         registerSubmit: function (event) {
             event.preventDefault();
-            
+
+            if($('#username').val().trim() === "" ||
+                $('#password').val().trim() === "") {
+                $('#auth-message')
+                    .removeClass()
+                    .addClass("error")
+                    .html("Username or password cannot be blank");
+                return;
+            }
+
             var registerData = {
                 username: $('#username').val(),
                 password: $('#password').val(),
