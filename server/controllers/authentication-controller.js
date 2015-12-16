@@ -72,23 +72,39 @@ _.extend(AuthController.prototype, {
                     });
                     return;
                 }
-                else {
-                    var expiryTime = Number(decodedToken.createdAt) + Number(decodedToken.duration);
 
-                    //console.log("expiry: " + expiryTime + " now: " + new Date().getTime());
+                User.findOne({'username': decodedToken.content},
+                    function (err, user) {
+                        if (err) {
+                            self.controllers.error.send(JSON.stringify(err));
+                            return;
+                        }
 
-                    if(expiryTime < new Date().getTime()) {
-                        self.sendMessage("auth", {
-                            result: "fail",
-                            data: "Token has expired"
-                        });
-                        return;
-                    }
+                        if (!user) {
+                            self.sendMessage("auth", {
+                                result: "fail",
+                                data: "Saved username not found in database"
+                            });
+                            return;
+                        }
 
-                    this.processSuccessfulLogin(decodedToken.content);
+                        var expiryTime = Number(decodedToken.createdAt) + Number(decodedToken.duration);
+
+                        //console.log("expiry: " + expiryTime + " now: " + new Date().getTime());
+
+                        if (expiryTime < new Date().getTime()) {
+                            self.sendMessage("auth", {
+                                result: "fail",
+                                data: "Token has expired"
+                            });
+                            return;
+                        }
+
+                        self.processSuccessfulLogin(decodedToken.content);
+                    });
                 }
-            }
-        },
+            },
+
         register: function (data) {
             var self = this;
 

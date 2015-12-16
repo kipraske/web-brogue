@@ -20,11 +20,11 @@ Anonymous users can observe but:
 
 If you are logged in during server restart and play, your highscore entry has no name
 
+FIXED
+
 #17
 
 Seems to be possible to login with local credentials, even if that user has been deleted from the database
-
-FIXED
 
 #16
 
