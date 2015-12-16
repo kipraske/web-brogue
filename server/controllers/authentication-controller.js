@@ -143,9 +143,10 @@ _.extend(AuthController.prototype, {
                     newUser.sessionId = self.createSessionToken(newUser.username);
 
                     // each user needs their own directory for the brogue processes to run in
-                    // Failure here is not handled well
+                    // TODO: should not send errors to the client
                     fs.mkdir(config.path.GAME_DATA_DIR + data.username, 0755, function (err) {
-                        if (err) {
+
+                        if (err.code != "EEXIST") {
                             self.controllers.error.send(JSON.stringify(err));
                         }
 

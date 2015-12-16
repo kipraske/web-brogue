@@ -1,11 +1,5 @@
 OPEN
 
-#1
-
-If you create a new user, that user does not exist but their directory exists, you get:
-Server Error: {"errno":-17,"code":"EEXIST","path":"/home/flend/web-brogue/game-data/flend"}
-at the client
-
 #4
 
 Animations are too fast to be seen (sometimes)
@@ -21,6 +15,12 @@ Anonymous users can observe but:
 If you are logged in during server restart and play, your highscore entry has no name
 
 FIXED
+
+#1
+
+If you create a new user, that user does not exist but their directory exists, you get:
+Server Error: {"errno":-17,"code":"EEXIST","path":"/home/flend/web-brogue/game-data/flend"}
+at the client
 
 #17
 
