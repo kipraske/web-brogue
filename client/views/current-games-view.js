@@ -8,8 +8,9 @@ define([
     "views/lobby-data-table-base",
     "views/current-games-row-view",
     'models/lobby-data-table-state',
-    "models/current-games-row"
-], function ($, _, Backbone, send, lobbyTableBase, CurrentGamesRowView, LobbyTableState, CurrentGamesRowModel) {
+    "models/current-games-row",
+    "models/user-logged-in"
+], function ($, _, Backbone, send, lobbyTableBase, CurrentGamesRowView, LobbyTableState, CurrentGamesRowModel, UserLoggedInModel) {
 
     var rowViewCollection = {};
 
@@ -17,6 +18,7 @@ define([
         el: "#current-games",
         tableSelector : "#current-games-table",
         $tableElement: null,
+        userModel: new UserLoggedInModel(),
         tableState : new LobbyTableState(),
         
         initialize : function(){
@@ -39,16 +41,23 @@ define([
             
             for (var incomingUserName in data) {
                 var update = data[incomingUserName];
-                
+
+                var action = "Observe " + incomingUserName;
+
+                if(incomingUserName === this.userModel.get("username")) {
+                    action = "Continue game";
+                }
+
                 if (!rowViewCollection[incomingUserName]) {
                     var rowData = _.extend(update, {
-                        userName: incomingUserName
+                        userName: incomingUserName,
+                        action: action
                     });
                     
                     var rowModel = new CurrentGamesRowModel(rowData);
                     var newRowView = rowViewCollection[incomingUserName] = new CurrentGamesRowView({
                         model : rowModel,
-                        id : "game-row-" + incomingUserName,
+                        id : "game-row-" + incomingUserName
                     });
                     this.$tableElement.append(newRowView.render().el);
                 }
@@ -65,6 +74,23 @@ define([
                     delete rowViewCollection[existingUserName];
                 }
             }
+        },
+        login : function(username){
+            this.userModel.set({
+                username : username
+            });
+
+            this.render();
+        },
+
+        logout: function(e) {
+            e.preventDefault();
+
+            this.userModel.set({
+                username : ""
+            });
+
+            this.render();
         }
     });
     

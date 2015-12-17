@@ -153,7 +153,7 @@
     <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
     <td><%= gold %></td>
     <td><%= seed %></td>
-    <td><a id="observe-game" href="#brogue">Observe <%= userName %></a></td>
+    <td><a id="observe-game" data-username="<%= userName %>" href="#brogue"><%= action %></a></td>
 </script>
 
 <script id="saved-games-heading" type ="text/template">

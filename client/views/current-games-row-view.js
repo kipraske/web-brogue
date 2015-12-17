@@ -21,9 +21,8 @@ define([
         observeGame: function(event){
             event.preventDefault();
 
-            var userNameStr = event.target.innerHTML;
-            var userName = userNameStr.split(' ', 2)[1];
-
+            var userName = $(event.target).data("username");
+            
             send("brogue", "start", {username: userName});
             dispatcher.trigger("observeGame", {username: userName});
             this.goToConsole();
