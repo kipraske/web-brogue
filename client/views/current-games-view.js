@@ -83,8 +83,7 @@ define([
             this.render();
         },
 
-        logout: function(e) {
-            e.preventDefault();
+        logout: function() {
 
             this.userModel.set({
                 username : ""

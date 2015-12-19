@@ -142,7 +142,7 @@ BrogueInterface.prototype.getChildWorkingDir = function () {
 },
 
 
-BrogueInterface.prototype.start = function (data) {
+BrogueInterface.prototype.start = function (data, reconnectOnly) {
 
     //Support reconnect
 
@@ -165,8 +165,19 @@ BrogueInterface.prototype.start = function (data) {
     }
     catch(e) {
 
-        //failed to connect to socket, spawning new process
-        this.newBrogueProcess(data);
+        //If the game doesn't exist, and we are trying to play (not observe),
+        //create a new game
+
+        if(this.brogueSocket != null) {
+            this.brogueSocket.close();
+        }
+
+        if(!reconnectOnly) {
+            this.newBrogueProcess(data);
+        }
+        else {
+            throw e;
+        }
     }
 };
 

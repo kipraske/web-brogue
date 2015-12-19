@@ -7,7 +7,7 @@ module.exports = {
 
     brogueInterface: {},
 
-    getBrogueInterface: function (username, data) {
+    getBrogueInterface: function (username, data, reconnectOnly) {
         if (this.brogueInterface[username]) {
             if(!this.brogueInterface[username].disconnected) {
                 return this.brogueInterface[username];
@@ -16,8 +16,14 @@ module.exports = {
 
         //If no interface exists, or it is disconnected, start with a new interface
 
-        this.brogueInterface[username] = new brogue(username);
-        this.brogueInterface[username].start(data);
+        try {
+            this.brogueInterface[username] = new brogue(username);
+            this.brogueInterface[username].start(data, reconnectOnly);
+        }
+        catch(e) {
+            delete this.brogueInterface[username];
+            throw e;
+        }
 
         return this.brogueInterface[username];
     }

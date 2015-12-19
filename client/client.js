@@ -90,6 +90,9 @@ require([
     dispatcher.on("quit", highScoresView.quit, highScoresView);
     dispatcher.on("quit", consoleView.exitToLobby, consoleView);
 
+    dispatcher.on("fail", highScoresView.quit, highScoresView);
+    dispatcher.on("fail", consoleView.exitToLobby, consoleView);
+
     dispatcher.on("login", headerView.login, headerView);
     dispatcher.on("login", highScoresView.login, highScoresView);
     dispatcher.on("login", allScoresView.login, allScoresView);
@@ -128,6 +131,7 @@ require([
         "chat": function(data) { dispatcher.trigger("chat", data) },
         "auth" : authView.handleMessage.bind(authView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
+        "fail" : function(data) { dispatcher.trigger("fail", data) },
         "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)
     });
 

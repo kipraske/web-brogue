@@ -177,7 +177,7 @@ _.extend(BrogueController.prototype, {
 
             this.username = brogueSessionName;
 
-            //Check input parameters and abort on error
+            //Check seed and abort on error
             if(data && data.seed) {
                 var seed = parseInt(data.seed, 10);
 
@@ -192,53 +192,69 @@ _.extend(BrogueController.prototype, {
 
             //Connect to brogue interface
 
-            this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data);
+            try {
 
-            //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
+                //Only spawn new games if the logged in user is requested a game (i.e. not observing)
+                var reconnectOnly = false;
+                if(this.controllers.auth.currentUserName != brogueSessionName) {
+                    reconnectOnly = true;
+                }
+                
+                this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data, reconnectOnly);
 
-            this.dataListener = this.brogueDataListener.bind(this);
-            this.brogueInterface.addDataListener(this.dataListener);
+                //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
-            this.quitListener = this.brogueQuitListener.bind(this);
-            this.brogueInterface.addQuitListener(this.quitListener);
+                this.dataListener = this.brogueDataListener.bind(this);
+                this.brogueInterface.addDataListener(this.dataListener);
 
-            this.errorListener = this.brogueErrorListener.bind(this);
-            this.brogueInterface.addErrorListener(this.errorListener);
+                this.quitListener = this.brogueQuitListener.bind(this);
+                this.brogueInterface.addQuitListener(this.quitListener);
 
-            this.eventListener = this.brogueEventListener.bind(this);
-            this.brogueInterface.addEventListener(this.eventListener);
+                this.errorListener = this.brogueErrorListener.bind(this);
+                this.brogueInterface.addErrorListener(this.errorListener);
 
-            this.statusListener = this.brogueStatusListener.bind(this);
-            this.brogueInterface.addStatusListener(this.statusListener);
+                this.eventListener = this.brogueEventListener.bind(this);
+                this.brogueInterface.addEventListener(this.eventListener);
 
-            //console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
+                this.statusListener = this.brogueStatusListener.bind(this);
+                this.brogueInterface.addStatusListener(this.statusListener);
 
-            //Stop lobby updates for this user
-            this.controllers.lobby.stopUserDataListen();
+                //console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 
-            //Enter this chat room
-            this.controllers.chat.enterRoom(brogueSessionName);
+                //Stop lobby updates for this user
+                this.controllers.lobby.stopUserDataListen();
 
-            //Send a global chat update
-            if (this.readOnly) {
-                this.controllers.chat.broadcastObserve(brogueSessionName);
+                //Enter this chat room
+                this.controllers.chat.enterRoom(brogueSessionName);
+
+                //Send a global chat update
+                if (this.readOnly) {
+                    this.controllers.chat.broadcastObserve(brogueSessionName);
+                }
+                else {
+                    this.controllers.chat.broadcastStartGame();
+                }
+
+                //Refresh once the game has had a chance to start (if required)
+                var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
+                setTimeout(refreshMethod, 250);
+
+                if (!this.readOnly) {
+                    this.setState(brogueState.ACTIVE);
+                }
+
+                //If we got here via a seed or save game route, pass messages back to the UI
+                if (data && data.seed) {
+                    this.sendMessage("seed", {
+                        result: "success"
+                    });
+                }
             }
-            else {
-                this.controllers.chat.broadcastStartGame();
-            }
-
-            //Refresh once the game has had a chance to start (if required)
-            var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
-            setTimeout(refreshMethod, 250);
-
-            if (!this.readOnly) {
-                this.setState(brogueState.ACTIVE);
-            }
-
-            //If we got here via a seed or save game route, pass messages back to the UI
-            if(data && data.seed) {
-                this.sendMessage("seed", {
-                    result: "success"
+            catch (e) {
+                //Failed to start game
+                this.sendMessage("fail", {
+                    result : "fail",
+                    data : "Failed to start game"
                 });
             }
         },
