@@ -77,11 +77,22 @@ define([
 
         observeGame: function(data) {
             //console.log("observe game" + JSON.stringify(username));
-            this.userModel.set({
-                playing: false,
-                observing: true,
-                observingUsername: data.username
-            });
+
+            if(data.username === this.userModel.get("username")) {
+                //Observing ourself is the same as playing
+                this.userModel.set({
+                    playing: true,
+                    observing: false,
+                    observingUsername: data.username
+                });
+            }
+            else {
+                this.userModel.set({
+                    playing: false,
+                    observing: true,
+                    observingUsername: data.username
+                });
+            }
             this.render();
         }
         
