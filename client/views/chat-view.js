@@ -20,7 +20,7 @@ define([
         template: _.template($('#lobby-chat-template').html()),
 
         initialize: function () {
-            this.render()
+            this.render();
         },
         render: function () {
 
@@ -30,12 +30,16 @@ define([
                 messagesList = messagesList.concat('<li>' + elem + '</li>');
             });
 
+            var inputHadFocus = $(this.inputElement).is(':focus');
             var currentInput = $(this.inputElement).val();
 
             this.$el.html(this.template({messageListItems: messagesList }));
 
             $(this.inputElement).val(currentInput);
             $(this.listElement).scrollTop(1E10);
+            if(inputHadFocus) {
+                $(this.inputElement).focus();
+            }
         },
 
         chatMessage: function (message) {

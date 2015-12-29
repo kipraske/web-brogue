@@ -18,11 +18,14 @@ If you are logged in during server restart and play, your highscore entry has no
 
 Logging in as a different user does not update continue game / observe correctly on current games display
 
-NEXT #19
-
+NEXT #20
 
 
 FIXED
+
+#19
+
+When a chat window update occurs, you lose current focus, which is annoying when you are typing a message (otherwise not a big deal, since console is default focus)
 
 #1
 
