@@ -27,7 +27,10 @@ module.exports = function(app) {
             var filteredRecord =
                 _.pick(gameRecord,
                     'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date');
-            filteredRecord.id = gameRecord._id;
+
+            if('recording' in gameRecord && gameRecord.recording != undefined) {
+                filteredRecord.recording = 'recording-' + gameRecord._id;
+            }
 
             filteredGameRecords.push(filteredRecord);
         });

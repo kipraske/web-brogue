@@ -13,7 +13,7 @@ function AuthController(socket) {
     this.socket = socket;
     this.controllers = null;
     
-    this.currentUserName = "";
+    this.currentUserName = null;
 }
 
 AuthController.prototype = new Controller();
@@ -171,7 +171,7 @@ _.extend(AuthController.prototype, {
 
             this.controllers.chat.broadcastLogoutMessage();
 
-            this.currentUserName = "";
+            this.currentUserName = null;
             this.controllers.brogue.handlerCollection.clean.call(this.controllers.brogue, null);
             this.sendMessage("auth", {
                 result: "logout",

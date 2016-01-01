@@ -91,7 +91,7 @@ define([
                         sortable: false,
                         editable: false
                     }, {
-                        name: "id",
+                        name: "recording",
                         label: "Recording",
                         cell: WatchGameUriCell,
                         sortable: false,

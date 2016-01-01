@@ -27,7 +27,11 @@ define([
         },
         
         headingTemplate : _.template($('#current-games-heading').html()),    
-        
+
+        render: function() {
+            this.updateRowModelData();
+        },
+
         updateRowModelData: function(data){                    
             // handle incoming user data
             if (data) {

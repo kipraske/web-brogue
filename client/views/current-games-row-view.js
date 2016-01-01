@@ -23,7 +23,7 @@ define([
 
             var userName = $(event.target).data("username");
             
-            send("brogue", "start", {username: userName});
+            send("brogue", "observe", {username: userName});
             dispatcher.trigger("observeGame", {username: userName});
             this.goToConsole();
         },
