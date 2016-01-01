@@ -1,5 +1,6 @@
 var GameRecord = require("../database/game-record-model");
 var paginate = require("express-paginate");
+var _ = require("underscore");
 
 module.exports = function(app) {
 
@@ -17,6 +18,21 @@ module.exports = function(app) {
         }
     };
 
+    var filterGameRecords = function(gameRecords) {
+
+        var filteredGameRecords = [];
+
+        _.each(gameRecords, function(gameRecord) {
+
+            var filteredRecord =
+                _.pick(gameRecord,
+                    'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date');
+            filteredGameRecords.push(filteredRecord);
+        });
+
+        return filteredGameRecords;
+    };
+
     app.use(paginate.middleware(10, 50));
 
     app.get("/api/games", function (req, res) {
@@ -32,7 +48,7 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        data: gameRecords,
+                        data: filterGameRecords(gameRecords),
                         pageCount: pageCount,
                         itemCount: itemCount
                     });
@@ -69,7 +85,7 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        data: gameRecords,
+                        data: filterGameRecords(gameRecords),
                         pageCount: pageCount,
                         itemCount: itemCount
                     });
@@ -106,7 +122,7 @@ module.exports = function(app) {
                     json: function () {
                         res.json({
                             object: 'list',
-                            data: gameRecords,
+                            data: filterGameRecords(gameRecords),
                             pageCount: pageCount,
                             itemCount: itemCount
                         });
@@ -129,7 +145,7 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        data: gameRecords,
+                        data: filterGameRecords(gameRecords),
                         pageCount: pageCount,
                         itemCount: itemCount
                     });
