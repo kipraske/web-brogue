@@ -13,7 +13,9 @@ define([
         defaults: {
             username : "",
             observing: false,
+            recording: false,
             observingUsername: "",
+            recordingId: 0,
             playing: false
         }
     });

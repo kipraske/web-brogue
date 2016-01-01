@@ -7,6 +7,7 @@ var childProcess = require('child_process');
 var path = require('path');
 var fs = require('fs');
 
+var brogueMode = require('../enum/brogue-mode');
 var config = require('../config');
 var brogueConstants = require('./brogue-constants.js');
 
@@ -138,11 +139,14 @@ BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callba
 
 
 BrogueInterface.prototype.getChildWorkingDir = function () {
-    return config.path.GAME_DATA_DIR + this.username;
+
+    var usernameRoot = this.username.split('-')[0];
+
+    return config.path.GAME_DATA_DIR + usernameRoot;
 },
 
 
-BrogueInterface.prototype.start = function (data, reconnectOnly) {
+BrogueInterface.prototype.start = function (data, mode) {
 
     //Support reconnect
 
@@ -165,7 +169,7 @@ BrogueInterface.prototype.start = function (data, reconnectOnly) {
     }
     catch(e) {
 
-        //If the game doesn't exist, and we are trying to play (not observe),
+        //If the game doesn't exist, and we are trying to play or watch a recording (not observe),
         //create a new game
 
         //This 'book-keeping' triggers an error -9 at the moment, booting the player, so it has been disabled
@@ -173,8 +177,10 @@ BrogueInterface.prototype.start = function (data, reconnectOnly) {
         //    this.brogueSocket.close();
         //}
 
-        if(!reconnectOnly) {
-            this.newBrogueProcess(data);
+        console.log("mode" + mode);
+
+        if(mode != brogueMode.OBSERVE) {
+            this.newBrogueProcess(data, mode);
         }
         else {
             throw e;
@@ -182,23 +188,35 @@ BrogueInterface.prototype.start = function (data, reconnectOnly) {
     }
 };
 
-BrogueInterface.prototype.newBrogueProcess = function(data) {
+BrogueInterface.prototype.newBrogueProcess = function(data, mode) {
 
     var childWorkingDir = this.getChildWorkingDir();
-    var args = ["--no-menu", "--no-recording", "--no-scores", "--no-saves"]; // the flames on the brogue menu will crash most clients since it sends too much data at once
 
-    //Input has been sanity checked in the controller. Any errors from brogue should be caught by the usual handlers
-    if (data) {
-        if (data.savedGame) {
+    var args = "";
 
-            args.push("-o");
-            args.push(data.savedGame);
-        }
-        else if (data.seed || data.seed === "") {
-            var seed = parseInt(data.seed, 10);
+    if(mode == brogueMode.RECORDING) {
+        args = ["--no-menu"];
 
-            args.push("-s");
-            args.push(seed);
+        args.push("-v");
+        args.push(data.recordingPath);
+    }
+    else {
+        args = ["--no-menu", "--no-recording", "--no-scores", "--no-saves"];
+
+        //Input has been sanity checked in the controller. Any errors from brogue should be caught by the usual handlers
+
+        if (data) {
+            if (data.savedGame) {
+
+                args.push("-o");
+                args.push(data.savedGame);
+            }
+            else if (data.seed || data.seed === "") {
+                var seed = parseInt(data.seed, 10);
+
+                args.push("-s");
+                args.push(seed);
+            }
         }
     }
 
@@ -211,6 +229,9 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
         detached: true,
         stdio: 'ignore'
     };
+    console.log(JSON.stringify(args));
+    console.log(config.path.BROGUE);
+    console.log(options);
     this.brogueChild = childProcess.spawn(config.path.BROGUE, args, options);
     this.attachChildProcess();
 };

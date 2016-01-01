@@ -7,6 +7,7 @@ var config = require('../config');
 
 var Controller = require('./controller-base');
 var brogueState = require('../enum/brogue-state');
+var brogueMode = require('../enum/brogue-mode');
 var allUsers = require('../user/all-users');
 var brogueComms = require('../brogue/brogue-comms');
 var gameRecord = require('../database/game-record-model');
@@ -101,6 +102,7 @@ _.extend(BrogueController.prototype, {
                 recording: event.recording
             };
 
+            console.log(JSON.stringify(thisGameRecord));
             //Create save game record
             gameRecord.create(thisGameRecord, function (err) {
                 if (err) {
@@ -136,99 +138,103 @@ _.extend(BrogueController.prototype, {
         this.sendMessage('b', data);
     },
 
+    watchRecording: function (data) {
+
+        if (!this.controllers.auth.currentUserName) {
+            this.sendFailedToStartGameMessage("Can't watch a game if not logged in.");
+            return;
+        }
+
+        console.log(JSON.stringify(data));
+
+        if (!data || !data.recording) {
+            this.sendFailedToStartGameMessage("No game record given to watch.");
+            return;
+        }
+
+        //Lookup recording id in database
+        var splitRecordingId = data.recording.split('-');
+        if(splitRecordingId.length < 2) {
+            this.sendFailedToStartGameMessage("Can't process recording id " + data.recording);
+            return;
+        }
+
+        var id = splitRecordingId[1];
+
+        var self = this;
+
+        gameRecord.findOne({'_id': id}, function (err, gameRecord) {
+            if (err) {
+                self.controllers.error.send(JSON.stringify(err));
+                return;
+            }
+            if (gameRecord) {
+
+                var brogueSessionName = self.controllers.auth.currentUserName + "-" + "recording";
+                console.log(JSON.stringify(gameRecord));
+                data.recordingPath = gameRecord.recording;
+                console.log("Path from db: " + data.recordingPath);
+
+                self.startBrogueSession(brogueSessionName, data, brogueMode.RECORDING);
+
+                //Stop lobby updates for this user
+                self.controllers.lobby.stopUserDataListen();
+            }
+            else {
+                self.sendFailedToStartGameMessage("Can't process recording id " + data.recording);
+                return;
+            }
+        });
+    },
+
     startGameOrObserve: function (data, observing) {
 
         var brogueSessionName;
-        this.readOnly = true;
-
-        if(!observing) {
-            if(!this.controllers.auth.currentUserName) {
-                this.sendFailedToStartGameMessage("Can't start a game if not logged in.");
-            }
-
-            brogueSessionName = this.controllers.auth.currentUserName;
-            this.readOnly = false;
-
-            //Check seed and abort on error
-            if(data && data.seed) {
-                var seed = parseInt(data.seed, 10);
-
-                if (isNaN(seed) || seed < 1 || seed > 4294967295) {
-                    this.sendMessage("seed", {
-                        result : "fail",
-                        data : "Please enter a numerical seed between 1 and 4294967295"
-                    });
-                    return;
-                }
-            }
-        }
-        else {
-            //Observing
-            //Work out if this is the user playing their own game or just observing
-
-            if(data.username === this.controllers.auth.currentUserName) {
-                brogueSessionName = this.controllers.auth.currentUserName;
-                this.readOnly = false;
-            }
-            else {
-                brogueSessionName = data.username;
-            }
-        }
-
-        this.username = brogueSessionName;
-
-        //Connect to brogue interface
+        var mode = brogueMode.OBSERVE;
 
         try {
+            if (!observing) {
+                if (!this.controllers.auth.currentUserName) {
+                    this.sendFailedToStartGameMessage("Can't start a game if not logged in.");
+                    return;
+                }
 
-            //Only spawn new games if the logged in user is requested a game (i.e. not observing)
-            var reconnectOnly = false;
-            if(this.controllers.auth.currentUserName != brogueSessionName) {
-                reconnectOnly = true;
-            }
+                brogueSessionName = this.controllers.auth.currentUserName;
+                mode = brogueMode.GAME;
 
-            this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data, reconnectOnly);
+                //Check seed and abort on error
+                if (data && data.seed) {
+                    var seed = parseInt(data.seed, 10);
 
-            //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
-
-            this.dataListener = this.brogueDataListener.bind(this);
-            this.brogueInterface.addDataListener(this.dataListener);
-
-            this.quitListener = this.brogueQuitListener.bind(this);
-            this.brogueInterface.addQuitListener(this.quitListener);
-
-            this.errorListener = this.brogueErrorListener.bind(this);
-            this.brogueInterface.addErrorListener(this.errorListener);
-
-            this.eventListener = this.brogueEventListener.bind(this);
-            this.brogueInterface.addEventListener(this.eventListener);
-
-            this.statusListener = this.brogueStatusListener.bind(this);
-            this.brogueInterface.addStatusListener(this.statusListener);
-
-            //console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
-
-            //Stop lobby updates for this user
-            this.controllers.lobby.stopUserDataListen();
-
-            //Enter this chat room
-            this.controllers.chat.enterRoom(brogueSessionName);
-
-            //Send a global chat update
-            if (this.readOnly) {
-                this.controllers.chat.broadcastObserve(brogueSessionName);
+                    if (isNaN(seed) || seed < 1 || seed > 4294967295) {
+                        this.sendMessage("seed", {
+                            result: "fail",
+                            data: "Please enter a numerical seed between 1 and 4294967295"
+                        });
+                        return;
+                    }
+                }
             }
             else {
-                this.controllers.chat.broadcastStartGame();
+                //Observing
+
+                if (!data || !data.username) {
+                    this.sendFailedToStartGameMessage("No username given to observe.");
+                    return;
+                }
+
+                //Work out if this is the user playing their own game or just observing
+
+                if (data.username === this.controllers.auth.currentUserName) {
+                    brogueSessionName = this.controllers.auth.currentUserName;
+                    mode = brogueMode.GAME;
+                }
+                else {
+                    brogueSessionName = data.username;
+                }
             }
 
-            //Refresh once the game has had a chance to start (if required)
-            var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
-            setTimeout(refreshMethod, 250);
-
-            if (!this.readOnly) {
-                this.setState(brogueState.ACTIVE);
-            }
+            this.startBrogueSession(brogueSessionName, data, mode);
 
             //If we got here via a seed or save game route, pass messages back to the UI
             if (data && data.seed) {
@@ -236,11 +242,67 @@ _.extend(BrogueController.prototype, {
                     result: "success"
                 });
             }
+
+            //Enter this chat room
+            this.controllers.chat.enterRoom(brogueSessionName);
+
+            //Send a global chat update
+            if (mode == brogueMode.OBSERVE) {
+                this.controllers.chat.broadcastObserve(brogueSessionName);
+            }
+            else {
+                this.controllers.chat.broadcastStartGame();
+            }
+
+            //Stop lobby updates for this user
+            this.controllers.lobby.stopUserDataListen();
+
+            if (mode != brogueMode.OBSERVE) {
+                this.setState(brogueState.ACTIVE);
+            }
         }
         catch (e) {
             //Failed to start game
             this.sendFailedToStartGameMessage("Failed to start game");
         }
+    },
+
+    startBrogueSession: function (sessionName, data, mode) {
+
+        //Connect to brogue interface
+
+        this.username = sessionName;
+
+        this.readOnly = false;
+        if(mode == brogueMode.OBSERVE) {
+            this.readOnly = true;
+        }
+
+        //Only spawn new games if the logged in user is requested a game (i.e. not observing)
+        this.brogueInterface = brogueComms.getBrogueInterface(this.username, data, mode);
+
+        //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
+
+        this.dataListener = this.brogueDataListener.bind(this);
+        this.brogueInterface.addDataListener(this.dataListener);
+
+        this.quitListener = this.brogueQuitListener.bind(this);
+        this.brogueInterface.addQuitListener(this.quitListener);
+
+        this.errorListener = this.brogueErrorListener.bind(this);
+        this.brogueInterface.addErrorListener(this.errorListener);
+
+        this.eventListener = this.brogueEventListener.bind(this);
+        this.brogueInterface.addEventListener(this.eventListener);
+
+        this.statusListener = this.brogueStatusListener.bind(this);
+        this.brogueInterface.addStatusListener(this.statusListener);
+
+        //console.log("Added listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
+
+        //Refresh once the game has had a chance to start (if required)
+        var refreshMethod = this.brogueInterface.sendRefreshScreen.bind(this.brogueInterface);
+        setTimeout(refreshMethod, 250);
     },
 
     sendFailedToStartGameMessage: function(message) {
@@ -277,8 +339,8 @@ _.extend(BrogueController.prototype, {
         observe: function(data) {
             this.startGameOrObserve(data, true)
         },
-        watch: function(data) {
-
+        recording: function(data) {
+            this.watchRecording(data);
         },
         leave: function (data) {
 

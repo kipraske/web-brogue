@@ -127,7 +127,7 @@
 </script>
 
 <script id="welcome" type="text/template">
-    <div><% if (observing) { %>Observing <%= observingUsername %> |<% } %><% if (playing) { %> Playing |<% } %> <%= username %> | <% if (playing || observing) { %> <a id="headerLobby" href="#lobbyLink">Lobby</a> |<% } %> <a id="logout" href="#logout">Logout</a></div>
+    <div><% if (observing) { %>Observing <%= observingUsername %> |<% } %><% if (playing) { %> Playing |<% } %> <%= username %> |<% if (recording) { %> Watching <%= recordingId %> |<% } %><% if (playing || observing) { %> <a id="headerLobby" href="#lobbyLink">Lobby</a> |<% } %> <a id="logout" href="#logout">Logout</a></div>
 </script>
 
 <script id="current-games-heading" type ="text/template">

@@ -3,8 +3,11 @@
 define([
     "jquery",
     "underscore",
-    "backbone"
-], function ($, _, Backbone) {
+    "backbone",
+    "dispatcher",
+    "dataIO/send-generic",
+    "views/view-activation-helpers"
+], function ($, _, Backbone, dispatcher, send, activate) {
 
     var HighScoresView = Backbone.View.extend({
 
@@ -20,6 +23,8 @@ define([
             this.listenTo(this.model, "add", this.render);
             this.listenTo(this.model, "change", this.render);
 
+            var self = this;
+
             var WatchGameUriCell = Backgrid.UriCell.extend({
 
                 events : {
@@ -32,9 +37,9 @@ define([
                     var gameId = $(event.target).data("gameid");
 
                     console.log("watch game clicked: " + gameId);
-                    //send("brogue", "start", {username: userName});
-                    //dispatcher.trigger("observeGame", {username: userName});
-                    //this.goToConsole();
+                    send("brogue", "recording", {recording: gameId});
+                    dispatcher.trigger("recordingGame", {recording: gameId});
+                    self.goToConsole();
                 },
 
                 render: function () {
@@ -150,6 +155,10 @@ define([
 
             this.model.setAllScores();
             this.refresh();
+        },
+        goToConsole : function(){
+            activate.console();
+            dispatcher.trigger("showConsole");
         }
     });
 

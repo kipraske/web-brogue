@@ -115,6 +115,7 @@ require([
 
     dispatcher.on("startGame", headerView.startGame, headerView);
     dispatcher.on("observeGame", headerView.observeGame, headerView);
+    dispatcher.on("recordingGame", headerView.recordingGame, headerView);
     dispatcher.on("leaveGame", headerView.leaveGame, headerView);
 
     dispatcher.on("reconnect", authView.requestLogin, authView);

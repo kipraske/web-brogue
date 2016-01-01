@@ -52,7 +52,8 @@ define([
             //console.log("start game");
             this.userModel.set({
                 playing: true,
-                observing: false
+                observing: false,
+                recording: false
             });
             this.render();
         },
@@ -61,7 +62,8 @@ define([
             //console.log("leave game");
             this.userModel.set({
                 playing: false,
-                observing: false
+                observing: false,
+                recording: false
             });
             this.render();
         },
@@ -83,6 +85,7 @@ define([
                 this.userModel.set({
                     playing: true,
                     observing: false,
+                    recording: false,
                     observingUsername: data.username
                 });
             }
@@ -90,9 +93,21 @@ define([
                 this.userModel.set({
                     playing: false,
                     observing: true,
+                    recording: false,
                     observingUsername: data.username
                 });
             }
+            this.render();
+        },
+
+        recordingGame: function(data) {
+
+            this.userModel.set({
+                playing: false,
+                observing: false,
+                recording: true,
+                recordingId: data.recording
+            });
             this.render();
         }
         
