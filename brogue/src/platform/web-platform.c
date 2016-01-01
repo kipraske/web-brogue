@@ -207,7 +207,7 @@ static void sendStatusUpdate() {
 // This function is used both for checking input and pausing
 static boolean web_pauseForMilliseconds(short milliseconds)
 {
-  usleep(milliseconds);
+  usleep(milliseconds * 1000);
 
   //Poll for input data
 
