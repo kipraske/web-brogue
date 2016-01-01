@@ -173,8 +173,6 @@ BrogueInterface.prototype.start = function (data, mode) {
         //    this.brogueSocket.close();
         //}
 
-        console.log("mode" + mode);
-
         if(mode != brogueMode.OBSERVE) {
             this.newBrogueProcess(data, mode);
         }
@@ -225,9 +223,6 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
         detached: true,
         stdio: 'ignore'
     };
-    console.log(JSON.stringify(args));
-    console.log(config.path.BROGUE);
-    console.log(options);
     this.brogueChild = childProcess.spawn(config.path.BROGUE, args, options);
     this.attachChildProcess();
 };
@@ -475,8 +470,6 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
         eventData.eventId === brogueConstants.gameOver.GAMEOVER_VICTORY ||
         eventData.eventId === brogueConstants.gameOver.GAMEOVER_SUPERVICTORY ||
         eventData.eventId === brogueConstants.gameOver.GAMEOVER_RECORDING) {
-
-        console.log("sending quit");
 
         self.killBrogue(self);
         self.disconnectBrogue(self);

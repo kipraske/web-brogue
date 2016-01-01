@@ -83,7 +83,7 @@ _.extend(BrogueController.prototype, {
 
         //Add record to the database (only if owner of game)
         //TODO: Maybe just one eventId for end game events?
-        if(!this.readOnly && (
+        if(this.mode == brogueMode.GAME && (
             event.eventId === brogueConstants.gameOver.GAMEOVER_QUIT ||
             event.eventId === brogueConstants.gameOver.GAMEOVER_DEATH ||
             event.eventId === brogueConstants.gameOver.GAMEOVER_VICTORY ||
@@ -102,7 +102,6 @@ _.extend(BrogueController.prototype, {
                 recording: event.recording
             };
 
-            console.log(JSON.stringify(thisGameRecord));
             //Create save game record
             gameRecord.create(thisGameRecord, function (err) {
                 if (err) {
@@ -118,7 +117,7 @@ _.extend(BrogueController.prototype, {
     },
 
     brogueStatusListener: function (status) {
-        if(!this.readOnly) {
+        if(this.mode == brogueMode.GAME) {
             if(!allUsers.isUserValid(this.controllers.auth.currentUserName)) {
                 //This is a funny exception to deal with the case when the user has logged out from one window
                 //but is still playing
@@ -145,8 +144,6 @@ _.extend(BrogueController.prototype, {
             return;
         }
 
-        console.log(JSON.stringify(data));
-
         if (!data || !data.recording) {
             this.sendFailedToStartGameMessage("No game record given to watch.");
             return;
@@ -171,9 +168,7 @@ _.extend(BrogueController.prototype, {
             if (gameRecord) {
 
                 var brogueSessionName = self.controllers.auth.currentUserName + "-" + brogueConstants.paths.RECORDING;
-                console.log(JSON.stringify(gameRecord));
                 data.recordingPath = gameRecord.recording;
-                console.log("Path from db: " + data.recordingPath);
 
                 self.startBrogueSession(brogueSessionName, data, brogueMode.RECORDING);
 
@@ -273,10 +268,7 @@ _.extend(BrogueController.prototype, {
 
         this.username = sessionName;
 
-        this.readOnly = false;
-        if(mode == brogueMode.OBSERVE) {
-            this.readOnly = true;
-        }
+        this.mode = mode;
 
         //Only spawn new games if the logged in user is requested a game (i.e. not observing)
         this.brogueInterface = brogueComms.getBrogueInterface(this.username, data, mode);
@@ -320,7 +312,7 @@ _.extend(BrogueController.prototype, {
                 return;
             }
 
-            if(this.readOnly) {
+            if(this.mode == brogueMode.OBSERVE) {
                 return;
             }
 
@@ -344,10 +336,10 @@ _.extend(BrogueController.prototype, {
         },
         leave: function (data) {
 
-            if(this.readOnly) {
+            if(this.mode == brogueMode.OBSERVE) {
                 this.controllers.chat.broadcastStopObserve(this.username);
             }
-            else {
+            if(this.mode == brogueMode.GAME) {
                 this.controllers.chat.broadcastLeaveGame();
             }
 
@@ -366,7 +358,7 @@ _.extend(BrogueController.prototype, {
         //TODO: If required, this needs to migrate to interface
         kill: function (data) {
 
-            if(!this.readOnly) {
+            if(this.mode == brogueMode.GAME) {
                 allUsers.setState(this.username, brogueState.INACTIVE);
             }
 
