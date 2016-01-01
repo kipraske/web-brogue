@@ -97,7 +97,8 @@ _.extend(BrogueController.prototype, {
                 level: event.level,
                 result: event.eventId,
                 easyMode: Boolean(event.easyMode),
-                description: event.message
+                description: event.message,
+                recording: event.recording
             };
 
             //Create save game record
@@ -199,7 +200,7 @@ _.extend(BrogueController.prototype, {
                 if(this.controllers.auth.currentUserName != brogueSessionName) {
                     reconnectOnly = true;
                 }
-                
+
                 this.brogueInterface = brogueComms.getBrogueInterface(brogueSessionName, data, reconnectOnly);
 
                 //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);

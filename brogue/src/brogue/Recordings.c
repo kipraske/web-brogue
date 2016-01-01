@@ -1039,6 +1039,19 @@ void saveGame() {
 	deleteMessages();
 }
 
+void saveRecordingNoPrompt(char *filePath) {
+
+	if (rogue.playbackMode) {
+		return;
+	}
+
+	getAvailableFilePath(filePath, "Recording", RECORDING_SUFFIX);
+	strcat(filePath, RECORDING_SUFFIX);
+
+	remove(filePath);
+	rename(currentFilePath, filePath);
+}
+
 void saveRecording() {
 	char filePath[BROGUE_FILENAME_MAX], defaultPath[BROGUE_FILENAME_MAX];
 	boolean askAgain;

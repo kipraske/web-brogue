@@ -282,12 +282,12 @@ static boolean modifier_held(int modifier) {
 	return 0;
 }
 
-static void notify_event(short eventId, short data1, short data2, const char *str) {
+static void notify_event(short eventId, short data1, short data2, const char *str1, const char *str2) {
 
   char statusOutputBuffer[EVENT_SIZE];
-  char msg[80];
+  char msg[100];
 
-  snprintf(msg, 80, "event: %i d1: %i d2: %i s: %s\n", eventId, data1, data2, str);
+  snprintf(msg, 100, "event: %i d1: %i d2: %i s1: %s s2: %s\n", eventId, data1, data2, str1, str2);
   write_to_log(msg);
 
   // Coordinates of (254, 254) will let the server and client know that this is a event notification update rather than a cell update
@@ -315,13 +315,21 @@ static void notify_event(short eventId, short data1, short data2, const char *st
   statusOutputBuffer[17] = rogue.seed >> 8 & 0xff;
   statusOutputBuffer[18] = rogue.seed;
 
-  // The rest is filler so we keep consistent output size
+  // Copy str1 (death message)
 
   int j;
-  int msg_start = 19;
-  for (j = msg_start; j < EVENT_SIZE; j++){
-      statusOutputBuffer[j] = str[j - msg_start];
-      if(!str[j - msg_start])
+  int msg1_start = 19;
+  int msg1_end = 70;
+  for (j = msg1_start; j < msg1_end; j++){
+      statusOutputBuffer[j] = str1[j - msg1_start];
+      if(!str1[j - msg1_start])
+        break;
+  }
+
+  int msg2_end = EVENT_SIZE;
+  for (j = msg1_end; j < msg2_end; j++){
+      statusOutputBuffer[j] = str2[j - msg1_end];
+      if(!str2[j - msg1_end])
         break;
   }
 

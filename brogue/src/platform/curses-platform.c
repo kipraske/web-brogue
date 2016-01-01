@@ -215,7 +215,7 @@ static boolean modifier_held(int modifier) {
 	return 0;
 }
 
-static void notify_event(short eventId, short data1, short data2, const char *str) {
+static void notify_event(short eventId, short data1, short data2, const char *str1, const char *str2) {
   //Unused
 }
 

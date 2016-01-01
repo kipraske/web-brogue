@@ -332,18 +332,32 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 15] * 256 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 16];
 
-                var messageStart = i + EVENT_DATA_OFFSET + 17;
+                var message1Start = i + EVENT_DATA_OFFSET + 17;
                 var eventEnd = i + EVENT_DATA_LENGTH;
 
-                for(var j = messageStart; j < eventEnd; j++) {
+                for(var j = message1Start; j < eventEnd; j++) {
                     if(self.dataAccumulator[j] == 0) {
                         break;
                     }
                 }
 
-                var messageLength = j - 1;
+                var message1End = j;
 
-                var eventStr = self.dataAccumulator.slice(messageStart, messageLength).toString('utf8');
+                var message2Start = i + EVENT_DATA_OFFSET + 68;
+                for(var k = message2Start; k < eventEnd; k++) {
+                    if(self.dataAccumulator[k] == 0) {
+                        break;
+                    }
+                }
+
+                var message2End = k;
+
+                var eventStr1 = self.dataAccumulator.slice(message1Start, message1End).toString('utf8');
+                var eventStr2 = self.dataAccumulator.slice(message2Start, message2End).toString('utf8');
+
+                var makePathForRecording = function(recordingFilename) {
+                    return self.getChildWorkingDir() + "/" + recordingFilename;
+                };
 
                 var eventData = {
                     date: Date.now(),
@@ -354,7 +368,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     level: level,
                     seed: seed,
                     easyMode: easyMode,
-                    message: eventStr
+                    message: eventStr1,
+                    recording: makePathForRecording(eventStr2)
                 };
 
                 self.brogueEvents.emit('event', eventData);
