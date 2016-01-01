@@ -168,9 +168,10 @@ BrogueInterface.prototype.start = function (data, reconnectOnly) {
         //If the game doesn't exist, and we are trying to play (not observe),
         //create a new game
 
-        if(this.brogueSocket != null) {
-            this.brogueSocket.close();
-        }
+        //This 'book-keeping' triggers an error -9 at the moment, booting the player, so it has been disabled
+        //if(this.brogueSocket != null) {
+        //    this.brogueSocket.close();
+        //}
 
         if(!reconnectOnly) {
             this.newBrogueProcess(data);
