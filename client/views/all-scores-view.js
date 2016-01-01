@@ -48,13 +48,15 @@ define([
                     this.$el.empty();
                     var rawValue = this.model.get(this.column.get("name"));
                     var formattedValue = this.formatter.fromRaw(rawValue, this.model);
-                    this.$el.append($("<a>", {
-                        href: '#brogue',
-                        title: this.model.title,
-                        id: 'watch-game',
-                        "data-gameid": formattedValue,
-                        "data-gamedescription": this.model.get("username") + "-" + this.model.get("seed") + "-" + self.formatDate(this.model.get("date"))
-                    }).text("Watch game"));
+                    if(formattedValue) {
+                        this.$el.append($("<a>", {
+                            href: '#brogue',
+                            title: this.model.title,
+                            id: 'watch-game',
+                            "data-gameid": formattedValue,
+                            "data-gamedescription": this.model.get("username") + "-" + this.model.get("seed") + "-" + self.formatDate(this.model.get("date"))
+                        }).text("Watch game"));
+                    }
                     this.delegateEvents();
                     return this;
                 }
