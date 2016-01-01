@@ -4,7 +4,11 @@ define([
     "jquery",
     "underscore",
     "backbone",
-], function ($, _, Backbone) {
+    "dispatcher",
+    "dataIO/send-generic",
+    "views/view-activation-helpers",
+    "moment"
+], function ($, _, Backbone, dispatcher, send, activate, Moment) {
 
     var AllScoresView = Backbone.View.extend({
         el: '#all-scores',
@@ -20,6 +24,41 @@ define([
         initialize: function() {
             this.listenTo(this.model, "add", this.render);
             this.listenTo(this.model, "change", this.render);
+
+            var self = this;
+
+            var WatchGameUriCell = Backgrid.UriCell.extend({
+
+                events : {
+                    "click #watch-game" : "watchGame"
+                },
+
+                watchGame: function(event){
+                    event.preventDefault();
+
+                    var gameId = $(event.target).data("gameid");
+                    var gameDescription = $(event.target).data("gamedescription");
+
+                    send("brogue", "recording", {recording: gameId});
+                    dispatcher.trigger("recordingGame", {recording: gameDescription});
+                    self.goToConsole();
+                },
+
+                render: function () {
+                    this.$el.empty();
+                    var rawValue = this.model.get(this.column.get("name"));
+                    var formattedValue = this.formatter.fromRaw(rawValue, this.model);
+                    this.$el.append($("<a>", {
+                        href: '#brogue',
+                        title: this.model.title,
+                        id: 'watch-game',
+                        "data-gameid": formattedValue,
+                        "data-gamedescription": this.model.get("username") + "-" + this.model.get("seed") + "-" + self.formatDate(this.model.get("date"))
+                    }).text("Watch game"));
+                    this.delegateEvents();
+                    return this;
+                }
+            });
 
             this.grid = new Backgrid.Grid({
                 columns: [
@@ -57,6 +96,12 @@ define([
                         name: "description",
                         label: "Message",
                         cell: "string",
+                        sortable: false,
+                        editable: false
+                    }, {
+                        name: "recording",
+                        label: "Recording",
+                        cell: WatchGameUriCell,
                         sortable: false,
                         editable: false
                     }],
@@ -139,7 +184,16 @@ define([
 
             this.model.setMonthlyTopScores();
             this.refresh();
-        }
+        },
+
+        goToConsole : function(){
+            activate.console();
+            dispatcher.trigger("showConsole");
+        },
+
+        formatDate: function(date) {
+            return Moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        },
     });
 
     return AllScoresView;

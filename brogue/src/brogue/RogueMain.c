@@ -1193,6 +1193,9 @@ void gameOver(char *killedBy, boolean useCustomPhrasing) {
 			notifyEvent(GAMEOVER_QUIT, theEntry.score, 0, theEntry.description, recordingFilename);
   	}
 	}
+	else {
+		notifyEvent(GAMEOVER_RECORDING, 0, 0, "recording ended", "none");
+	}
 
 	rogue.gameHasEnded = true;
 }
@@ -1314,11 +1317,16 @@ void victory(boolean superVictory) {
 		printHighScores(qualified);
 	}
 
-	if(superVictory) {
-		notifyEvent(GAMEOVER_SUPERVICTORY, theEntry.score, 0, theEntry.description, recordingFilename);
+	if (!rogue.playbackMode) {
+		if(superVictory) {
+			notifyEvent(GAMEOVER_SUPERVICTORY, theEntry.score, 0, theEntry.description, recordingFilename);
+		}
+		else {
+			notifyEvent(GAMEOVER_VICTORY, theEntry.score, 0, theEntry.description, recordingFilename);
+		}
 	}
 	else {
-		notifyEvent(GAMEOVER_VICTORY, theEntry.score, 0, theEntry.description, recordingFilename);
+		notifyEvent(GAMEOVER_RECORDING, 0, 0, "recording ended", "none");
 	}
 
 	rogue.gameHasEnded = true;

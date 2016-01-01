@@ -6,8 +6,9 @@ define([
     "backbone",
     "dispatcher",
     "dataIO/send-generic",
-    "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, send, activate) {
+    "views/view-activation-helpers",
+    'moment'
+], function ($, _, Backbone, dispatcher, send, activate, Moment) {
 
     var HighScoresView = Backbone.View.extend({
 
@@ -35,10 +36,10 @@ define([
                     event.preventDefault();
 
                     var gameId = $(event.target).data("gameid");
+                    var gameDescription = $(event.target).data("gamedescription");
 
-                    console.log("watch game clicked: " + gameId);
                     send("brogue", "recording", {recording: gameId});
-                    dispatcher.trigger("recordingGame", {recording: gameId});
+                    dispatcher.trigger("recordingGame", {recording: gameDescription});
                     self.goToConsole();
                 },
 
@@ -50,7 +51,8 @@ define([
                         href: '#brogue',
                         title: this.model.title,
                         id: 'watch-game',
-                        "data-gameid": formattedValue
+                        "data-gameid": formattedValue,
+                        "data-gamedescription": this.model.get("username") + "-" + this.model.get("seed") + "-" + self.formatDate(this.model.get("date"))
                     }).text("Watch game"));
                     this.delegateEvents();
                     return this;
@@ -156,10 +158,15 @@ define([
             this.model.setAllScores();
             this.refresh();
         },
+
         goToConsole : function(){
             activate.console();
             dispatcher.trigger("showConsole");
-        }
+        },
+
+        formatDate: function(date) {
+            return Moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        },
     });
 
     return HighScoresView;
