@@ -84,10 +84,10 @@ _.extend(BrogueController.prototype, {
         //Add record to the database (only if owner of game)
         //TODO: Maybe just one eventId for end game events?
         if(!this.readOnly && (
-            event.eventId === brogueConstants.GAMEOVER_QUIT ||
-            event.eventId === brogueConstants.GAMEOVER_DEATH ||
-            event.eventId === brogueConstants.GAMEOVER_VICTORY ||
-            event.eventId === brogueConstants.GAMEOVER_SUPERVICTORY)) {
+            event.eventId === brogueConstants.gameOver.GAMEOVER_QUIT ||
+            event.eventId === brogueConstants.gameOver.GAMEOVER_DEATH ||
+            event.eventId === brogueConstants.gameOver.GAMEOVER_VICTORY ||
+            event.eventId === brogueConstants.gameOver.GAMEOVER_SUPERVICTORY)) {
 
             var self = this;
             var thisGameRecord = {
@@ -170,7 +170,7 @@ _.extend(BrogueController.prototype, {
             }
             if (gameRecord) {
 
-                var brogueSessionName = self.controllers.auth.currentUserName + "-" + "recording";
+                var brogueSessionName = self.controllers.auth.currentUserName + "-" + brogueConstants.paths.RECORDING;
                 console.log(JSON.stringify(gameRecord));
                 data.recordingPath = gameRecord.recording;
                 console.log("Path from db: " + data.recordingPath);

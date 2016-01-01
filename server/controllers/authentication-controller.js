@@ -5,6 +5,7 @@ var Controller = require('./controller-base');
 var User = require('../user/user-model');
 var cleanUp = require("./cleanup-controllers.js");
 var sessions = require('client-sessions');
+var brogueConstants = require('../brogue/brogue-constants');
 
 // Controller for handling user authentication over the web socket
 
@@ -146,21 +147,28 @@ _.extend(AuthController.prototype, {
                     // TODO: should not send errors to the client
                     fs.mkdir(config.path.GAME_DATA_DIR + data.username, 0755, function (err) {
 
-                        if (err.code != "EEXIST") {
+                        if (err && err.code != "EEXIST") {
                             self.controllers.error.send(JSON.stringify(err));
                         }
 
-                        newUser.save(function (err) {
-                            if (err) {
+                        fs.mkdir(config.path.GAME_DATA_DIR + data.username + "-" + brogueConstants.paths.RECORDING, 0755, function (err) {
+
+                            if (err && err.code != "EEXIST") {
                                 self.controllers.error.send(JSON.stringify(err));
                             }
 
-                            self.sendMessage("auth", {
-                                result: "success",
-                                data: {
-                                    message: "registered",
-                                    token: newUser.sessionId
+                            newUser.save(function (err) {
+                                if (err) {
+                                    self.controllers.error.send(JSON.stringify(err));
                                 }
+
+                                self.sendMessage("auth", {
+                                    result: "success",
+                                    data: {
+                                        message: "registered",
+                                        token: newUser.sessionId
+                                    }
+                                });
                             });
                         });
                     });

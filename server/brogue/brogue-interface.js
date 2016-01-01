@@ -137,14 +137,10 @@ BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callba
     this.sendToBrogue(message, callback);
 };
 
-
 BrogueInterface.prototype.getChildWorkingDir = function () {
 
-    var usernameRoot = this.username.split('-')[0];
-
-    return config.path.GAME_DATA_DIR + usernameRoot;
-},
-
+    return config.path.GAME_DATA_DIR + this.username;
+};
 
 BrogueInterface.prototype.start = function (data, mode) {
 
@@ -474,10 +470,10 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
     //Analyse brogue messages and do suitable processing, before passing back to the controller
 
     //Kill the brogue process on quit (save a keypress and make sure it dies)
-    if(eventData.eventId === brogueConstants.GAMEOVER_QUIT ||
-        eventData.eventId === brogueConstants.GAMEOVER_DEATH ||
-        eventData.eventId === brogueConstants.GAMEOVER_VICTORY ||
-        eventData.eventId === brogueConstants.GAMEOVER_SUPERVICTORY) {
+    if(eventData.eventId === brogueConstants.gameOver.GAMEOVER_QUIT ||
+        eventData.eventId === brogueConstants.gameOver.GAMEOVER_DEATH ||
+        eventData.eventId === brogueConstants.gameOver.GAMEOVER_VICTORY ||
+        eventData.eventId === brogueConstants.gameOver.GAMEOVER_SUPERVICTORY) {
 
         self.killBrogue(self);
         self.disconnectBrogue(self);
