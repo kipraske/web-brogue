@@ -32,7 +32,6 @@ define([
             return Moment(date).format('MMMM Do YYYY, h:mm:ss a');
         },
 
-        // get the state from Github's search API result
         parseState: function (resp, queryParams, state, options) {
             return {totalRecords: resp.itemCount };
         },

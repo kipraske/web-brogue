@@ -20,6 +20,38 @@ define([
             this.listenTo(this.model, "add", this.render);
             this.listenTo(this.model, "change", this.render);
 
+            var WatchGameUriCell = Backgrid.UriCell.extend({
+
+                events : {
+                    "click #watch-game" : "watchGame"
+                },
+
+                watchGame: function(event){
+                    event.preventDefault();
+
+                    var gameId = $(event.target).data("gameid");
+
+                    console.log("watch game clicked: " + gameId);
+                    //send("brogue", "start", {username: userName});
+                    //dispatcher.trigger("observeGame", {username: userName});
+                    //this.goToConsole();
+                },
+
+                render: function () {
+                    this.$el.empty();
+                    var rawValue = this.model.get(this.column.get("name"));
+                    var formattedValue = this.formatter.fromRaw(rawValue, this.model);
+                    this.$el.append($("<a>", {
+                        href: '#brogue',
+                        title: this.model.title,
+                        id: 'watch-game',
+                        "data-gameid": formattedValue
+                    }).text("Watch game"));
+                    this.delegateEvents();
+                    return this;
+                }
+            });
+
             this.grid = new Backgrid.Grid({
                 columns: [
                     {
@@ -56,6 +88,12 @@ define([
                         name: "description",
                         label: "Message",
                         cell: "string",
+                        sortable: false,
+                        editable: false
+                    }, {
+                        name: "id",
+                        label: "Recording",
+                        cell: WatchGameUriCell,
                         sortable: false,
                         editable: false
                     }],
