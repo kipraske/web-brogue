@@ -221,6 +221,14 @@ _.extend(AuthController.prototype, {
 
         this.currentUserName = username;
 
+        //As of the playback changes, everyone is required to have a -recordings directory.
+        //This code adds it for established users who would have registered before the change
+        fs.mkdir(config.path.GAME_DATA_DIR + this.currentUserName + "-" + brogueConstants.paths.RECORDING, 0755, function (err) {
+            if (err && err.code != "EEXIST") {
+                self.controllers.error.send(JSON.stringify(err));
+            }
+        });
+
         this.sendMessage("auth", {
             result: "success",
             data: {

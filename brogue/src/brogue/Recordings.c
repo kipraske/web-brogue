@@ -929,6 +929,10 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 				rogue.gameHasEnded = true;
 				rogue.playbackOOS = false;
                 rogue.creaturesWillFlashThisTurn = false;
+
+      	//Notify the server that the recording is over
+        notifyEvent(GAMEOVER_RECORDING, 0, 0, "recording ended", "none");
+
 				break;
             case TRUE_COLORS_KEY:
                 rogue.trueColorMode = !rogue.trueColorMode;

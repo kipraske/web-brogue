@@ -473,7 +473,10 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
     if(eventData.eventId === brogueConstants.gameOver.GAMEOVER_QUIT ||
         eventData.eventId === brogueConstants.gameOver.GAMEOVER_DEATH ||
         eventData.eventId === brogueConstants.gameOver.GAMEOVER_VICTORY ||
-        eventData.eventId === brogueConstants.gameOver.GAMEOVER_SUPERVICTORY) {
+        eventData.eventId === brogueConstants.gameOver.GAMEOVER_SUPERVICTORY ||
+        eventData.eventId === brogueConstants.gameOver.GAMEOVER_RECORDING) {
+
+        console.log("sending quit");
 
         self.killBrogue(self);
         self.disconnectBrogue(self);
