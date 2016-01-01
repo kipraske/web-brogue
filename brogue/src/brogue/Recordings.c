@@ -30,6 +30,8 @@
 
 #pragma mark Recording functions
 
+extern boolean noSaves;
+
 void recordChar(unsigned char c) {
 	inputRecordBuffer[locationInRecordingBuffer++] = c;
 	recordingLocation++;
@@ -889,6 +891,9 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 				rogue.playbackMode = true;
 				break;
 			case VIEW_RECORDING_KEY:
+				if (noSaves) {
+        	return;
+        }
 				confirmMessages();
 				rogue.playbackMode = false;
 				if (dialogChooseFile(path, RECORDING_SUFFIX, "View recording: ")) {
@@ -903,6 +908,9 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 				rogue.playbackMode = true;
 				break;
 			case LOAD_SAVED_GAME_KEY:
+				if (noSaves) {
+        	return;
+        }
 				confirmMessages();
 				rogue.playbackMode = false;
 				if (dialogChooseFile(path, GAME_SUFFIX, "Open saved game: ")) {

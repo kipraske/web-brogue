@@ -189,7 +189,7 @@ BrogueInterface.prototype.newBrogueProcess = function(data, mode) {
     var args = "";
 
     if(mode == brogueMode.RECORDING) {
-        args = ["--no-menu"];
+        args = ["--no-menu", "--no-saves"];
 
         args.push("-v");
         args.push(data.recordingPath);

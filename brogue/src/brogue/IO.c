@@ -285,22 +285,25 @@ short actionMenu(short x, boolean playingBack) {
                 }
                 buttons[buttonCount].hotkey[0] = SAVE_GAME_KEY;
                 buttonCount++;
+
+                if (KEYBOARD_LABELS) {
+                    sprintf(buttons[buttonCount].text, "  %sO: %sOpen suspended game  ",		yellowColorEscape, whiteColorEscape);
+                } else {
+                    strcpy(buttons[buttonCount].text, "  Open suspended game  ");
+                }
+                buttons[buttonCount].hotkey[0] = LOAD_SAVED_GAME_KEY;
+                buttonCount++;
             }
+        }
+        if(!noSaves) {
             if (KEYBOARD_LABELS) {
-                sprintf(buttons[buttonCount].text, "  %sO: %sOpen suspended game  ",		yellowColorEscape, whiteColorEscape);
+                sprintf(buttons[buttonCount].text, "  %sV: %sView saved recording  ",		yellowColorEscape, whiteColorEscape);
             } else {
-                strcpy(buttons[buttonCount].text, "  Open suspended game  ");
+                strcpy(buttons[buttonCount].text, "  View saved recording  ");
             }
-            buttons[buttonCount].hotkey[0] = LOAD_SAVED_GAME_KEY;
-            
+            buttons[buttonCount].hotkey[0] = VIEW_RECORDING_KEY;
+            buttonCount++;
         }
-        if (KEYBOARD_LABELS) {
-            sprintf(buttons[buttonCount].text, "  %sV: %sView saved recording  ",		yellowColorEscape, whiteColorEscape);
-        } else {
-            strcpy(buttons[buttonCount].text, "  View saved recording  ");
-        }
-        buttons[buttonCount].hotkey[0] = VIEW_RECORDING_KEY;
-        buttonCount++;
         sprintf(buttons[buttonCount].text, "    %s---", darkGrayColorEscape);
         buttons[buttonCount].flags &= ~B_ENABLED;
         buttonCount++;
@@ -2503,6 +2506,9 @@ void executeKeystroke(signed long keystroke, boolean controlKey, boolean shiftKe
 			if (rogue.playbackMode) {
 				return;
 			}
+			if (noSaves) {
+        return;
+      }
 			confirmMessages();
 			if ((rogue.playerTurnNumber < 50 || confirm("End this game and view a recording?", false))
 				&& dialogChooseFile(path, RECORDING_SUFFIX, "View recording: ")) {
@@ -2519,6 +2525,9 @@ void executeKeystroke(signed long keystroke, boolean controlKey, boolean shiftKe
 			if (rogue.playbackMode) {
 				return;
 			}
+			if (noSaves) {
+        return;
+      }
 			confirmMessages();
 			if ((rogue.playerTurnNumber < 50 || confirm("End this game and load a saved game?", false))
 				&& dialogChooseFile(path, GAME_SUFFIX, "Open saved game: ")) {
