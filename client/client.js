@@ -42,6 +42,7 @@ require([
     "dataIO/router",
     "models/high-scores",
     "models/chat",
+    "models/site-news-collection",
     "views/view-activation-helpers",
     "views/auth-view",
     "views/chat-view",
@@ -52,11 +53,12 @@ require([
     "views/saved-games-view",
     "views/mini-scores-view",
     "views/all-scores-view",
+    "views/site-news-view",
     "views/console-view",
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsCollection, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -70,6 +72,9 @@ require([
     var consoleView = new ConsoleView();
     var chatView = new ChatView({model: new ChatModel()});
     var consoleChatView = new ConsoleChatView({model: new ChatModel()});
+    var siteNewsCollection = new SiteNewsCollection();
+    siteNewsCollection.addDefaultData();
+    var siteNewsView = new SiteNewsView({collection: siteNewsCollection});
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
         seedView : new SeedPopupView(),

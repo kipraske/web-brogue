@@ -39,6 +39,7 @@
     <div id="saved-games" class="saved-games inactive"></div>
     <div id="mini-scores" class="mini-scores"></div>
     <div id="all-scores" class="all-scores inactive"></div>
+    <div id="site-news" class="site-news"></div>
 
 </div>
 <div id="console-holder" class="console-holder inactive">
@@ -128,6 +129,20 @@
 
 <script id="welcome" type="text/template">
     <div><% if (observing) { %>Observing <%= observingUsername %> |<% } %><% if (playing) { %> Playing |<% } %> <%= username %> |<% if (recording) { %> Watching <%= recordingId %> |<% } %><% if (playing || observing || recording) { %> <a id="headerLobby" href="#lobbyLink">Lobby</a> |<% } %> <a id="logout" href="#logout">Logout</a></div>
+</script>
+
+<script id="site-news-heading" type ="text/template">
+    <h2>Site News</h2>
+    <% if (isEmpty) { %>
+    <p> There is no site news at this time</p>
+    <% } else { %>
+    <ul id="site-news-table">
+    </ul>
+    <% } %>
+</script>
+
+<script id="site-news-row" type="text/template">
+    <li><%= date %>: <%= description %></li>
 </script>
 
 <script id="current-games-heading" type ="text/template">

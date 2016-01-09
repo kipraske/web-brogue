@@ -87,6 +87,7 @@ button {
 .current-games,
 .saved-games,
 .mini-scores,
+.site-news,
 .all-scores {
     margin: 0 2.5%;
     box-sizing: border-box;
@@ -191,6 +192,7 @@ button {
     .current-games,
     .saved-games,
     .mini-scores,
+    .site-news,
     .all-scores {
         margin: 0 2.5% 0 7.5%;
         padding-left: 400px;
