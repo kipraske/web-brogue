@@ -17,6 +17,12 @@ define([
                 "description": "Fixed score wrapping bug which affected scores above 65535. Guess why I never noticed this :)"
             });
             this.add(note);
+            var note = new SiteNews();
+            note.set({
+                "date": new Date(2016, 1, 12, 0, 0, 0),
+                "description": "Closing a watched recording now exits - you don't need to press Q"
+            });
+            this.add(note);
         }
     });
 
