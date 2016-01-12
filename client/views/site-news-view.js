@@ -2,9 +2,8 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    "moment",
     "views/site-news-row-view"
-], function ($, _, Backbone, Moment, SiteNewsRowView) {
+], function ($, _, Backbone, SiteNewsRowView) {
 
     var SiteNewsView = Backbone.View.extend({
 

@@ -1,8 +1,9 @@
 define([
     "jquery",
     "underscore",
-    "backbone"
-], function ($, _, Backbone) {
+    "backbone",
+    "moment"
+], function ($, _, Backbone, Moment) {
 
     var SiteNewsRowView = Backbone.View.extend({
         tagName: "li",
@@ -11,8 +12,17 @@ define([
         template : _.template($('#site-news-row').html()),
 
         render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
+
+            var objectToRender = {
+                date: this.formatDate(this.model.get("date")),
+                description: this.model.get("description")
+            };
+
+            this.$el.html(this.template(objectToRender));
             return this;
+        },
+        formatDate: function(date) {
+            return Moment(date).format('MMMM Do YYYY');
         }
     });
 
