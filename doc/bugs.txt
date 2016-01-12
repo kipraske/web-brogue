@@ -18,10 +18,15 @@ If you are logged in during server restart and play, your highscore entry has no
 
 Logging in as a different user does not update continue game / observe correctly on current games display
 
-NEXT #21
+
+NEXT #22
 
 
 FIXED
+
+#21
+
+Scores above 65335 are wrapped
 
 #20
 

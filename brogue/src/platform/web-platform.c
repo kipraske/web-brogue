@@ -282,7 +282,7 @@ static boolean modifier_held(int modifier) {
 	return 0;
 }
 
-static void notify_event(short eventId, short data1, short data2, const char *str1, const char *str2) {
+static void notify_event(short eventId, int data1, int data2, const char *str1, const char *str2) {
 
   char statusOutputBuffer[EVENT_SIZE];
   char msg[100];

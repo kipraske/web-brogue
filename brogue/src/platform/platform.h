@@ -7,7 +7,7 @@ struct brogueConsole {
 	void (*plotChar)(uchar, short, short, short, short, short, short, short, short);
 	void (*remap)(const char *, const char *);
 	boolean (*modifierHeld)(int modifier);
-	void (*notifyEvent)(short eventId, short data1, short data2, const char *str1, const char *str2);
+	void (*notifyEvent)(short eventId, int data1, int data2, const char *str1, const char *str2);
 };
 
 void loadKeymap();
