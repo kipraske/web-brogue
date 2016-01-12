@@ -35,6 +35,15 @@ _.extend(BrogueController.prototype, {
         }
     },
 
+    endBrogueSessionAndKillInterface: function() {
+
+        if(this.brogueInterface) {
+            this.brogueInterface.killBrogue(this.brogueInterface);
+        }
+
+        this.returnToLobby();
+    },
+
     endBrogueSession: function() {
         this.sendMessage("quit", true);
         allUsers.removeUser(this.username);
@@ -339,8 +348,12 @@ _.extend(BrogueController.prototype, {
             if(this.mode == brogueMode.OBSERVE) {
                 this.controllers.chat.broadcastStopObserve(this.username);
             }
-            if(this.mode == brogueMode.GAME) {
+            else if(this.mode == brogueMode.GAME) {
                 this.controllers.chat.broadcastLeaveGame();
+            }
+
+            if(this.mode == brogueMode.RECORDING) {
+                this.endBrogueSessionAndKillInterface();
             }
 
             this.returnToLobby();
@@ -350,27 +363,23 @@ _.extend(BrogueController.prototype, {
             
             // Called on logout or websocket close
 
-            this.handlerCollection.kill.call(this, data);
-            //Commented out temporarily so we can practice reconnecting - seems to be called on logout (window close)
-            //this.handlerCollection.kill.call(this, data);
-        },
-
-        //TODO: If required, this needs to migrate to interface
-        kill: function (data) {
-
             if(this.mode == brogueMode.GAME) {
                 allUsers.setState(this.username, brogueState.INACTIVE);
             }
 
+            else if(this.mode == brogueMode.RECORDING) {
+                this.endBrogueSessionAndKillInterface();
+            }
+
             //Just kill off the controller gracefully, leave the process (both observing and playing)
             this.removeBrogueListeners();
-        },
+        }
     },
     
     setState : function(state){
 
         allUsers.setState(this.controllers.auth.currentUserName, state);
-    },
+    }
 
 });
 

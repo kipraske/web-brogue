@@ -19,10 +19,14 @@ If you are logged in during server restart and play, your highscore entry has no
 Logging in as a different user does not update continue game / observe correctly on current games display
 
 
-NEXT #22
+NEXT #23
 
 
 FIXED
+
+#22
+
+Users find having to quit replays explicitally confusing
 
 #21
 

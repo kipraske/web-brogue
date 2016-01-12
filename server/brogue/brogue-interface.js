@@ -243,7 +243,6 @@ BrogueInterface.prototype.checkIdleTimeAndKill = function() {
         clearTimeout(this.intervalKiller);
 
         this.killBrogue(this);
-        this.disconnectBrogue(this);
 
         //Do not send the 'error' event, since it's likely that no controller is listening any more, and the 'error' event will crash the server
         this.brogueEvents.emit('quit', 'Brogue process timed out due to inactivity');
@@ -411,7 +410,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
     client_read.on('error', function(err) {
         console.error('Error when reading from client socket' + err);
         //Not identified any cases where this can happen yet but assume it's terminal
-        self.disconnectBrogue(self);
         self.brogueEvents.emit('quit', 'Error when reading from client socket');
     });
 
@@ -427,7 +425,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
         console.error('Error when writing to client socket: ' + err);
         //This occurs when we connected to an orphaned brogue process and it exits
         //Therefore we set ourselves into an ended state so a new game can be started
-        self.disconnectBrogue(self);
 
         self.brogueEvents.emit('quit', 'Error when writing to client socket - normally brogue has exited');
     });
@@ -442,7 +439,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
         self.brogueChild.on('error', function (err) {
             self.killBrogue(self);
-            self.disconnectBrogue(self);
 
             self.brogueEvents.emit('quit', 'Message could not be sent to brogue process - Error: ' + err);
         });
@@ -453,9 +449,7 @@ BrogueInterface.prototype.killBrogue = function(self) {
     if(self.brogueChild) {
         self.brogueChild.kill();
     }
-};
 
-BrogueInterface.prototype.disconnectBrogue = function(self) {
     self.brogueChild = null;
     self.brogueSocket = null;
     self.disconnected = true;
@@ -472,7 +466,6 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
         eventData.eventId === brogueConstants.gameOver.GAMEOVER_RECORDING) {
 
         self.killBrogue(self);
-        self.disconnectBrogue(self);
         self.brogueEvents.emit('quit');
     }
 };
