@@ -11,7 +11,7 @@ define([
         defaults: function() { return {
             chatMessages: [],
             username: null,
-            maxMessages: 100
+            maxMessages: 1000
         }},
         addChatMessage: function(message) {
             this.get("chatMessages").push(message);

@@ -67,9 +67,11 @@ define([
                 var inputText = $('#lobby-chat-input').val();
                 var messageToSend = this.truncateString(inputText, this.truncateStringLength);
 
-                send("chat", "message", { channel: "lobby", data: messageToSend });
+                if(messageToSend.trim().length > 0) {
 
-                this.model.addChatMessageWithThisUserAndTime(messageToSend);
+                    send("chat", "message", {channel: "lobby", data: messageToSend});
+                    this.model.addChatMessageWithThisUserAndTime(messageToSend);
+                }
             }
 
            this.render();

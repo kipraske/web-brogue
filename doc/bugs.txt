@@ -19,10 +19,14 @@ If you are logged in during server restart and play, your highscore entry has no
 Logging in as a different user does not update continue game / observe correctly on current games display
 
 
-NEXT #23
+NEXT #24
 
 
 FIXED
+
+#23
+
+Chat lines can't just be whitespace (happened due to holding down return in chat window).
 
 #22
 

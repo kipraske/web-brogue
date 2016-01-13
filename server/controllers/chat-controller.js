@@ -18,12 +18,22 @@ _.extend(ChatController.prototype, {
     handlerCollection: {
         message: function (data) {
 
+            //Check data
+
+            var incomingMessage = data.data;
+
+            if(incomingMessage.trim().length == 0) {
+                return
+            }
+
+            var messageToSend = this.truncateString(incomingMessage, this.truncateStringLength);
+
             //Send to all other listeners in the same room
             var broadcastMessage = { type: "chat", data: {
                 type: "message",
                 channel: data.channel,
                 username: this.controllers.auth.currentUserName,
-                data: data.data
+                data: messageToSend
             }};
 
             this.socket.to(this.roomName).emit('message', broadcastMessage);
@@ -67,6 +77,9 @@ _.extend(ChatController.prototype, {
         };
 
         this.socket.broadcast.emit('message', broadcastMessage);
+    },
+    truncateString: function (str, length) {
+        return str.length > length ? str.substring(0, length - 3) + '...' : str
     }
 });
 
