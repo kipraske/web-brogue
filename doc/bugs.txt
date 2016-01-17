@@ -1,14 +1,10 @@
 OPEN
 
-#4
-
-Animations are too fast to be seen (sometimes)
-
 #12
 
 Anonymous users can observe but:
   - Don't get a header bar
-  - The chat alert is 'is observing' rather than 'anonymous user is observing'
+  - The chat alert is 'null is observing' rather than 'anonymous user is observing'
 
 #15
 
@@ -18,11 +14,45 @@ If you are logged in during server restart and play, your highscore entry has no
 
 Logging in as a different user does not update continue game / observe correctly on current games display
 
+#24
 
-NEXT #24
+Anonymous users probably should be able to chat - when observing other people's games
 
+#25
+
+Anonymous users can't watch replays but the link is still there and there is no prompt
+
+#26
+
+Returning to the lobby will kill a replay, even if you go back to the same one afterwards. It would be nicer to keep state
+
+#27
+
+As an observer, viewing the inventory of an observed user would be cool. This will at least an upgrade of the brogue <-> server protocol to support large packets
+
+#28
+
+claris reported that he could control another user's game. Was this after a server reboot?
+
+#30
+
+Lumenstones count should be stored in the database as a separate column
+
+#31
+
+It would be nice to have a winner highscore table which would allow listing by lumenstone
+
+NEXT #32
 
 FIXED
+
+#29
+
+Games who escape have '0' as their deepest level which doesn't look great
+
+#4
+
+Animations are too fast to be seen (sometimes)
 
 #23
 
