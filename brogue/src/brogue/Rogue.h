@@ -2667,7 +2667,7 @@ extern "C" {
 				  short foreRed, short foreGreen, short foreBlue);
 	void pausingTimerStartsNow();
 	boolean pauseForMilliseconds(short milliseconds);
-	void notifyEvent(short eventId, short data1, short data2, const char *str1, const char *str2);
+	void notifyEvent(short eventId, int data1, int data2, const char *str1, const char *str2);
 	void nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance);
 	boolean controlKeyIsDown();
 	boolean shiftKeyIsDown();

@@ -316,10 +316,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
                 // We need to send bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
                 var eventData1 =
-                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 1] * 256 +
-                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 2];
-
-                var eventData2 =
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 1] * 16777216 +
+                    self.dataAccumulator[i + EVENT_DATA_OFFSET + 2] * 65536 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 3] * 256 +
                     self.dataAccumulator[i + EVENT_DATA_OFFSET + 4];
 
@@ -374,7 +372,7 @@ BrogueInterface.prototype.attachChildEvents = function () {
                     date: Date.now(),
                     eventId: eventId,
                     data1: eventData1,
-                    data2: eventData2,
+                    data2: 0,
                     gold: gold,
                     level: level,
                     seed: seed,

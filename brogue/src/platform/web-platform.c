@@ -299,10 +299,10 @@ static void notify_event(short eventId, int data1, int data2, const char *str1, 
   statusOutputBuffer[2] = eventId;
 
   // I am just going to explicitly send the status big-endian so we can be consistent on the client and server
-  statusOutputBuffer[3] = data1 >> 8 & 0xff;
-  statusOutputBuffer[4] = data1;
-  statusOutputBuffer[5] = data2 >> 8 & 0xff;
-  statusOutputBuffer[6] = data2;
+  statusOutputBuffer[3] = data1 >> 24 & 0xff;
+  statusOutputBuffer[4] = data1 >> 16 & 0xff;
+  statusOutputBuffer[5] = data1 >> 8 & 0xff;
+  statusOutputBuffer[6] = data1;
   statusOutputBuffer[7] = rogue.depthLevel >> 8 & 0xff;
   statusOutputBuffer[8] = rogue.depthLevel;
   statusOutputBuffer[9] = rogue.easyMode >> 8 & 0xff;

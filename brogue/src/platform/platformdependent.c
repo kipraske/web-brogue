@@ -70,7 +70,7 @@ boolean pauseForMilliseconds(short milliseconds) {
 	return currentConsole.pauseForMilliseconds(milliseconds);
 }
 
-void notifyEvent(short eventId, short data1, short data2, const char *str1, const char *str2) {
+void notifyEvent(short eventId, int data1, int data2, const char *str1, const char *str2) {
 	currentConsole.notifyEvent(eventId, data1, data2, str1, str2);
 }
 

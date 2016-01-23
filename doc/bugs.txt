@@ -50,9 +50,13 @@ Because the current games don't use BackGrid, the gold is formatted as nicely
 
 It would be cool to share a link to watch a replay, but that would need a way of it working for anon players (which is now OK if the session doesn't persist)
 
-NEXT #34
+NEXT #35
 
 FIXED
+
+#34
+
+Score still wrapped at 65536 when passed by the server
 
 #29
 
