@@ -114,8 +114,9 @@ int read_from_socket(char *buf, int size) {
 
 static void flush_output_buffer() {
 
-  char msg[80];
-  snprintf(msg, 80, "Flushing at %i\n", output_buffer_pos);
+  //char msg[80];
+  //snprintf(msg, 80, "Flushing at %i\n", output_buffer_pos);
+  //write_to_log(msg);
 
   int no_bytes_sent;
   no_bytes_sent = sendto(wfd, output_buffer, output_buffer_pos, 0, (struct sockaddr *) &addr_write, sizeof(struct sockaddr_un));
@@ -170,7 +171,7 @@ static void web_plotChar(uchar inputChar,
 
 static void sendStatusUpdate() {
     
-    char statusOutputBuffer[STATUS_TYPES_NUMBER * OUTPUT_SIZE];
+    char statusOutputBuffer[OUTPUT_SIZE];
     
     unsigned long statusValues[STATUS_TYPES_NUMBER]; 
     statusValues[DEEPEST_LEVEL_STATUS] = rogue.deepestLevel;

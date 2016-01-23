@@ -262,38 +262,37 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
         //Callback when receiving data on the socket from brogue
 
-        //console.error('data: (%d, %d) -> %s', data[0], data[1], String.fromCharCode(data[3]));
-
-        //Speed debugging
-        //var d = new Date();
-        //console.error(d.getTime());
-
         self.lastActiveTime = new Date().getTime();
 
-        // Ensure that we send out data in chunks divisible by CELL_MESSAGE_SIZE and save any left over for the next data event
-        // While it would be more efficient to accumulate all the data here on the server, I want the client to be able to start processing this data as it is being returned.
-        var dataLength = data.length;
-
-        //console.error(dataLength);
-
         var remainderLength = self.dataRemainder.length;
-        var numberOfCellsToSend = (dataLength + remainderLength) / CELL_MESSAGE_SIZE | 0;  // |0 is still 2x faster than Math.floor or parseInt
-        var sizeOfCellsToSend = numberOfCellsToSend * CELL_MESSAGE_SIZE;
-        var newReminderLength = dataLength + remainderLength - sizeOfCellsToSend;
 
-        //fill the data to send
-        self.dataAccumulator = new Buffer(sizeOfCellsToSend);
+        //console.log("d: " + data.length);
+
+        //fill the data buffer with the remainder from last time and the new data
+        self.dataAccumulator = new Buffer(data.length + remainderLength);
+        self.dataToSend = new Buffer(data.length + remainderLength);
         self.dataRemainder.copy(self.dataAccumulator);
-        data.copy(self.dataAccumulator, remainderLength, 0, dataLength - newReminderLength);
+        var dataLengthRationalised = 10 * Math.floor(data.length / 10);
+        data.copy(self.dataAccumulator, remainderLength, 0);
 
-        //save the remaining data for next time
-        self.dataRemainder = new Buffer(newReminderLength);
-        data.copy(self.dataRemainder, 0, dataLength - newReminderLength, dataLength);
+        var fullDataLength = self.dataAccumulator.length;
 
         //check for status updates in data and update user object.
         var i = 0;
-        while(i < sizeOfCellsToSend) {
-            if (self.dataAccumulator[i] === STATUS_BYTE_FLAG){
+        var dataToSendPos = 0;
+
+        while(i < fullDataLength) {
+
+            if(i + CELL_MESSAGE_SIZE > fullDataLength) {
+                //Partial message, wait for next data
+                break;
+            }
+
+            if (self.dataAccumulator[i] === STATUS_BYTE_FLAG) {
+
+                //(Partial messages are dealt with by the general case)
+
+                //console.log("status");
                 var updateFlag = self.dataAccumulator[i + STATUS_DATA_OFFSET];
 
                 // We need to send 4 bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
@@ -305,17 +304,15 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
                 self.brogueEvents.emit('status', {flag: updateFlag, value: updateValue});
 
-                //Remove this status update from the dataAccumulator
-                if(i + CELL_MESSAGE_SIZE <= self.dataAccumulator.length) {
-                    self.dataAccumulator.copy(self.dataAccumulator, i, i + CELL_MESSAGE_SIZE);
-                    self.dataAccumulator = self.dataAccumulator.slice(0, self.dataAccumulator.length - CELL_MESSAGE_SIZE);
-                }
-                else {
-                    i += CELL_MESSAGE_SIZE;
-                }
+                i += CELL_MESSAGE_SIZE;
             }
             else if(self.dataAccumulator[i] === EVENT_BYTE_FLAG) {
                 var eventId = self.dataAccumulator[i + EVENT_DATA_OFFSET];
+
+                if(i + EVENT_DATA_LENGTH > fullDataLength) {
+                    //Partial message, wait for next data
+                    break;
+                }
 
                 // We need to send bytes over as unsigned long.  JS bitwise operations force a signed long, so we are forced to use a float here.
                 var eventData1 =
@@ -390,23 +387,26 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
                 self.processBrogueEvents(self, eventData);
 
-                //Remove this status update from the dataAccumulator
-                if (i + EVENT_DATA_LENGTH <= self.dataAccumulator.length) {
-                    self.dataAccumulator.copy(self.dataAccumulator, i, i + EVENT_DATA_LENGTH);
-                    self.dataAccumulator = self.dataAccumulator.slice(0, self.dataAccumulator.length - EVENT_DATA_LENGTH);
-                }
-                else {
-                    i += EVENT_DATA_LENGTH;
-                }
+                i += EVENT_DATA_LENGTH;
             }
             else {
+                self.dataAccumulator.copy(self.dataToSend, dataToSendPos, i, i + CELL_MESSAGE_SIZE);
                 //No status message
                 i += CELL_MESSAGE_SIZE;
+                dataToSendPos += CELL_MESSAGE_SIZE;
             }
         }
 
-        //Send any remaining data onwards to the console
-        self.brogueEvents.emit('data', self.dataAccumulator);
+        //Save the remaining data for next time
+        //console.log("i: " + i);
+        //console.log("f: " + fullDataLength);
+        self.dataRemainder = new Buffer(fullDataLength - i);
+        self.dataAccumulator.copy(self.dataRemainder, 0, i, fullDataLength);
+        var dataToSendCropped = self.dataToSend.slice(0, dataToSendPos);
+        //console.log("r: " + self.dataRemainder.length);
+
+        //Send any  data onwards to the console
+        self.brogueEvents.emit('data', dataToSendCropped);
     });
 
     client_read.on('error', function(err) {
