@@ -5,9 +5,8 @@ define([
     "underscore",
     "backbone",
     "dispatcher",
-    "views/view-activation-helpers",
     "views/score-table-cells"
-], function ($, _, Backbone, dispatcher, activate, TableCells) {
+], function ($, _, Backbone, dispatcher, TableCells) {
 
     var HighScoresView = Backbone.View.extend({
 
@@ -121,11 +120,6 @@ define([
 
             this.model.setAllScores();
             this.refresh();
-        },
-
-        goToConsole : function(){
-            activate.console();
-            dispatcher.trigger("showConsole");
         }
     });
 

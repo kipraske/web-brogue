@@ -5,9 +5,8 @@ define([
     "underscore",
     "backbone",
     "dispatcher",
-    "views/view-activation-helpers",
     "views/score-table-cells"
-], function ($, _, Backbone, dispatcher, activate, TableCells) {
+], function ($, _, Backbone, dispatcher, TableCells) {
 
     var AllScoresView = Backbone.View.extend({
         el: '#all-scores',
@@ -148,12 +147,7 @@ define([
 
             this.model.setMonthlyTopScores();
             this.refresh();
-        },
-
-        goToConsole : function(){
-            activate.console();
-            dispatcher.trigger("showConsole");
-        },
+        }
     });
 
     return AllScoresView;

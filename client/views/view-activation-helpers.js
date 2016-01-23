@@ -31,17 +31,17 @@ define(['jquery'], function($){
         },
         
         lobby: function(){
-            $('#header, #lobby').removeClass("inactive");
+            $('#lobby').removeClass("inactive");
             $("#console-holder").addClass("inactive");
         },
         
         loggedIn: function(){
             $('#auth').addClass("inactive");
-            $('#header, #play').removeClass("inactive");
+            $('#play').removeClass("inactive");
         },
         
         resetAll: function(){
-            $('#header, #play, #saved-games, #all-scores, #console-holder').addClass("inactive");
+            $('#play, #saved-games, #all-scores, #console-holder').addClass("inactive");
             $('#lobby, #auth, #current-games, #mini-scores').removeClass("inactive");
         }
     };

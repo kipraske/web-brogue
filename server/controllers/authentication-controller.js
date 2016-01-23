@@ -14,13 +14,18 @@ function AuthController(socket) {
     this.socket = socket;
     this.controllers = null;
     
-    this.currentUserName = null;
+    this.authenticatedUserName = null;
+    this.anonUserName = this.createAnonUserName();
 }
 
 AuthController.prototype = new Controller();
 _.extend(AuthController.prototype, {
     controllerName: "auth",
     handlerCollection: {
+        "anon-login": function(data) {
+            this.processSuccessfulAnonLogin(this.anonUserName);
+        },
+
         login: function (data) {
             var self = this;
 
@@ -179,7 +184,7 @@ _.extend(AuthController.prototype, {
 
             this.controllers.chat.broadcastLogoutMessage();
 
-            this.currentUserName = null;
+            this.authenticatedUserName = null;
             this.controllers.brogue.handlerCollection.clean.call(this.controllers.brogue, null);
             this.sendMessage("auth", {
                 result: "logout",
@@ -210,8 +215,8 @@ _.extend(AuthController.prototype, {
 
         return decodedToken;
     },
-    processSuccessfulLogin: function(username) {
-        if (this.currentUserName) {
+    processSuccessfulAnonLogin: function(username) {
+        if (this.authenticatedUserName) {
             this.sendMessage("auth", {
                 result: "fail",
                 data: "You are already logged in"
@@ -219,11 +224,30 @@ _.extend(AuthController.prototype, {
             return;
         }
 
-        this.currentUserName = username;
+        this.sendMessage("auth", {
+            result: "success",
+            data: {
+                message: "anon-logged-in",
+                username: username
+            }
+        });
+
+        this.controllers.chat.broadcastLoginMessage();
+    },
+    processSuccessfulLogin: function(username) {
+        if (this.authenticatedUserName) {
+            this.sendMessage("auth", {
+                result: "fail",
+                data: "You are already logged in"
+            });
+            return;
+        }
+
+        this.authenticatedUserName = username;
 
         //As of the playback changes, everyone is required to have a -recordings directory.
         //This code adds it for established users who would have registered before the change
-        fs.mkdir(config.path.GAME_DATA_DIR + this.currentUserName + "-" + brogueConstants.paths.RECORDING, 0755, function (err) {
+        fs.mkdir(config.path.GAME_DATA_DIR + this.authenticatedUserName + "-" + brogueConstants.paths.RECORDING, 0755, function (err) {
             if (err && err.code != "EEXIST") {
                 self.controllers.error.send(JSON.stringify(err));
             }
@@ -239,6 +263,95 @@ _.extend(AuthController.prototype, {
         });
 
         this.controllers.chat.broadcastLoginMessage();
+    },
+    getUserOrAnonName: function() {
+
+        if(this.authenticatedUserName != null) {
+            return this.authenticatedUserName;
+        }
+        else {
+            return this.anonUserName;
+        }
+    },
+    createAnonUserName: function() {
+
+        var brogueMonsterNames = [
+            "rat",
+            "kobold",
+            "jackal",
+            "eel",
+            "monkey",
+            "bloat",
+            "pit bloat",
+            "goblin",
+            "goblin conjurer",
+            "goblin mystic",
+            "goblin totem",
+            "pink jelly",
+            "toad",
+            "vampire bat",
+            "arrow turret",
+            "acid mound",
+            "centipede",
+            "ogre",
+            "bog monster",
+            "ogre totem",
+            "spider",
+            "spark turret",
+            "will-o-the-wisp",
+            "wraith",
+            "zombie",
+            "troll",
+            "ogre shaman",
+            "naga",
+            "salamander",
+            "explosive bloat",
+            "dar blademaster",
+            "dar priestess",
+            "dar battlemage",
+            "acidic jelly",
+            "centaur",
+            "underworm",
+            "sentinel",
+            "acid turret",
+            "dart turret",
+            "kraken",
+            "lich",
+            "phylactery",
+            "pixie",
+            "phantom",
+            "flame turret",
+            "imp",
+            "fury",
+            "revenant",
+            "tentacle horror",
+            "golem",
+            "dragon",
+            "goblin warlord",
+            "black jelly",
+            "vampire",
+            "flamedancer",
+            "spectral blade",
+            "spectral sword",
+            "stone guardian",
+            "winged guardian",
+            "guardian spirit",
+            "Warden of Yendor",
+            "eldritch totem",
+            "mirrored totem",
+            "unicorn",
+            "ifrit",
+            "phoenix",
+            "phoenix egg",
+            "mangrove dryad"
+        ];
+
+        var randomName = brogueMonsterNames[Math.floor(Math.random()*brogueMonsterNames.length)];
+        var randomNameHyphened = randomName.replace(' ', '-');
+        var randomSuffix = function () { return Math.floor(Math.random() * 10) };
+
+        var randomNameFull = randomNameHyphened + randomSuffix + randomSuffix + randomSuffix;
+        return randomNameFull;
     }
 });
 

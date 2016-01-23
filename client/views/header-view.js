@@ -29,10 +29,21 @@ define([
         render: function () {
             this.$el.html(this.template(this.userModel.toJSON()));
         },
-        
+
+        anonymousLogin: function(username) {
+
+            this.userModel.set({
+                username : username + " (anon)",
+                loggedIn: false
+            });
+
+            this.render();
+        },
+
         login : function(username){
             this.userModel.set({
-                username : username
+                username : username,
+                loggedIn: true
             });
 
             this.render();
@@ -40,6 +51,8 @@ define([
         
         logout: function(e) {
             e.preventDefault();
+
+            this.leaveGame();
 
             util.removeItem('sessionId');
 
@@ -53,7 +66,8 @@ define([
             this.userModel.set({
                 playing: true,
                 observing: false,
-                recording: false
+                recording: false,
+                showLobby: true
             });
             this.render();
         },
@@ -63,7 +77,8 @@ define([
             this.userModel.set({
                 playing: false,
                 observing: false,
-                recording: false
+                recording: false,
+                showLobby: false
             });
             this.render();
         },
@@ -86,7 +101,8 @@ define([
                     playing: true,
                     observing: false,
                     recording: false,
-                    observingUsername: data.username
+                    observingUsername: data.username,
+                    showLobby: true
                 });
             }
             else {
@@ -94,7 +110,8 @@ define([
                     playing: false,
                     observing: true,
                     recording: false,
-                    observingUsername: data.username
+                    observingUsername: data.username,
+                    showLobby: true
                 });
             }
             this.render();
@@ -106,7 +123,8 @@ define([
                 playing: false,
                 observing: false,
                 recording: true,
-                recordingId: data.recording
+                recordingId: data.recording,
+                showLobby: true
             });
             this.render();
         }

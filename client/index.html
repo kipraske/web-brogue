@@ -12,7 +12,7 @@
 </head>
 <body>
 <noscript> This page will not work without JavaScript. Sorry. Feel free to download brogue and play it on your own computer at <a href="//sites.google.com/site/broguegame/">sites.google.com/site/broguegame/</a> </noscript>
-<div id="header" class="header inactive"></div>
+<div id="header" class="header"></div>
 <div id="lobby">
     <img class="banner" src="assets/brogue-banner.png" />
     <div id="loading" class="loading">Loading...</div>
@@ -128,7 +128,7 @@
 </script>
 
 <script id="welcome" type="text/template">
-    <div><% if (observing) { %>Observing <%= observingUsername %> |<% } %><% if (playing) { %> Playing |<% } %> <%= username %> |<% if (recording) { %> Watching <%= recordingId %> |<% } %><% if (playing || observing || recording) { %> <a id="headerLobby" href="#lobbyLink">Lobby</a> |<% } %> <a id="logout" href="#logout">Logout</a></div>
+    <div><% if (observing) { %>Observing <%= observingUsername %> | <% } %><% if (playing) { %>Playing | <% } %><% if (recording) { %>Watching <%= recordingId %> | <% } %><%= username %><% if (showLobby) { %> | <a id="headerLobby" href="#lobbyLink">Lobby</a> <% } %><% if (loggedIn) { %> | <a id="logout" href="#logout">Logout</a> <% } %></div>
 </script>
 
 <script id="site-news-heading" type ="text/template">

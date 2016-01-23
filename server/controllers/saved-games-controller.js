@@ -19,7 +19,7 @@ _.extend(SavedGamesController.prototype, {
     handlerCollection: {
         getBrogueSaves: function (data) {
             var self = this;
-            var currentUserName = this.controllers.auth.currentUserName;
+            var currentUserName = this.controllers.auth.authenticatedUserName;
             
             if (!currentUserName){
                 return;

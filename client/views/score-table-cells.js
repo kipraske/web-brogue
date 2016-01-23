@@ -5,8 +5,9 @@ define([
     "dispatcher",
     "dataIO/send-generic",
     "backgrid",
-    "moment"
-], function ($, _, Backbone, dispatcher, send, Backgrid, Moment) {
+    "moment",
+    "views/view-activation-helpers"
+], function ($, _, Backbone, dispatcher, send, Backgrid, Moment, activate) {
 
     var LevelFormatter = _.extend({}, Backgrid.CellFormatter.prototype, {
         fromRaw: function (rawValue, model) {
@@ -37,7 +38,7 @@ define([
 
             send("brogue", "recording", {recording: gameId});
             dispatcher.trigger("recordingGame", {recording: gameDescription});
-            self.goToConsole();
+            this.goToConsole();
         },
 
         render: function () {
@@ -60,6 +61,10 @@ define([
             }
             this.delegateEvents();
             return this;
+        },
+        goToConsole : function(){
+            activate.console();
+            dispatcher.trigger("showConsole");
         }
     });
 

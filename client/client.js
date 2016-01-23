@@ -105,11 +105,16 @@ require([
     dispatcher.on("login", consoleChatView.login, consoleChatView);
     dispatcher.on("login", currentGamesView.login, currentGamesView);
 
+    dispatcher.on("anon-login", headerView.anonymousLogin, headerView);
+    dispatcher.on("anon-login", chatView.login, chatView);
+    dispatcher.on("anon-login", consoleChatView.login, consoleChatView);
+
     dispatcher.on("logout", highScoresView.logout, highScoresView);
     dispatcher.on("logout", allScoresView.logout, allScoresView);
     dispatcher.on("logout", consoleChatView.logout, consoleChatView);
     dispatcher.on("logout", chatView.logout, chatView);
     dispatcher.on("logout", currentGamesView.logout, currentGamesView);
+    dispatcher.on("logout", authView.logout, authView);
 
     dispatcher.on("all-scores", allScoresView.activate, allScoresView);
 

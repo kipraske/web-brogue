@@ -39,8 +39,16 @@ define([
             if(storedToken) {
                 send("auth", "login", { token: storedToken });
             }
+            else {
+                send("auth", "anon-login");
+            }
 
             this.render("login");
+        },
+        logout: function() {
+
+            //Request an anon login
+            send("auth", "anon-login");
         },
         loginSubmit: function (event) {
             event.preventDefault();
@@ -98,29 +106,42 @@ define([
                 return;
             }
 
-            switch (message.data.message) {
-                case "logged-in" :
-                    activate.loggedIn();
+            if(message.result === "success") {
 
-                    this.model.set({
-                        username: message.data.username
-                    });
+                switch (message.data.message) {
+                    case "anon-logged-in":
 
-                    dispatcher.trigger("login", message.data.username);
+                        this.model.set({
+                            username: message.data.username
+                        });
 
-                    //var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
-                    //router.route(headerMessage);
+                        dispatcher.trigger("anon-login", message.data.username);
+                        break;
 
-                    util.setItem('sessionId', message.data.token);
 
-                    break;
-                case "registered" :
-                    this.render("login");
-                    $('#auth-message')
+                    case "logged-in" :
+                        activate.loggedIn();
+
+                        this.model.set({
+                            username: message.data.username
+                        });
+
+                        dispatcher.trigger("login", message.data.username);
+
+                        //var headerMessage = '{"type" : "header", "data" : "'+ this.model.get("username") +'"}'
+                        //router.route(headerMessage);
+
+                        util.setItem('sessionId', message.data.token);
+
+                        break;
+                    case "registered" :
+                        this.render("login");
+                        $('#auth-message')
                             .removeClass()
                             .addClass("success")
                             .html("Successfully Registered - Please log in");
-                    break;
+                        break;
+                }
             }
 
         }

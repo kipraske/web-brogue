@@ -51,12 +51,17 @@ _.extend(BrogueController.prototype, {
     },
 
     returnToLobby: function() {
+
+        this.stopInteractingWithCurrentGame();
+
         this.setState(brogueState.INACTIVE);
         this.controllers.lobby.sendAllUserData();
         this.controllers.lobby.userDataListen();
 
         this.controllers.chat.enterLobby();
+    },
 
+    stopInteractingWithCurrentGame: function() {
         this.removeBrogueListeners();
     },
 
@@ -100,7 +105,7 @@ _.extend(BrogueController.prototype, {
 
             var self = this;
             var thisGameRecord = {
-                username: this.controllers.auth.currentUserName,
+                username: this.controllers.auth.authenticatedUserName,
                 date: event.date,
                 score: event.data1,
                 seed: event.seed,
@@ -127,16 +132,16 @@ _.extend(BrogueController.prototype, {
 
     brogueStatusListener: function (status) {
         if(this.mode == brogueMode.GAME) {
-            if(!allUsers.isUserValid(this.controllers.auth.currentUserName)) {
+            if(!allUsers.isUserValid(this.controllers.auth.authenticatedUserName)) {
                 //This is a funny exception to deal with the case when the user has logged out from one window
                 //but is still playing
-                allUsers.addUser(this.controllers.auth.currentUserName);
+                allUsers.addUser(this.controllers.auth.authenticatedUserName);
             }
 
             //We may have a different state due to logging in again in a different window, but ACTIVE should take priority
             this.setState(brogueState.ACTIVE);
             allUsers.updateLobbyStatus(
-                this.controllers.auth.currentUserName,
+                this.controllers.auth.authenticatedUserName,
                 status.flag,
                 status.value);
         }
@@ -148,7 +153,7 @@ _.extend(BrogueController.prototype, {
 
     watchRecording: function (data) {
 
-        if (!this.controllers.auth.currentUserName) {
+        if (!this.controllers.auth.authenticatedUserName) {
             this.sendFailedToStartGameMessage("Can't watch a game if not logged in.");
             return;
         }
@@ -176,7 +181,7 @@ _.extend(BrogueController.prototype, {
             }
             if (gameRecord) {
 
-                var brogueSessionName = self.controllers.auth.currentUserName + "-" + brogueConstants.paths.RECORDING;
+                var brogueSessionName = self.controllers.auth.authenticatedUserName + "-" + brogueConstants.paths.RECORDING;
                 data.recordingPath = gameRecord.recording;
 
                 self.startBrogueSession(brogueSessionName, data, brogueMode.RECORDING);
@@ -198,12 +203,12 @@ _.extend(BrogueController.prototype, {
 
         try {
             if (!observing) {
-                if (!this.controllers.auth.currentUserName) {
+                if (!this.controllers.auth.authenticatedUserName) {
                     this.sendFailedToStartGameMessage("Can't start a game if not logged in.");
                     return;
                 }
 
-                brogueSessionName = this.controllers.auth.currentUserName;
+                brogueSessionName = this.controllers.auth.authenticatedUserName;
                 mode = brogueMode.GAME;
 
                 //Check seed and abort on error
@@ -229,8 +234,8 @@ _.extend(BrogueController.prototype, {
 
                 //Work out if this is the user playing their own game or just observing
 
-                if (data.username === this.controllers.auth.currentUserName) {
-                    brogueSessionName = this.controllers.auth.currentUserName;
+                if (data.username === this.controllers.auth.authenticatedUserName) {
+                    brogueSessionName = this.controllers.auth.authenticatedUserName;
                     mode = brogueMode.GAME;
                 }
                 else {
@@ -335,12 +340,15 @@ _.extend(BrogueController.prototype, {
             });
         },
         start: function(data) {
+            this.stopInteractingWithCurrentGame();
             this.startGameOrObserve(data, false)
         },
         observe: function(data) {
+            this.stopInteractingWithCurrentGame();
             this.startGameOrObserve(data, true)
         },
         recording: function(data) {
+            this.stopInteractingWithCurrentGame();
             this.watchRecording(data);
         },
         leave: function (data) {
@@ -372,13 +380,13 @@ _.extend(BrogueController.prototype, {
             }
 
             //Just kill off the controller gracefully, leave the process (both observing and playing)
-            this.removeBrogueListeners();
+            this.stopInteractingWithCurrentGame();
         }
     },
     
     setState : function(state){
 
-        allUsers.setState(this.controllers.auth.currentUserName, state);
+        allUsers.setState(this.controllers.auth.authenticatedUserName, state);
     }
 
 });

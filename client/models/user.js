@@ -16,7 +16,9 @@ define([
             recording: false,
             observingUsername: "",
             recordingId: 0,
-            playing: false
+            playing: false,
+            loggedIn: false,
+            showLobby: false
         }
     });
 

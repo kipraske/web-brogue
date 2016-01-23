@@ -32,9 +32,11 @@ _.extend(ChatController.prototype, {
             var broadcastMessage = { type: "chat", data: {
                 type: "message",
                 channel: data.channel,
-                username: this.controllers.auth.currentUserName,
+                username: this.controllers.auth.getUserOrAnonName(),
                 data: messageToSend
             }};
+
+            console.log(JSON.stringify(broadcastMessage));
 
             this.socket.to(this.roomName).emit('message', broadcastMessage);
         }
@@ -71,8 +73,8 @@ _.extend(ChatController.prototype, {
         var broadcastMessage = {
             type: "chat", data: {
                 type: "status",
-                username: this.controllers.auth.currentUserName,
-                data: this.controllers.auth.currentUserName + " " + message
+                username: this.controllers.auth.getUserOrAnonName(),
+                data: this.controllers.auth.getUserOrAnonName() + " " + message
             }
         };
 
