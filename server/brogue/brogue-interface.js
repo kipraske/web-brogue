@@ -149,6 +149,8 @@ BrogueInterface.prototype.start = function (data, mode) {
     //Test if we can send to server socket, if so, no need to spawn a new process, just attach
     //This may happen on first connect after server restart, for example
 
+    this.createBrogueDirectoryIfRequired(this.username);
+
     try {
 
         var sendBuf = new Buffer(5);
@@ -467,6 +469,25 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
 
         self.killBrogue(self);
         self.brogueEvents.emit('quit');
+    }
+};
+
+BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(username) {
+
+    var path = config.path.GAME_DATA_DIR + username;
+
+    try {
+        fs.accessSync(path, fs.F_OK);
+    }
+    catch(err) {
+        try {
+            fs.mkdirSync(path, 0755);
+        }
+        catch (err) {
+            if (err && err.code != "EEXIST") {
+                console.error("Failed to create " + path + " : " + JSON.stringify(err));
+            }
+        }
     }
 };
 

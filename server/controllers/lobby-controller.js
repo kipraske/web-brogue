@@ -22,7 +22,7 @@ _.extend(LobbyController.prototype, {
     // The lobby would not normally get user requests, but I am adding this so we can test these functions
     handlerCollection : {
         requestSingleUserData : function(username){
-            console.log(allUsers.users[username].lobbyData);
+            //console.log(allUsers.users[username].lobbyData);
         },
         requestAllUserData : function(includeEveryone){
             this.sendAllUserData(includeEveryone);

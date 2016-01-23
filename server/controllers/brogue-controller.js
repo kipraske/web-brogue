@@ -153,11 +153,6 @@ _.extend(BrogueController.prototype, {
 
     watchRecording: function (data) {
 
-        if (!this.controllers.auth.authenticatedUserName) {
-            this.sendFailedToStartGameMessage("Can't watch a game if not logged in.");
-            return;
-        }
-
         if (!data || !data.recording) {
             this.sendFailedToStartGameMessage("No game record given to watch.");
             return;
@@ -181,7 +176,7 @@ _.extend(BrogueController.prototype, {
             }
             if (gameRecord) {
 
-                var brogueSessionName = self.controllers.auth.authenticatedUserName + "-" + brogueConstants.paths.RECORDING;
+                var brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
                 data.recordingPath = gameRecord.recording;
 
                 self.startBrogueSession(brogueSessionName, data, brogueMode.RECORDING);

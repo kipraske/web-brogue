@@ -36,7 +36,7 @@ _.extend(ChatController.prototype, {
                 data: messageToSend
             }};
 
-            console.log(JSON.stringify(broadcastMessage));
+            //console.log(JSON.stringify(broadcastMessage));
 
             this.socket.to(this.roomName).emit('message', broadcastMessage);
         }

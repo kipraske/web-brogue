@@ -148,33 +148,17 @@ _.extend(AuthController.prototype, {
                     newUser.password = newUser.createHash(data.password);
                     newUser.sessionId = self.createSessionToken(newUser.username);
 
-                    // each user needs their own directory for the brogue processes to run in
-                    // TODO: should not send errors to the client
-                    fs.mkdir(config.path.GAME_DATA_DIR + data.username, 0755, function (err) {
-
-                        if (err && err.code != "EEXIST") {
+                    newUser.save(function (err) {
+                        if (err) {
                             self.controllers.error.send(JSON.stringify(err));
                         }
 
-                        fs.mkdir(config.path.GAME_DATA_DIR + data.username + "-" + brogueConstants.paths.RECORDING, 0755, function (err) {
-
-                            if (err && err.code != "EEXIST") {
-                                self.controllers.error.send(JSON.stringify(err));
+                        self.sendMessage("auth", {
+                            result: "success",
+                            data: {
+                                message: "registered",
+                                token: newUser.sessionId
                             }
-
-                            newUser.save(function (err) {
-                                if (err) {
-                                    self.controllers.error.send(JSON.stringify(err));
-                                }
-
-                                self.sendMessage("auth", {
-                                    result: "success",
-                                    data: {
-                                        message: "registered",
-                                        token: newUser.sessionId
-                                    }
-                                });
-                            });
                         });
                     });
                 }
@@ -244,14 +228,6 @@ _.extend(AuthController.prototype, {
         }
 
         this.authenticatedUserName = username;
-
-        //As of the playback changes, everyone is required to have a -recordings directory.
-        //This code adds it for established users who would have registered before the change
-        fs.mkdir(config.path.GAME_DATA_DIR + this.authenticatedUserName + "-" + brogueConstants.paths.RECORDING, 0755, function (err) {
-            if (err && err.code != "EEXIST") {
-                self.controllers.error.send(JSON.stringify(err));
-            }
-        });
 
         this.sendMessage("auth", {
             result: "success",
@@ -350,7 +326,7 @@ _.extend(AuthController.prototype, {
         var randomNameHyphened = randomName.replace(' ', '-');
         var randomSuffix = function () { return Math.floor(Math.random() * 10) };
 
-        var randomNameFull = randomNameHyphened + randomSuffix + randomSuffix + randomSuffix;
+        var randomNameFull = randomNameHyphened + randomSuffix() + randomSuffix() + randomSuffix();
         return randomNameFull;
     }
 });
