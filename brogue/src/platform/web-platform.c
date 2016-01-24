@@ -124,6 +124,7 @@ static void flush_output_buffer() {
     char msg[80];
     snprintf(msg, 80, "Sent %ld bytes only %s\n", (long) no_bytes_sent, strerror(errno));
     write_to_log(msg);
+    sleep(1);
   }
 
   output_buffer_pos = 0;
