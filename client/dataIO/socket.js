@@ -4,7 +4,8 @@
 define(['dataIO/router'], function(router){
     
     // websocket is at the same url just using the ws protocol
-    var socketUrl = "ws://" + window.location.host + ":8080";
+    var hostname = process.env.SERVER_HOSTNAME || window.location.host
+    var socketUrl = "ws://" + hostname + ":8080";
     
     if (!window.WebSocket){
         alert("Your browser does not seem to support websockets which are needed for this application");

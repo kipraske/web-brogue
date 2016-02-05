@@ -29,7 +29,7 @@ Vagrant.configure(2) do |config|
   
   config.vm.provision "start-server",
     type: "shell",
-    env: { SERVER_IP: ip_address },
+    env: { SERVER_HOSTNAME: ip_address },
     inline: <<-SHELL
       cd /srv/web-brogue/server && nodejs ./server.js
     SHELL
