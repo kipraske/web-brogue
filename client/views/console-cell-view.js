@@ -19,7 +19,8 @@ define([
         tagName: "div",
         className: "console-cell",
         events : {
-            "click" : "handleClick"
+            "click" : "handleClick",
+            "mouseover" : "handleMouseover"
         },
         
         initialize: function() {
@@ -62,6 +63,16 @@ define([
             );
             sendMouseEvent(
                 MOUSE_UP_EVENT_CHAR, 
+                this.model.get("x"), 
+                this.model.get("y"), 
+                event.ctrlKey, 
+                event.shiftKey
+            );
+        },
+        
+        handleMouseover : function(event){
+            sendMouseEvent(
+                MOUSE_HOVER_EVENT_CHAR, 
                 this.model.get("x"), 
                 this.model.get("y"), 
                 event.ctrlKey, 
