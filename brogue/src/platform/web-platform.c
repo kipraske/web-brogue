@@ -24,6 +24,8 @@
 //Custom events
 #define REFRESH_SCREEN          50
 
+#define PERMIT_CLIENT_MOUSELOOK 1
+
 enum StatusTypes {
     DEEPEST_LEVEL_STATUS,
     GOLD_STATUS,
@@ -226,7 +228,6 @@ static boolean web_pauseForMilliseconds(short milliseconds)
 
 static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsDance)
 {
-
     // because we will halt execution until we get more input, we definitely cannot have any dancing colors from the server side.
     colorsDance = false;
     
@@ -247,6 +248,9 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
     read_from_socket(inputBuffer, MAX_INPUT_SIZE);
     returnEvent->eventType = inputBuffer[0];
 
+	if(!PERMIT_CLIENT_MOUSELOOK && returnEvent->eventType == MOUSE_ENTERED_CELL)
+    	return;
+
     if (returnEvent->eventType == REFRESH_SCREEN) {
 
       //Custom event type - brogue should ignore, not status update
@@ -265,7 +269,7 @@ static void web_nextKeyOrMouseEvent(rogueEvent *returnEvent, boolean textInput, 
         returnEvent->shiftKey = inputBuffer[4];
     }
     else // it is a mouseEvent
-    {
+    {    
         fread(inputBuffer, sizeof(char), MOUSE_INPUT_SIZE, stdin);
         returnEvent->param1 = inputBuffer[1];  //x coord
         returnEvent->param2 = inputBuffer[2];  //y coord
