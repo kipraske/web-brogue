@@ -13,23 +13,16 @@ define([
         addDefaultData: function() {
             var note = new SiteNews();
             note.set({
-                "date": new Date(2016, 0, 23, 0, 0, 0),
-                "description": "Anonymous users now have names and can watch recordings"
+                "date": new Date(2016, 2, 25, 0, 0, 0),
+                "description": "Try my 2016 7DRL <a href='http://flend.net/northerly'>Becoming Northerly</a>!"
             });
             this.add(note);
             var note = new SiteNews();
             note.set({
-                "date": new Date(2016, 0, 12, 0, 0, 0),
-                "description": "Fixed score wrapping bug which affected scores above 65535. Guess why I never noticed this :)"
+                "date": new Date(2016, 2, 25, 0, 0, 0),
+                "description": "Mouseover enabled (thanks to bleezy)"
             });
             this.add(note);
-            var note = new SiteNews();
-            note.set({
-                "date": new Date(2016, 0, 12, 0, 0, 0),
-                "description": "Closing a watched recording now exits - you don't need to press Q"
-            });
-            this.add(note);
-
         }
     });
 
