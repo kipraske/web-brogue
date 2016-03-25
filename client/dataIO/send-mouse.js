@@ -1,4 +1,4 @@
-// Sends a mouseclick event to the server
+// Sends a mouseclick or mouseenter event to the server
 // See rogue.h for mouse event definitions
 
 define(['dataIO/socket'], function(ws){

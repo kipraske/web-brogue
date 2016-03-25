@@ -241,6 +241,7 @@ button {
     position : absolute;
     overflow: hidden;
     text-align: center;
+    cursor: default;
 }
 
 .console-chat {
