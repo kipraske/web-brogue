@@ -47,3 +47,5 @@ Subsequent to this, I (flend) have made rather more extensive brogue edits. I do
 Server Configuration
 --------------------------------
 Server global configuration variables are defined in server/config.js. You may need to adjust these depending on how your environment is set up.
+
+In particular, if you change the port setting (port.HTTP = 8080) you must make the same change in client/dataIO/socket.js (window.location.hostname + ":8080").
