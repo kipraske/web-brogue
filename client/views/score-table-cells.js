@@ -11,11 +11,23 @@ define([
 
     var LevelFormatter = _.extend({}, Backgrid.CellFormatter.prototype, {
         fromRaw: function (rawValue, model) {
+
+            var easyModeQualifier = "";
+
+            if(model.get("easyMode")) {
+                easyModeQualifier = "&";
+            }
+
             if(rawValue == 0) {
-                return "Win!";
+                if(model.get("easyMode")) {
+                    return "&Win!";
+                }
+                else {
+                    return "Win!";
+                }
             }
             else if(rawValue) {
-                return "L" + rawValue.toString();
+                return easyModeQualifier + "L" + rawValue.toString();
             }
         }
     });
