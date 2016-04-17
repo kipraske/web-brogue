@@ -3,7 +3,7 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
+    'backbone'
 ], function($, _, Backbone) {
 
     var ConsoleCellModel = Backbone.Model.extend({
