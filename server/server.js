@@ -22,6 +22,7 @@ httpServerDomain.run(function () {
     var express = require("express");
     var morgan = require("morgan");
     var highScoreApi = require("./api/high-score-api");
+    var newsApi = require("./api/news-api");
 
     var app = express();
 
@@ -48,6 +49,7 @@ httpServerDomain.run(function () {
     });
 
     highScoreApi(app);
+    newsApi(app);
 
     var server = require('http').Server(app);
     var io = require('socket.io')(server);

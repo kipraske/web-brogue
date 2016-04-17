@@ -1,0 +1,22 @@
+{
+  "name": "web-brogue-news",
+  "version": "0.1.0",
+  "description": "A utility for add news to the brogue server.",
+  "contributors": [
+    {
+      "name": "Tom Ford",
+      "email": "flend@compsoc.net"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flend/web-brogue"
+  },
+  "main": "news.js",
+  "dependencies": {
+    "mongoose": "^4.0.0",
+    "underscore": "^1.8.2",
+    "minimist": "1.2.0",
+    "async": "1.0.0"
+  }
+}
