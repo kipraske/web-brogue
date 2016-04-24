@@ -13,15 +13,19 @@ define([
 
         initialize: function () {
             this.render();
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'add', this.render);
+
+            this.model.fetch();
         },
 
         render: function() {
 
             var isEmpty = false;
-            if(this.collection && this.collection.length == 0) {
+            if(this.model && this.model.length == 0) {
                 isEmpty = true;
             }
-            if(!this.collection) {
+            if(!this.model) {
                 isEmpty = true;
             }
 
@@ -31,8 +35,8 @@ define([
 
             this.$listElement = this.$el.find('#site-news-table');
 
-            if(this.collection) {
-                this.collection.each(function (model) {
+            if(this.model) {
+                this.model.each(function (model) {
                     var item = new SiteNewsRowView({model: model});
                     this.$listElement.append(item.render().$el);
                 }, this);
