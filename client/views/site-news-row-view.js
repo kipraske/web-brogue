@@ -15,7 +15,7 @@ define([
 
             var objectToRender = {
                 date: this.formatDate(this.model.get("date")),
-                description: this.model.get("description")
+                description: this.model.get("story")
             };
 
             this.$el.html(this.template(objectToRender));

@@ -35,8 +35,6 @@ module.exports = function(app) {
         return filteredNewsRecords;
     };
 
-    app.use(paginate.middleware(10, 50));
-
     app.get("/api/news", function (req, res) {
         NewsRecord.paginate({}, {
             page: req.query.page,
