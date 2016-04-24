@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var mongoosePaginate = require('mongoose-paginate');
+//var mongoosePaginate = require('mongoose-paginate');
 
 var newsRecordSchema = mongoose.Schema({
     seq: Number,
@@ -7,6 +7,6 @@ var newsRecordSchema = mongoose.Schema({
     story: String
 });
 
-newsRecordSchema.plugin(mongoosePaginate);
+//newsRecordSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('NewsRecord', newsRecordSchema);
