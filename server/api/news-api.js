@@ -18,16 +18,21 @@ module.exports = function(app) {
         }
     };
 
-    var filterNewsRecords = function (newsRecords) {
+    var filterNewsRecords = function (newsRecords, queryDays) {
 
         var filteredNewsRecords = [];
         var d = new Date();
         var now = d.getTime();
 
+        var days = 30;
+
+        if(queryDays && queryDays > 0) {
+            days = queryDays;
+        }
+
         _.each(newsRecords, function (newsRecord) {
 
-            //Return news from the last month
-            if(newsRecord.date.getTime() - now < 1000 * 60 * 60 * 24 * 30 * 1) {
+            if(now - newsRecord.date.getTime() < 1000 * 60 * 60 * 24 * days) {
                 filteredNewsRecords.push(newsRecord);
             }
         });
@@ -48,7 +53,7 @@ module.exports = function(app) {
                 json: function () {
                     res.json({
                         object: 'list',
-                        data: filterNewsRecords(newsRecords),
+                        data: filterNewsRecords(newsRecords, req.query.days),
                         pageCount: pageCount,
                         itemCount: itemCount
                     });

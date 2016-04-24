@@ -5,7 +5,7 @@ define([
 ], function($, _, Backbone) {
 
     var SiteNewsModel = Backbone.PageableCollection.extend({
-        url: '/api/news',
+        url: '/api/news?days=60',
 
         state: {
             pageSize: 10,
@@ -21,13 +21,7 @@ define([
             pageSize: "limit"
         },
 
-        parseState: function (resp, queryParams, state, options) {
-            return {totalRecords: resp.itemCount };
-        },
-
-        // get the actual records
         parseRecords: function (resp, options) {
-
             return resp.data;
         }
     });

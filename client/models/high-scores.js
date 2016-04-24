@@ -21,8 +21,8 @@ define([
         // You can remap the query parameters from `state` keys from
         // the default to those your server supports
         queryParams: {
-            totalPages: null,
-            totalRecords: null,
+            totalPages: "pageCount",
+            totalRecords: "itemCount",
             sortKey: "sort",
             order: "order",
             pageSize: "limit"
@@ -30,10 +30,6 @@ define([
 
         formatDate: function(date) {
             return Moment(date).format('MMMM Do YYYY, h:mm:ss a');
-        },
-
-        parseState: function (resp, queryParams, state, options) {
-            return {totalRecords: resp.itemCount };
         },
 
         // get the actual records
