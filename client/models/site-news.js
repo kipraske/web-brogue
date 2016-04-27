@@ -14,13 +14,15 @@ define([
         },
 
         queryParams: {
-            totalPages: "pageCount",
-            totalRecords: "itemCount",
             sortKey: "sort",
             order: "order",
             pageSize: "limit"
         },
 
+        parseState: function (resp, queryParams, state, options) {
+            return {totalRecords: resp.itemCount };
+        },
+        
         parseRecords: function (resp, options) {
             return resp.data;
         }
