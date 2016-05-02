@@ -1,8 +1,9 @@
 define([
     'jquery',
     'underscore',
-    'backbone'
-], function($, _, Backbone) {
+    'backbone',
+    'backbonePaginator'
+], function($, _, Backbone, BackbonePaginator) {
 
     var SiteNewsModel = Backbone.PageableCollection.extend({
         url: '/api/news?days=60',
