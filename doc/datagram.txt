@@ -1,0 +1,11 @@
+Linux has a limit on the backlog of datagram packets that can wait in the queue.
+
+cat /proc/sys/net/unix/max_dgram_qlen
+
+On the digital ocean server this is 10, which causes EAGAIN on sending very quickly when using the mouse.
+
+It is probably wise to increase this (as root):
+
+sysctl -w net.unix.max_dgram_qlen=128
+
+(it is 512 on my debian dev box)
