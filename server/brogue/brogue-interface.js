@@ -422,16 +422,23 @@ BrogueInterface.prototype.attachChildEvents = function () {
     }
 
     this.brogueSocket.on('error', function(err) {
-        console.error('Error when writing to client socket: ' + err);
-        //err = 111
+
+        //err.code = -111 ECONNREFUSED
         //This occurs when we connected to an orphaned brogue process and it exits
         //Therefore we set ourselves into an ended state so a new game can be started
+        
+        if(err.code != -11) {
+            self.resetBrogueConnection(self);
+            console.error('Error when writing to client socket: ' + err);
+            self.brogueEvents.emit('quit', 'Error when writing to client socket - normally brogue has exited');
+        }
+        else {
+            //err.code = -11 EAGAIN
+            //This occurs brogue has gone non-responsive and the input buffer is full
+            //It should be temporary
 
-        //err = 11
-        //This occurs brogue has gone non-responsive and the input buffer is full
-        self.resetBrogueConnection(self);
-
-        self.brogueEvents.emit('quit', 'Error when writing to client socket - normally brogue has exited');
+            console.error("EAGAIN from socket, continuing.");
+        }
     });
 
     //Not applicable when connecting to an orphaned process
