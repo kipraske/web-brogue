@@ -739,7 +739,7 @@ void pausePlayback() {
 }
 
 // Used to interact with playback -- e.g. changing speed, pausing.
-void executePlaybackInput(rogueEvent *recordingInput) {
+boolean executePlaybackInput(rogueEvent *recordingInput) {
 	signed long key;
 	short newDelay, frameCount, x, y, previousDeepestLevel;
 	unsigned long destinationFrame;
@@ -748,7 +748,7 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 	char path[BROGUE_FILENAME_MAX];
 	
 	if (!rogue.playbackMode) {
-		return;
+		return false;
 	}
 	
 	if (recordingInput->eventType == KEYSTROKE) {
@@ -771,14 +771,14 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 					flashTemporaryAlert(" Slower ", 300);
 				}
 				rogue.playbackDelayPerTurn = newDelay;
-				break;
+				return true;
 			case ACKNOWLEDGE_KEY:
 				if (rogue.playbackOOS && rogue.playbackPaused) {
 					flashTemporaryAlert(" Out of sync ", 2000);
 				} else {
                     rogue.playbackPaused = !rogue.playbackPaused;
 				}
-				break;
+				return true;
 			case TAB_KEY:
 				rogue.playbackOmniscience = !rogue.playbackOmniscience;
 				displayLevel();
@@ -788,7 +788,7 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 				} else {
 					messageWithColor("Omniscience disabled.", &teal, false);
 				}
-				break;
+				return true;
 			case DESCEND_KEY:
 				pauseState = rogue.playbackPaused;
                 previousDeepestLevel = rogue.deepestLevel;
@@ -814,12 +814,12 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 					}
 				}
 				rogue.playbackPaused = pauseState;
-				break;
+				return true;
 			case INVENTORY_KEY:
 				rogue.playbackMode = false;
 				displayInventory(ALL_ITEMS, 0, 0, true, false);
 				rogue.playbackMode = true;
-				break;
+				return true;
 			case RIGHT_KEY:
 			case RIGHT_ARROW:
             case LEFT_KEY:
@@ -876,23 +876,23 @@ void executePlaybackInput(rogueEvent *recordingInput) {
                         refreshSideBar(-1, -1, false);
                     }
                 }
-				break;
+				return true;
 			case HELP_KEY:
 				printPlaybackHelpScreen();
-				break;
+				return true;
 			case DISCOVERIES_KEY:
 				rogue.playbackMode = false;
 				printDiscoveriesScreen();
 				rogue.playbackMode = true;
-				break;
+				return true;
 			case MESSAGE_ARCHIVE_KEY:
 				rogue.playbackMode = false;
 				displayMessageArchive();
 				rogue.playbackMode = true;
-				break;
+				return true;
 			case VIEW_RECORDING_KEY:
 				if (noSaves) {
-        	return;
+        	return false;
         }
 				confirmMessages();
 				rogue.playbackMode = false;
@@ -906,10 +906,10 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 					}
 				}
 				rogue.playbackMode = true;
-				break;
+				return true;
 			case LOAD_SAVED_GAME_KEY:
 				if (noSaves) {
-        	return;
+        	return false;
         }
 				confirmMessages();
 				rogue.playbackMode = false;
@@ -923,7 +923,7 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 					}
 				}
 				rogue.playbackMode = true;
-				break;
+				return true;
 			case NEW_GAME_KEY:
 				rogue.playbackMode = false;
 				if (confirm("Close recording and begin a new game?", true)) {
@@ -931,7 +931,7 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 					rogue.gameHasEnded = true;
 				}
 				rogue.playbackMode = true;
-				break;
+				return true;
 			case QUIT_KEY:
 				//freeEverything();
 				rogue.gameHasEnded = true;
@@ -941,7 +941,7 @@ void executePlaybackInput(rogueEvent *recordingInput) {
       	//Notify the server that the recording is over
         notifyEvent(GAMEOVER_RECORDING, 0, 0, "recording ended", "none");
 
-				break;
+				return true;
             case TRUE_COLORS_KEY:
                 rogue.trueColorMode = !rogue.trueColorMode;
                 displayLevel();
@@ -953,7 +953,7 @@ void executePlaybackInput(rogueEvent *recordingInput) {
                     messageWithColor(KEYBOARD_LABELS ? "Color effects enabled. Press '\\' again to disable." : "Color effects enabled.",
                                      &teal, false);
                 }
-                break;
+                return true;
             case AGGRO_DISPLAY_KEY:
                 rogue.displayAggroRangeMode = !rogue.displayAggroRangeMode;
                 displayLevel();
@@ -965,18 +965,20 @@ void executePlaybackInput(rogueEvent *recordingInput) {
                     messageWithColor(KEYBOARD_LABELS ? "Stealth range hidden. Press ']' again to display." : "Stealth range hidden.",
                                      &teal, false);
                 }
-                break;
+                return true;
 			case SEED_KEY:
 				//rogue.playbackMode = false;
 				//DEBUG {displayGrid(safetyMap); displayMoreSign(); displayLevel();}
 				//rogue.playbackMode = true;
 				printSeed();
+				return true;
 				break;
 			default:
 				if (key >= '0' && key <= '9'
 					|| key >= NUMPAD_0 && key <= NUMPAD_9) {
                     
 					promptToAdvanceToLocation(key);
+					return true;
 				}
 				break;
 		}
@@ -988,12 +990,16 @@ void executePlaybackInput(rogueEvent *recordingInput) {
 			rogue.playbackMode = false;
 			displayMessageArchive();
 			rogue.playbackMode = true;
+			return true;
 		}
 	} else if (recordingInput->eventType == RIGHT_MOUSE_UP) {
 		rogue.playbackMode = false;
 		displayInventory(ALL_ITEMS, 0, 0, true, false);
 		rogue.playbackMode = true;
+		return true;
 	}
+
+	return false;
 }
 
 // Pass in defaultPath (the file name WITHOUT suffix), and the suffix.

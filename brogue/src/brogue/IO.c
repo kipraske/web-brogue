@@ -2305,8 +2305,8 @@ void nextBrogueEvent(rogueEvent *returnEvent, boolean textInput, boolean colorsD
 				if (pauseDuration && pauseBrogue(pauseDuration)) {
 					// if the player did something during playback
 					nextBrogueEvent(&recordingInput, false, false, true);
-					executePlaybackInput(&recordingInput);
-					repeatAgain = !rogue.playbackPaused;
+					boolean interaction = executePlaybackInput(&recordingInput);
+					repeatAgain = !rogue.playbackPaused && interaction;
 				}
 			}
 		} while ((repeatAgain || rogue.playbackOOS) && !rogue.gameHasEnded);
