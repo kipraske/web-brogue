@@ -151,37 +151,28 @@ BrogueInterface.prototype.start = function (data, mode) {
 
     this.createBrogueDirectoryIfRequired(this.username);
 
-    try {
+    var sendBuf = new Buffer(5);
+    sendBuf[0] = SCREEN_REFRESH;
 
-        var sendBuf = new Buffer(5);
-        sendBuf[0] = SCREEN_REFRESH;
+    this.brogueSocket = unixdgram.createSocket('unix_dgram');
 
-        this.brogueSocket = unixdgram.createSocket('unix_dgram');
+    var self = this;
+    //Note: relies on synchronous callback
+    this.brogueSocket.send(sendBuf, 0, 5, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function (err) {
 
-        this.brogueSocket.send(sendBuf, 0, 5, this.getChildWorkingDir() + "/" + SERVER_SOCKET, function () {
-            //ok to connect to socket - callback
-        });
-
+        if (err) {
+            //If the game doesn't exist, and we are trying to play or watch a recording (not observe),
+            //Create a new game
+            if (mode != brogueMode.OBSERVE) {
+                self.newBrogueProcess(data, mode);
+            }
+            else {
+                throw new Error("Trying to observe game that does not exist.");
+            }
+        }
         //Okay to connect through socket to running process
-        this.attachChildProcess();
-    }
-    catch(e) {
-
-        //If the game doesn't exist, and we are trying to play or watch a recording (not observe),
-        //create a new game
-
-        //This 'book-keeping' triggers an error -9 at the moment, booting the player, so it has been disabled
-        //if(this.brogueSocket != null) {
-        //    this.brogueSocket.close();
-        //}
-
-        if(mode != brogueMode.OBSERVE) {
-            this.newBrogueProcess(data, mode);
-        }
-        else {
-            throw e;
-        }
-    }
+        self.attachChildProcess();
+    });
 };
 
 BrogueInterface.prototype.newBrogueProcess = function(data, mode) {
