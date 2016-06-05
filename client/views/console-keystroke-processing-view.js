@@ -39,6 +39,9 @@ define([
 
             // Check brogue/rogue.h for key definitions within brogue
             switch (keyCode) {
+                case 12: //centre (5)
+                    returnCode = 53;
+                    break;
                 case 13: //enter
                     returnCode = 13;
                     break;
