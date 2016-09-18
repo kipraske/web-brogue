@@ -1,9 +1,9 @@
-var config = require("./config");
+var config = require("../../server/config");
 
-var GameRecord = require("./database/game-record-model");
-var _ = require("underscore");
+var GameRecord = require("../../server/database/game-record-model");
+var _ = require("../../server/node_modules/underscore/underscore");
 
-var mongoose = require("mongoose");
+var mongoose = require("../../server/node_modules/mongoose");
 mongoose.connect(config.db.url);
 
 var calculateLevelStats = function () {
