@@ -26,7 +26,13 @@ define([
                         name: "level",
                         label: "Level",
                         cell: "integer",
-                        sortable: true,
+                        sortable: false,
+                        editable: false
+                    }, {
+                        name: "rank",
+                        label: "Rank",
+                        cell: "integer",
+                        sortable: false,
                         editable: false
                     }, {
                         name: "cause",

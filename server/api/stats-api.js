@@ -88,8 +88,11 @@ module.exports = function(app) {
                         });
 
                         var numberOfDeathsByCauseOnLevelAsArraySorted = _.sortBy(numberOfDeathsByCauseOnLevelAsArray, "frequency").reverse();
+                        var numberOfDeathsByCauseOnLevelAsArraySortedWithRank = _.map(numberOfDeathsByCauseOnLevelAsArraySorted, function(data, index) {
+                            return _.extend(data, { rank: index + 1});
+                        });
 
-                        return numberOfDeathsByCauseOnLevelAsArraySorted;
+                        return numberOfDeathsByCauseOnLevelAsArraySortedWithRank;
                     });
 
                     var deathNumbersCropped = _.mapObject(deathNumbersByLevel, function(levelStats) {

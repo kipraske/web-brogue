@@ -153,6 +153,10 @@ button {
     width: 100%;
 }
 
+.server-statistics table {
+    width: auto;
+}
+
 .current-games th,
 .current-games td,
 .saved-games th,
