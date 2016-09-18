@@ -130,8 +130,3 @@ var calculateLevelStats = function () {
 };
 
 calculateLevelStats();
-
-var cat = {};
-cat["dog"] = "bob";
-
-console.log(JSON.stringify(cat));

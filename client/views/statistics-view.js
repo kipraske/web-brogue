@@ -1,11 +1,8 @@
-// Embedded high scores view
-
 define([
     "jquery",
     "underscore",
-    "backbone",
-    "dispatcher"
-], function ($, _, Backbone, dispatcher) {
+    "backbone"
+], function ($, _, Backbone) {
 
     var StatisticsView = Backbone.View.extend({
 
