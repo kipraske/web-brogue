@@ -42,7 +42,8 @@
     <div id="saved-games" class="saved-games inactive"></div>
     <div id="mini-scores" class="mini-scores"></div>
     <div id="all-scores" class="all-scores inactive"></div>
-    <div id="server-statistics" class="server-statistics inactive"></div>
+    <div id="server-statistics" class="server-statistics inactive">
+    </div>
     <div id="site-news" class="site-news"></div>
 
 </div>
@@ -195,11 +196,31 @@
 </script>
 
 <script id="stats-heading" type="text/template">
-    <h2>Server Statistics</h2>
+    <h2>Game Statistics</h2>
     <ul>
-        <li><a id="stats-deaths-by-level" href="#stats-deaths-by-level">Deaths by Level</a></li>
+        <li><a id="stats-general" href="#general-statistics">General stats</a></li>
+        <li><a id="stats-deaths-by-level" href="#level-statistics">Deaths by Level</a></li>
     </ul>
-    <div id="stats-grid" />
+    <div id="general-statistics" class="general-statistics"></div>
+    <div id="level-statistics" class="level-statistics"></div>
+</script>
+
+<script id="level-statistics-template" type="text/template">
+    <h3>Deaths by Level</h3>
+    <p>The top 3 causes of death by the level on which they happened.</p>
+    <div id="level-stats-grid" />
+</script>
+
+<script id="general-statistics-template" type="text/template">
+    <h3>General Statistics</h3>
+    <ul>
+        <li>Total games played: <%= totalGames %> (easy mode: <%= totalEasyModeGames %>)</li>
+        <li>Total victories: <%= totalNormalModeVictories %></li>
+        <li>Total masteries: <%= totalNormalModeSuperVictories %></li>
+        <li>Total lumenstones stolen: <%= totalLumenstones %></li>
+        <li>Total levels explored: <%= totalLevels %></li>
+        <p>(victories and masteries exclude easy mode)</p>
+    </ul>
 </script>
 
 <script id="seed-popup" type="text/template">

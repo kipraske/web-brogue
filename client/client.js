@@ -43,7 +43,8 @@ require([
     "models/high-scores",
     "models/chat",
     "models/site-news",
-    "models/statistics-model",
+    "models/level-stats-model",
+    "models/general-stats-model",
     "views/view-activation-helpers",
     "views/auth-view",
     "views/chat-view",
@@ -59,8 +60,10 @@ require([
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
     "views/popups/duplicate-process-popup-view",
-    "views/statistics-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, StatisticsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView, StatisticsView){
+    "views/statistics-view",
+    "views/level-stats-view",
+    "views/general-stats-view"
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView, StatisticsView, LevelStatsView, GeneralStatsView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -74,7 +77,9 @@ require([
     var consoleView = new ConsoleView();
     var chatView = new ChatView({model: new ChatModel()});
     var consoleChatView = new ConsoleChatView({model: new ChatModel()});
-    var statisticsView = new StatisticsView({model: new StatisticsModel()});
+    var statisticsView = new StatisticsView();
+    var levelStatsView = new LevelStatsView({model: new LevelStatsModel()});
+    var generalStatsView = new GeneralStatsView({model: new GeneralStatsModel()});
     var siteNewsView = new SiteNewsView({model: new SiteNewsModel() });
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
