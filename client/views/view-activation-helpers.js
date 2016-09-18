@@ -9,18 +9,18 @@ define(['jquery'], function($){
             $('#loading').addClass('inactive');
         },
 
-        savedGames : function(){       
-            $('#current-games').addClass('inactive');
-            $('#saved-games').removeClass('inactive');
-        },
-        
         currentGames : function(){
-            $('#saved-games, #all-scores').addClass('inactive');
-            $('#current-games, #mini-scores, #chat').removeClass('inactive');
+            $('#all-scores, #server-statistics').addClass('inactive');
+            $('#current-games, #mini-scores, #chat, #site-news').removeClass('inactive');
+        },
+
+        statistics : function(){
+            $('#saved-games, #current-games, #mini-scores, #all-scores, #site-news').addClass('inactive');
+            $('#server-statistics').removeClass('inactive');
         },
 
         highScores : function(){
-            $('#saved-games, #current-games, #mini-scores').addClass('inactive');
+            $('#saved-games, #current-games, #mini-scores, #server-statistics, #site-news').addClass('inactive');
             $('#all-scores, #chat').removeClass('inactive');
         },
         
@@ -41,7 +41,7 @@ define(['jquery'], function($){
         },
         
         resetAll: function(){
-            $('#play, #saved-games, #all-scores, #console-holder').addClass("inactive");
+            $('#play, #saved-games, #all-scores, #console-holder, #server-statistics').addClass("inactive");
             $('#lobby, #auth, #current-games, #mini-scores').removeClass("inactive");
         }
     };

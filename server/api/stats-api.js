@@ -83,9 +83,10 @@ module.exports = function(app) {
                             return causeGames.length;
                         });
 
-                        var numberOfDeathsByCauseOnLevelAsArray = _.map(numberOfDeathsByCauseOnLevel, function(value, key){
-                            return { level: level, cause : key, frequency : value };
+                        var numberOfDeathsByCauseOnLevelAsArray = _.map(numberOfDeathsByCauseOnLevel, function(value, key) {
+                            return { level: parseInt(level), cause : key, frequency : parseInt(value) };
                         });
+
                         var numberOfDeathsByCauseOnLevelAsArraySorted = _.sortBy(numberOfDeathsByCauseOnLevelAsArray, "frequency").reverse();
 
                         return numberOfDeathsByCauseOnLevelAsArraySorted;

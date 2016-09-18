@@ -88,7 +88,8 @@ button {
 .saved-games,
 .mini-scores,
 .site-news,
-.all-scores {
+.all-scores,
+.server-statistics {
     margin: 0 2.5%;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -159,7 +160,9 @@ button {
 .mini-scores th,
 .mini-scores td,
 .all-scores th,
-.all-scores td {
+.all-scores td,
+.server-statistics th,
+.server-statistics td {
     text-align: left;
 }
 
@@ -198,6 +201,11 @@ button {
         padding-left: 400px;
         /* accounts for margin */
         width: 90%;
+    }
+
+    .server-statistics {
+        margin: 0 2.5% 0 7.5%;
+        padding-left: 400px;
     }
 }
 
