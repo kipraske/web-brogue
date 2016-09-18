@@ -5,6 +5,11 @@ module.exports = function(app) {
 
     app.get("/api/stats/levels", function (req, res) {
 
+        var maxCausesPerLevel = Number.MAX_SAFE_INTEGER;
+        if(req.query.maxCauses) {
+            maxCausesPerLevel = req.query.maxCauses;
+        }
+
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
@@ -79,14 +84,20 @@ module.exports = function(app) {
                         });
 
                         var numberOfDeathsByCauseOnLevelAsArray = _.map(numberOfDeathsByCauseOnLevel, function(value, key){
-                            return { cause : key, frequency : value };
+                            return { level: level, cause : key, frequency : value };
                         });
                         var numberOfDeathsByCauseOnLevelAsArraySorted = _.sortBy(numberOfDeathsByCauseOnLevelAsArray, "frequency").reverse();
 
                         return numberOfDeathsByCauseOnLevelAsArraySorted;
                     });
 
-                    res.json(deathNumbersByLevel);
+                    var deathNumbersCropped = _.mapObject(deathNumbersByLevel, function(levelStats) {
+                        return levelStats.slice(0, maxCausesPerLevel);
+                    });
+
+                    var deathNumbersFlattened = _.flatten(_.map(deathNumbersCropped, function(val) { return val; }));
+
+                    res.json(deathNumbersFlattened);
                 });
             }
         });

@@ -98,14 +98,22 @@ var calculateLevelStats = function () {
             });
 
             var numberOfDeathsByCauseOnLevelAsArray = _.map(numberOfDeathsByCauseOnLevel, function(value, key){
-                return { cause : key, frequency : value };
+                return { level: level, cause : key, frequency : value };
             });
             var numberOfDeathsByCauseOnLevelAsArraySorted = _.sortBy(numberOfDeathsByCauseOnLevelAsArray, "frequency").reverse();
 
             return numberOfDeathsByCauseOnLevelAsArraySorted;
         });
 
-        console.log(JSON.stringify(deathNumbersByLevel, null, 2));
+        var maxEntriesPerLevel = 1;
+
+        var deathNumbersCropped = _.mapObject(deathNumbersByLevel, function(levelStats) {
+            return levelStats.slice(0, maxEntriesPerLevel);
+        });
+
+        var deathNumbersFlattened = _.flatten(_.map(deathNumbersCropped, function(val) { return val; }));
+
+        console.log(JSON.stringify(deathNumbersFlattened, null, 2));
 
 
         //console.log("Killed Games");
