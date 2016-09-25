@@ -17,4 +17,5 @@ gameRecordSchema.index({ date: 1, username: -1 }, { unique: true });
 
 gameRecordSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('GameRecord', gameRecordSchema);
+module.exports = gameRecordSchema;
+//mongoose.model('GameRecord', gameRecordSchema);

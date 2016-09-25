@@ -1,8 +1,12 @@
+var request = require('supertest');
 var mongoose = require("mongoose");
-var gameRecord = require("../database/game-record-model");
+var gameRecordSchema = require("../database/game-record-model");
 var brogueConstants = require("../brogue/brogue-constants.js");
+var expect = require("chai").expect;
+var server = require("./server-test");
 
-mongoose.connect('mongodb://localhost/stats_api_test');
+var dbPath = 'mongodb://localhost/stats_api_test';
+var db = mongoose.createConnection(dbPath);
 
 describe("stats-api", function(){
 
@@ -10,7 +14,7 @@ describe("stats-api", function(){
 
         var gameRecord1 = {
             username: "flend",
-            date: event.date,
+            date: new Date("2011-05-26T07:56:00.123Z"),
             score: 100,
             seed: 200,
             level: 3,
@@ -20,23 +24,28 @@ describe("stats-api", function(){
             recording: "file1"
         };
 
-        gameRecord.create(gameRecord1, function() {
+        db.model('GameRecord', gameRecordSchema).create(gameRecord1, function() {
+            console.log("wrote record");
             done();
         });
     });
+
     afterEach(function(done){
+
         //delete all the customer records
-        gameRecord.remove({}, function() {
+        db.model('GameRecord', gameRecordSchema).remove({}, function() {
+            console.log("deleted record");
+
             done();
         });
     });
 
-    var url = "http://localhost:8080/api/stats/general";
-
-    it("returns status 200", function() {
-      request(url, function(error, response, body) {
-        expect(response.statusCode).to.equal(200);
-      });
+    it("returns status 200", function(done) {
+      request(server)
+          .get("/api/stats/general")
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(200, done);
     });
 
 });

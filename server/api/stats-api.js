@@ -1,6 +1,10 @@
-var GameRecord = require("../database/game-record-model");
+var mongoose = require('mongoose');
+var GameRecordSchema = require("../database/game-record-model");
+
 var brogueConstants = require('../brogue/brogue-constants.js');
 var _ = require("underscore");
+
+var GameRecord = mongoose.model('GameRecord', GameRecordSchema);
 
 module.exports = function(app) {
 
