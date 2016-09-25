@@ -45,7 +45,12 @@ describe("stats-api", function(){
           .get("/api/stats/general")
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .expect(200, done);
+          .expect(200)
+          .end(function(err, res) {
+              if (err) throw err;
+              console.log(JSON.stringify(res));
+              done();
+          });
     });
 
 });
