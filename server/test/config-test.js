@@ -12,7 +12,7 @@ var config = {
         GAME_DATA_DIR : path.normalize(__dirname + "../../../game-data/")
     },
     db : {
-        url : "mongodb://localhost/stats_api_test"
+        url : "mongodb://localhost/server_test"
     },
     lobby : {
         UPDATE_INTERVAL : 1000,

@@ -195,7 +195,6 @@ module.exports = function(app) {
                     var allNormalModeDeaths = _.where(allNormalModeGames, {result: brogueConstants.gameOver.GAMEOVER_DEATH});
                     var allNormalModeSuperVictories = _.where(allNormalModeGames, {result: brogueConstants.gameOver.GAMEOVER_SUPERVICTORY});
 
-
                     var totalLumenstonesPerGame = _.map(allNormalModeGames, function (game) {
 
                         var lumenRe = new RegExp("with\\s+(\\d+)\\s+lumenstones");
