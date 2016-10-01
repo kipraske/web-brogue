@@ -178,6 +178,7 @@ module.exports = function(app) {
 
     app.get("/api/stats/records", function (req, res) {
 
+        //TODO - just a copy of general for now
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
