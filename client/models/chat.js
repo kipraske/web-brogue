@@ -31,6 +31,12 @@ define([
             this.addChatMessage(fullMessage);
         },
 
+        addChatHistory: function(history) {
+            _.each(history, function(historyEntry) {
+                var fullMessage = "(" + historyEntry.username + " " + this.formatDate(historyEntry.date) + "): " + historyEntry.message;
+                this.addChatMessage(fullMessage);
+            }, this);
+        },
         formatDate: function(date) {
             return Moment(date).format('h:mm');
         },

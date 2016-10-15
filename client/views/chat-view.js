@@ -20,6 +20,7 @@ define([
         template: _.template($('#lobby-chat-template').html()),
 
         initialize: function () {
+            this.requestHistory();
             this.render();
         },
         render: function () {
@@ -50,6 +51,9 @@ define([
                 }
                 if(message.type === "status") {
                     this.model.addStatusMessageWithTime(message.data);
+                }
+                if(message.type === "history") {
+                    this.model.addChatHistory(message.history);
                 }
             }
 
@@ -88,6 +92,9 @@ define([
         },
         truncateString: function (str, length) {
             return str.length > length ? str.substring(0, length - 3) + '...' : str
+        },
+        requestHistory: function () {
+            send("chat", "lobbyHistory");
         }
     });
 
