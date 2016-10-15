@@ -460,7 +460,6 @@ BrogueInterface.prototype.resetBrogueConnection = function(self) {
     if(self.brogueSocket != null) {
         try {
             self.brogueSocket.close();
-            console.log("closing server socket");
         }
         catch (err) {
             console.error("Failed to close server socket " + JSON.stringify(err));
@@ -469,7 +468,6 @@ BrogueInterface.prototype.resetBrogueConnection = function(self) {
     if(self.brogueClientSocket != null) {
         try {
             self.brogueClientSocket.close();
-            console.log("closing client socket");
         }
         catch(err) {
             console.error("Failed to close client socket " + JSON.stringify(err));
