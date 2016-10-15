@@ -18,8 +18,7 @@ define([
         },
 
         addStatusMessageWithTime: function(message) {
-            var fullMessage = "(system" + " " + this.formatDate(new Date()) + "): " + message;
-            this.addChatMessage(fullMessage);
+            this.addChatMessage(this.formatSystemMessage(new Date(), message));
         },
 
         addChatMessageWithThisUserAndTime: function(message) {
@@ -27,18 +26,30 @@ define([
         },
 
         addChatMessageWithUserAndTime: function(username, message) {
-            var fullMessage = "(" + username + " " + this.formatDate(new Date()) + "): " + message;
-            this.addChatMessage(fullMessage);
+            this.addChatMessage(this.formatChatMessage(username, new Date(), message));
         },
-
         addChatHistory: function(history) {
             _.each(history, function(historyEntry) {
-                var fullMessage = "(" + historyEntry.username + " " + this.formatDate(historyEntry.date) + "): " + historyEntry.message;
-                this.addChatMessage(fullMessage);
+                this.addChatMessage(this.formatChatMessage(historyEntry.username, historyEntry.date, historyEntry.message));
             }, this);
         },
+        formatSystemMessage: function(date, message) {
+            return "[" + this.formatDate(new Date()) + " " + message + "]";
+        },
+        formatChatMessage: function(username, date, message) {
+            return "(" + this.formatDate(date) + ") " + username + ": " + message;
+        },
         formatDate: function(date) {
-            return Moment(date).format('h:mm');
+
+            var formattedDate = [];
+            var startOfToday = Moment().startOf('day');
+
+            if(Moment(date).isBefore(startOfToday)) {
+                formattedDate =  Moment(date).format('D/MMM ')
+            }
+
+            formattedDate += Moment(date).format('h:mm');
+            return formattedDate;
         },
 
         setUsername: function(username) {

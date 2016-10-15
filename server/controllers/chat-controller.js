@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var chatRecord = mongoose.model('ChatRecord', chatRecordSchema);
 
 var LOBBY_NAME = "lobby";
-var CHAT_HISTORY_LENGTH = 2;
+var CHAT_HISTORY_LENGTH = 100;
 
 function ChatController(socket) {
     this.controllerName = "chat";
@@ -55,12 +55,8 @@ _.extend(ChatController.prototype, {
             //Delete very old chats if above threshold
             chatRecord.count({}, function(err, count) {
 
-                console.log("count of chats: " + count);
                 if (count > CHAT_HISTORY_LENGTH * 2) {
                     chatRecord.find({}).sort('-date').skip(CHAT_HISTORY_LENGTH).exec(function (err, chatRecords) {
-
-                        console.log("chats to delete");
-                        console.log(JSON.stringify(chatRecords));
 
                         if (err) {
                             return;
@@ -85,12 +81,6 @@ _.extend(ChatController.prototype, {
                     var chatsToSend = _.map(chatRecords, function(chatRecord) { return _.pick(chatRecord, "date", "username", "message"); });
                     var chatsToSendOrdered = _.sortBy(chatsToSend, "date");
 
-                    console.log("chat history");
-                    console.log(JSON.stringify(chatRecords));
-
-                    console.log("chat to send");
-                    console.log(JSON.stringify(chatsToSendOrdered));
-
                     self.sendMessage("chat", {
                         type: "history",
                         history: chatsToSendOrdered
@@ -104,10 +94,9 @@ _.extend(ChatController.prototype, {
             username: chatMessage.username,
             message: chatMessage.message
         };
-        console.log("Persisting message; " + chatMessage.message);
 
         chatRecord.create(thisChatRecord, function (err) {
-            console.err("chat save failure:" + err);
+            console.err("Chat save failure:" + err);
         });
     },
     enterRoom: function(roomName) {
