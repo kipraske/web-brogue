@@ -9,7 +9,7 @@ var GameRecord = mongoose.model('GameRecord', GameRecordSchema);
 
 module.exports = function(app) {
 
-    app.get("/api/stats/levels", function (req, res) {
+    app.get("/api/stats/levels/monsters", function (req, res) {
 
         var maxCausesPerLevel = Number.MAX_SAFE_INTEGER;
         if(req.query.maxCauses) {
@@ -48,6 +48,31 @@ module.exports = function(app) {
                     });
 
                     var deathNumbersFlattened = _.flatten(_.map(deathNumbersCropped, function(val) { return val; }));
+
+                    res.json(deathNumbersFlattened);
+                });
+            }
+        });
+    });
+
+    app.get("/api/stats/levels", function (req, res) {
+
+        res.format({
+            json: function () {
+                GameRecord.find({}).lean().exec(function (err, games) {
+
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+
+                    var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
+
+                    var deathNumbersByLevel = _.mapObject(deathGamesByLevel, function(levelGames, level) {
+
+                        var numberOfDeathsOnLevelAsArray = { level: parseInt(level), frequency : levelGames.length };
+
+                        return numberOfDeathsOnLevelAsArray;
+                    });
+
+                    var deathNumbersFlattened = _.flatten(_.map(deathNumbersByLevel, function(val) { return val; }));
 
                     res.json(deathNumbersFlattened);
                 });

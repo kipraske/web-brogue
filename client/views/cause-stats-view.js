@@ -4,10 +4,10 @@ define([
     "backbone"
 ], function ($, _, Backbone) {
 
-    var LevelStatisticsView = Backbone.View.extend({
+    var CauseStatisticsView = Backbone.View.extend({
 
-        el: '#level-statistics',
-        headingTemplate: _.template($('#level-statistics-template').html()),
+        el: '#cause-statistics',
+        headingTemplate: _.template($('#cause-statistics-template').html()),
 
         initialize: function() {
             this.listenTo(this.model, "add", this.render);
@@ -19,6 +19,18 @@ define([
                         name: "level",
                         label: "Level",
                         cell: "integer",
+                        sortable: false,
+                        editable: false
+                    }, {
+                        name: "rank",
+                        label: "Rank",
+                        cell: "integer",
+                        sortable: false,
+                        editable: false
+                    }, {
+                        name: "cause",
+                        label: "Cause",
+                        cell: "string",
                         sortable: false,
                         editable: false
                     }, {
@@ -39,7 +51,7 @@ define([
 
             this.$el.html(this.headingTemplate({}));
 
-            $("#level-stats-grid").append(this.grid.render().$el);
+            $("#cause-stats-grid").append(this.grid.render().$el);
             return this;
         },
 
@@ -49,6 +61,6 @@ define([
         }
     });
 
-    return LevelStatisticsView;
+    return CauseStatisticsView;
 });
 

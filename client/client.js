@@ -43,6 +43,7 @@ require([
     "models/high-scores",
     "models/chat",
     "models/site-news",
+    "models/cause-stats-model",
     "models/level-stats-model",
     "models/general-stats-model",
     "views/view-activation-helpers",
@@ -62,8 +63,9 @@ require([
     "views/popups/duplicate-process-popup-view",
     "views/statistics-view",
     "views/level-stats-view",
-    "views/general-stats-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView, StatisticsView, LevelStatsView, GeneralStatsView){
+    "views/general-stats-view",
+    "views/cause-stats-view"
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -79,6 +81,7 @@ require([
     var consoleChatView = new ConsoleChatView({model: new ChatModel()});
     var statisticsView = new StatisticsView();
     var levelStatsView = new LevelStatsView({model: new LevelStatsModel()});
+    var causeStatsView = new CauseStatsView({model: new CauseStatsModel()});
     var generalStatsView = new GeneralStatsView({model: new GeneralStatsModel()});
     var siteNewsView = new SiteNewsView({model: new SiteNewsModel() });
     var consoleKeyboardView = new ConsoleKeyProcessingView();
