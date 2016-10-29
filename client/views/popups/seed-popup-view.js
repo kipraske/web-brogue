@@ -4,10 +4,11 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "dispatcher",
     "views/popups/popup-view",
     "dataIO/send-generic",
     "views/view-activation-helpers"
-], function ($, _, Backbone, PopupView, send, activate) {
+], function ($, _, Backbone, dispatcher, PopupView, send, activate) {
 
     var SeedView = PopupView.extend({
         
@@ -23,12 +24,7 @@ define([
         },
     
         handleMessage : function(message){
-            if (message === "show popup"){
-                this.showPopup(message);
-                return;
-            }
-            
-            if (message.result === "fail"){
+            if (message.result === "fail") {
                 // re-rendering the popup in the case we have a conflict with the duplicate process popup
                 // only happens if we have a duplicate process AND user decides to put in a bad seed value
                 this.showPopup(message.data);
@@ -36,7 +32,10 @@ define([
             }
             else if (message.result === "success") {
                 this.closePopup();
+                dispatcher.trigger("startGame");
+
                 activate.console();
+                dispatcher.trigger("showConsole");
             }
         },
         
@@ -46,6 +45,11 @@ define([
             send("brogue", "start", {
                 seed: seedValue
             });
+        },
+
+        showSeedPopup: function() {
+            this.showPopup("");
+            return;
         },
         
         showSeedError : function(message){

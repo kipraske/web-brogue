@@ -60,12 +60,11 @@ require([
     "views/console-view",
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
-    "views/popups/duplicate-process-popup-view",
     "views/statistics-view",
     "views/level-stats-view",
     "views/general-stats-view",
     "views/cause-stats-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView){
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -87,7 +86,6 @@ require([
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
         seedView : new SeedPopupView(),
-        duplicateBrogueView : new DuplicateBroguePopupView()
     };
 
     var highScoresModel = new HighScoresModel();
@@ -142,6 +140,7 @@ require([
 
     dispatcher.on("focusConsole", consoleView.giveKeyboardFocus, consoleView);
 
+    dispatcher.on("showSeedPopup", popups.seedView.showSeedPopup, popups.seedView);
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
@@ -154,7 +153,6 @@ require([
         "auth" : authView.handleMessage.bind(authView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
         "fail" : function(data) { dispatcher.trigger("fail", data) },
-        "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)
     });
 
     // clean up application
