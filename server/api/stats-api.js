@@ -118,6 +118,17 @@ module.exports = function(app) {
                     var totalLevelsPerGame = _.map(games, function (game) { return parseInt(game.level) || 0 });
                     var totalLevels = _.reduce(totalLevelsPerGame, function(memo, num){ return memo + num; }, 0);
 
+                    var allVictories = allNormalModeVictories.concat(allNormalModeSuperVictories);
+                    var allVictoriesSortedByDate = _.sortBy(allVictories, 'date');
+                    var lastVictory = _.last(allVictoriesSortedByDate);
+                    var lastVictoryData;
+                    if(!lastVictory) {
+                        lastVictoryData = { date: "Never", username: "No-one" };
+                    }
+                    else {
+                        lastVictoryData = { date: lastVictory.date, username: lastVictory.username };
+                    }
+
                     var statsSummary = {};
 
                     statsSummary.totalGames = games.length;
@@ -137,6 +148,8 @@ module.exports = function(app) {
 
                     statsSummary.totalLumenstones = totalLumenstones;
                     statsSummary.totalLevels = totalLevels;
+
+                    statsSummary.lastVictory = lastVictoryData;
 
                     res.json(statsSummary);
                 });
