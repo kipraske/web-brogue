@@ -3,11 +3,12 @@
 define([
     "jquery",
     "underscore",
+    "dispatcher",
     "backbone",
     "dataIO/send-mouse",
     "models/console-cell",
     "models/console-cell-shared"
-], function($, _, Backbone, sendMouseEvent, CellModel, ConsoleCellShared) {
+], function($, _, dispatcher, Backbone, sendMouseEvent, CellModel, ConsoleCellShared) {
 
     // See BrogueCode/rogue.h for all brogue event definitions
     var MOUSE_UP_EVENT_CHAR = 1;
@@ -106,6 +107,8 @@ define([
                 var delay = ConsoleCellShared.lastMouseOver + MOUSEOVER_SIDEBAR_RATE_LIMIT_MS - timeNow;
                 ConsoleCellShared.mouseOverDelayedSend = setTimeout(sendMouseOverEvent, delay, x, y, event.ctrlKey, event.shiftKey);
             }
+
+            dispatcher.trigger("focusConsole");
         }
     });
 

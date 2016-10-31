@@ -1,6 +1,9 @@
-var GameRecord = require("../database/game-record-model");
+var mongoose = require('mongoose');
+var gameRecordSchema = require("../database/game-record-model");
 var paginate = require("express-paginate");
 var _ = require("underscore");
+
+var GameRecord = mongoose.model('GameRecord', gameRecordSchema);
 
 module.exports = function(app) {
 
@@ -26,7 +29,7 @@ module.exports = function(app) {
 
             var filteredRecord =
                 _.pick(gameRecord,
-                    'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date');
+                    '_id', 'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date');
 
             if('recording' in gameRecord && gameRecord.recording != undefined) {
                 filteredRecord.recording = 'recording-' + gameRecord._id;
@@ -139,6 +142,29 @@ module.exports = function(app) {
     app.get("/api/games/:username", function (req, res) {
 
         GameRecord.paginate({username: req.params.username}, {
+            page: req.query.page,
+            limit: req.query.limit,
+            sortBy: sortFromQueryParams(req, '-date')
+        }, function (err, gameRecords, pageCount, itemCount) {
+
+            if (err) return next(err);
+
+            res.format({
+                json: function () {
+                    res.json({
+                        object: 'list',
+                        data: filterGameRecords(gameRecords),
+                        pageCount: pageCount,
+                        itemCount: itemCount
+                    });
+                }
+            });
+        });
+    });
+
+    app.get("/api/games/id/:id", function (req, res) {
+
+        GameRecord.paginate({_id: req.params.id}, {
             page: req.query.page,
             limit: req.query.limit,
             sortBy: sortFromQueryParams(req, '-date')

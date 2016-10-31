@@ -27,5 +27,13 @@
     "client-sessions": "^0.7.0",
     "morgan": "^1.6.1",
     "socket.io": "^1.0.0"
+  },
+  "scripts": {
+    "test": "mocha --timeout 10000"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "supertest": "^2.0.0"
   }
 }

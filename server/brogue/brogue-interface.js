@@ -217,7 +217,6 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
         stdio: 'ignore'
     };
     this.brogueChild = childProcess.spawn(config.path.BROGUE, args, options);
-    this.attachChildProcess();
 };
 
 BrogueInterface.prototype.attachChildProcess = function() {
@@ -248,8 +247,8 @@ BrogueInterface.prototype.attachChildEvents = function () {
 
     try { fs.unlinkSync(this.getChildWorkingDir() + "/" + CLIENT_SOCKET); } catch (e) { /* swallow */ }
 
-    var client_read = unixdgram.createSocket('unix_dgram');
-    client_read.on('message', function(data, rinfo) {
+    this.brogueClientSocket = unixdgram.createSocket('unix_dgram');
+    this.brogueClientSocket.on('message', function(data, rinfo) {
 
         //Callback when receiving data on the socket from brogue
 
@@ -398,13 +397,13 @@ BrogueInterface.prototype.attachChildEvents = function () {
         self.brogueEvents.emit('data', dataToSendCropped);
     });
 
-    client_read.on('error', function(err) {
-        console.error('Error when reading from client socket' + err);
+    this.brogueClientSocket.on('error', function(err) {
+        self.resetBrogueConnection(self);
         //Not identified any cases where this can happen yet but assume it's terminal
         self.brogueEvents.emit('quit', 'Error when reading from client socket');
     });
 
-    client_read.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
+    this.brogueClientSocket.bind(this.getChildWorkingDir() + "/" + CLIENT_SOCKET);
 
     //Server write socket
     //May have already been connected in the test above
@@ -458,8 +457,26 @@ BrogueInterface.prototype.killBrogue = function(self) {
 
 BrogueInterface.prototype.resetBrogueConnection = function(self) {
 
+    if(self.brogueSocket != null) {
+        try {
+            self.brogueSocket.close();
+        }
+        catch (err) {
+            console.error("Failed to close server socket " + JSON.stringify(err));
+        }
+    }
+    if(self.brogueClientSocket != null) {
+        try {
+            self.brogueClientSocket.close();
+        }
+        catch(err) {
+            console.error("Failed to close client socket " + JSON.stringify(err));
+        }
+    }
+
     self.brogueChild = null;
     self.brogueSocket = null;
+    self.brogueClientSocket = null;
     self.disconnected = true;
 };
 

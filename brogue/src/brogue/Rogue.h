@@ -31,7 +31,7 @@
 #define USE_UNICODE
 
 // version string -- no more than 16 bytes:
-#define BROGUE_VERSION_STRING "1.7.4"
+#define BROGUE_VERSION_STRING "1.7.4-web"
 
 // debug macros -- define DEBUGGING as 1 to enable wizard mode.
 
@@ -191,7 +191,7 @@
 #define FOOD_CHAR		';'
 #define SCROLL_CHAR		0x266A//'?'		// 0x039E
 //#define RING_CHAR		0x26AA //0xffee
-#define RING_CHAR		0x26AA
+#define RING_CHAR		'o'
 #define CHARM_CHAR      0x03DE
 #define POTION_CHAR		'!'
 #define ARMOR_CHAR		'['

@@ -18,6 +18,7 @@ define([
             "click #start-brogue-seed" : "startBrogueSeed",
             "click #show-saved-games" : "showSavedGames",
             "click #show-current-games" : "showCurrentGames",
+            "click #show-stats" : "showStats",
             "click #show-high-scores" : "showHighScores"
         },
         startBrogue: function(event){
@@ -31,20 +32,17 @@ define([
         startBrogueSeed: function(event){
             event.preventDefault();
 
-            //TODO: Don't use the server-side routing for this!
-            var popupMessage = { "type" : "seed", "data" : "show popup" };
-            router.route(popupMessage);
+            dispatcher.trigger("showSeedPopup");
         },
-        
-        showSavedGames : function(event){
-            event.preventDefault();    
-            send('savedGames', 'getBrogueSaves');
-            activate.savedGames();
-        },
-        
+
         showCurrentGames : function(event){
             event.preventDefault();
             activate.currentGames();
+        },
+
+        showStats : function(event){
+            event.preventDefault();
+            activate.statistics();
         },
 
         showHighScores: function(event) {

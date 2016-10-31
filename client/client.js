@@ -43,6 +43,9 @@ require([
     "models/high-scores",
     "models/chat",
     "models/site-news",
+    "models/cause-stats-model",
+    "models/level-stats-model",
+    "models/general-stats-model",
     "views/view-activation-helpers",
     "views/auth-view",
     "views/chat-view",
@@ -57,8 +60,11 @@ require([
     "views/console-view",
     "views/console-keystroke-processing-view",
     "views/popups/seed-popup-view",
-    "views/popups/duplicate-process-popup-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, DuplicateBroguePopupView){
+    "views/statistics-view",
+    "views/level-stats-view",
+    "views/general-stats-view",
+    "views/cause-stats-view"
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -72,11 +78,14 @@ require([
     var consoleView = new ConsoleView();
     var chatView = new ChatView({model: new ChatModel()});
     var consoleChatView = new ConsoleChatView({model: new ChatModel()});
+    var statisticsView = new StatisticsView();
+    var levelStatsView = new LevelStatsView({model: new LevelStatsModel()});
+    var causeStatsView = new CauseStatsView({model: new CauseStatsModel()});
+    var generalStatsView = new GeneralStatsView({model: new GeneralStatsModel()});
     var siteNewsView = new SiteNewsView({model: new SiteNewsModel() });
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {
         seedView : new SeedPopupView(),
-        duplicateBrogueView : new DuplicateBroguePopupView()
     };
 
     var highScoresModel = new HighScoresModel();
@@ -129,6 +138,9 @@ require([
     dispatcher.on("reconnect", authView.requestLogin, authView);
     dispatcher.on("reconnect", consoleView.exitToLobby, consoleView);
 
+    dispatcher.on("focusConsole", consoleView.giveKeyboardFocus, consoleView);
+
+    dispatcher.on("showSeedPopup", popups.seedView.showSeedPopup, popups.seedView);
     // set up routes for the messages from the websocket connection (only)
     router.registerHandlers({
         //Must bind 'this' to the scope of the view so we can use the internal view functions
@@ -141,7 +153,6 @@ require([
         "auth" : authView.handleMessage.bind(authView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),
         "fail" : function(data) { dispatcher.trigger("fail", data) },
-        "duplicate brogue" : popups.duplicateBrogueView.handleMessage.bind(popups.duplicateBrogueView)
     });
 
     // clean up application

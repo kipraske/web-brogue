@@ -1,7 +1,12 @@
 var Controller = require('./controller-base');
 var _ = require('underscore');
 
+var chatRecordSchema = require('../database/chat-record-model');
+var mongoose = require('mongoose');
+var chatRecord = mongoose.model('ChatRecord', chatRecordSchema);
+
 var LOBBY_NAME = "lobby";
+var CHAT_HISTORY_LENGTH = 100;
 
 function ChatController(socket) {
     this.controllerName = "chat";
@@ -18,7 +23,7 @@ _.extend(ChatController.prototype, {
     handlerCollection: {
         message: function (data) {
 
-            //Check data
+            //Incoming message from client
 
             var incomingMessage = data.data;
 
@@ -36,10 +41,63 @@ _.extend(ChatController.prototype, {
                 data: messageToSend
             }};
 
-            //console.log(JSON.stringify(broadcastMessage));
-
             this.socket.to(this.roomName).emit('message', broadcastMessage);
+
+            if(this.roomName == LOBBY_NAME) {
+                this.persistLobbyMessage({ username: broadcastMessage.data.username,
+                                           message: messageToSend });
+            }
+        },
+        lobbyHistory: function(data) {
+
+            var self = this;
+
+            //Delete very old chats if above threshold
+            chatRecord.count({}, function(err, count) {
+
+                if (count > CHAT_HISTORY_LENGTH * 2) {
+                    chatRecord.find({}).sort('-date').skip(CHAT_HISTORY_LENGTH).exec(function (err, chatRecords) {
+
+                        if (err) {
+                            return;
+                        }
+                        if (chatRecords) {
+                            _.each(chatRecords, function (chatRecord) {
+                                chatRecord.remove()
+                            });
+                        }
+                    });
+                }
+            });
+
+            //Send chat history
+            chatRecord.find({}).sort('-date').limit(CHAT_HISTORY_LENGTH).exec(function (err, chatRecords) {
+                if (err) {
+                    self.controllers.error.send(JSON.stringify(err));
+                    return;
+                }
+
+                if (chatRecords) {
+                    var chatsToSend = _.map(chatRecords, function(chatRecord) { return _.pick(chatRecord, "date", "username", "message"); });
+                    var chatsToSendOrdered = _.sortBy(chatsToSend, "date");
+
+                    self.sendMessage("chat", {
+                        type: "history",
+                        history: chatsToSendOrdered
+                    });
+                }
+            });
         }
+    },
+    persistLobbyMessage: function(chatMessage) {
+        var thisChatRecord = {
+            username: chatMessage.username,
+            message: chatMessage.message
+        };
+
+        chatRecord.create(thisChatRecord, function (err) {
+            console.err("Chat save failure:" + err);
+        });
     },
     enterRoom: function(roomName) {
         this.socket.leave(this.roomName);
