@@ -122,6 +122,30 @@ _.extend(AuthController.prototype, {
                 return;
             }
 
+            if(data.username.indexOf("<") > -1 || data.username.indexOf(">") > -1) {
+                self.sendMessage("auth", {
+                    result: "fail",
+                    data: "Sorry, cannot use < > brackets in username"
+                });
+                return;
+            }
+
+            if(data.username.length > 30) {
+                self.sendMessage("auth", {
+                    result: "fail",
+                    data: "Sorry, usernames limited to 30 characters"
+                });
+                return;
+            }
+
+            if (data.password !== data.repeat) {
+                self.sendMessage("auth", {
+                    result: "fail",
+                    data: "Password fields do not match"
+                });
+                return;
+            }
+
             User.findOne({'username': data.username}, function (err, user) {
                 if (err) {
                     self.controllers.error.send(JSON.stringify(err));
@@ -132,13 +156,6 @@ _.extend(AuthController.prototype, {
                     self.sendMessage("auth", {
                         result: "fail",
                         data: "Sorry that username is already taken"
-                    });
-                    return;
-                }
-                else if (data.password !== data.repeat) {
-                    self.sendMessage("auth", {
-                        result: "fail",
-                        data: "Password fields do not match"
                     });
                     return;
                 }
