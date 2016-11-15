@@ -36,7 +36,31 @@ describe("stats/general", function(){
             recording: "file2"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2], function() {
+        var gameRecord3 = {
+            username: "ccc",
+            date: new Date("2013-06-27T07:56:01.123Z"),
+            score: 150,
+            seed: 250,
+            level: 26,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Escaped the Dungeons of Doom with 3 lumenstones!",
+            recording: "file3"
+        };
+
+        var gameRecord4 = {
+            username: "dave",
+            date: new Date("2012-06-26T07:56:01.123Z"),
+            score: 150,
+            seed: 250,
+            level: 26,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Escaped the Dungeons of Doom!",
+            recording: "file4"
+        };
+
+        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4], function() {
             done();
         });
     });
@@ -62,11 +86,92 @@ describe("stats/general", function(){
             .set('Accept', 'application/json')
             .end(function(err, res) {
                 var bodyObj = JSON.parse(res.text);
-                expect(bodyObj).to.have.property('totalGames', 2);
+                expect(bodyObj).to.have.property('totalGames', 4);
+                done();
+            });
+    });
+
+    it("last victory is calculated from victories", function(done) {
+        request(server)
+            .get("/api/stats/general")
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+                var bodyObj = JSON.parse(res.text);
+                expect(bodyObj).to.have.deep.property('lastVictory.date', "2013-06-27T07:56:01.123Z");
+                expect(bodyObj).to.have.deep.property('lastVictory.username', "ccc");
                 done();
             });
     });
 });
+
+describe("stats/general", function(){
+
+    beforeEach(function(done) {
+
+        var gameRecord1 = {
+            username: "xxx",
+            date: new Date("2011-06-26T07:56:00.123Z"),
+            score: 100,
+            seed: 200,
+            level: 26,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Escaped the Dungeons of Doom!",
+            recording: "file1"
+        };
+
+        var gameRecord2 = {
+            username: "yyy",
+            date: new Date("2011-05-26T07:56:00.123Z"),
+            score: 150,
+            seed: 250,
+            level: 40,
+            result: brogueConstants.gameOver.GAMEOVER_SUPERVICTORY,
+            easyMode: false,
+            description: "Mastered the Dungeons of Doom!",
+            recording: "file2"
+        };
+
+        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2], function() {
+            done();
+        });
+    });
+
+    afterEach(function(done) {
+
+        db.model('GameRecord', gameRecordSchema).remove({}, function() {
+            done();
+        });
+    });
+
+    it("last victory is calculated from victories and supervictories", function(done) {
+        request(server)
+            .get("/api/stats/general")
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+                var bodyObj = JSON.parse(res.text);
+                expect(bodyObj).to.have.deep.property('lastVictory.date', "2011-06-26T07:56:00.123Z");
+                expect(bodyObj).to.have.deep.property('lastVictory.username', "xxx");
+                done();
+            });
+    });
+});
+
+describe("stats/general", function(){
+
+    it("last victory is 'Never' if no victories recorded", function(done) {
+        request(server)
+            .get("/api/stats/general")
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+                var bodyObj = JSON.parse(res.text);
+                expect(bodyObj).to.have.deep.property('lastVictory.date', 'Never');
+                expect(bodyObj).to.have.deep.property('lastVictory.username', 'No-one');
+                done();
+            });
+    });
+});
+
 
 describe("stats/levels/monsters", function() {
 

@@ -227,6 +227,7 @@
         <li>Total masteries: <%= totalNormalModeSuperVictories %></li>
         <li>Total lumenstones stolen: <%= totalLumenstones %></li>
         <li>Total levels explored: <%= totalLevels %></li>
+        <li>Last victory: <%= lastVictoryDate %> (by <%= lastVictoryUser %>)</li>
         <p>(victories and masteries exclude easy mode)</p>
     </ul>
 </script>
@@ -241,14 +242,5 @@
     </form>
 </script>
 
-<script id="duplicate-brogue-popup" type="text/template">
-    <div id="popup-close" class="close"> X </div>
-    <form>
-        <div> It appears that you have a brogue game open in another window somewhere. What would you like to do with your existing game?</div>
-        <label for="duplicate-brogue-choice-1"><input type="radio" value="mirror" name="duplicate-brogue-choice" id="duplicate-brogue-choice-1" checked="checked"> Mirror your current game here in this window.
-            <label for="duplicate-brogue-choice-2"><input type="radio" value="kill" name="duplicate-brogue-choice" id="duplicate-brogue-choice-2"> Kill your existing brogue game and go back to the lobby</label>
-            <button type="submit" id="duplicate-brogue-button"> Ok </button>
-    </form>
-</script>
 </body>
 </html>

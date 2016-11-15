@@ -1,5 +1,6 @@
 var Controller = require('./controller-base');
 var _ = require('underscore');
+var escape = require('escape-html');
 
 var chatRecordSchema = require('../database/chat-record-model');
 var mongoose = require('mongoose');
@@ -31,21 +32,22 @@ _.extend(ChatController.prototype, {
                 return
             }
 
-            var messageToSend = this.truncateString(incomingMessage, this.truncateStringLength);
+            var messageTruncated = this.truncateString(incomingMessage, this.truncateStringLength);
+            var messageSanitised = escape(incomingMessage);
 
             //Send to all other listeners in the same room
             var broadcastMessage = { type: "chat", data: {
                 type: "message",
                 channel: data.channel,
                 username: this.controllers.auth.getUserOrAnonName(),
-                data: messageToSend
+                data: messageSanitised
             }};
 
             this.socket.to(this.roomName).emit('message', broadcastMessage);
 
             if(this.roomName == LOBBY_NAME) {
                 this.persistLobbyMessage({ username: broadcastMessage.data.username,
-                                           message: messageToSend });
+                                           message: messageTruncated });
             }
         },
         lobbyHistory: function(data) {
@@ -79,7 +81,15 @@ _.extend(ChatController.prototype, {
 
                 if (chatRecords) {
                     var chatsToSend = _.map(chatRecords, function(chatRecord) { return _.pick(chatRecord, "date", "username", "message"); });
-                    var chatsToSendOrdered = _.sortBy(chatsToSend, "date");
+                    var chatsToSendSanitised = _.map(chatsToSend,
+                        function(chatRecord) {
+                            return {
+                                "date": chatRecord.date,
+                                "username": chatRecord.username,
+                                "message": escape(chatRecord.message)
+                            }
+                        });
+                    var chatsToSendOrdered = _.sortBy(chatsToSendSanitised, "date");
 
                     self.sendMessage("chat", {
                         type: "history",
