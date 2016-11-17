@@ -106,7 +106,7 @@ _.extend(ChatController.prototype, {
         };
 
         chatRecord.create(thisChatRecord, function (err) {
-            console.err("Chat save failure:" + err);
+            console.error("Chat save failure:" + err);
         });
     },
     enterRoom: function(roomName) {
