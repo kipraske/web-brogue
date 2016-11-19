@@ -1,8 +1,9 @@
 define([
     "jquery",
     "underscore",
-    "backbone"
-], function ($, _, Backbone) {
+    "backbone",
+    "chart"
+], function ($, _, Backbone, Chart) {
 
     var LevelStatisticsView = Backbone.View.extend({
 
@@ -40,6 +41,50 @@ define([
             this.$el.html(this.headingTemplate({}));
 
             $("#level-stats-grid").append(this.grid.render().$el);
+
+            //Level statistics chart
+
+            var ctx = document.getElementById("level-statistics-chart");
+            var levelData = this.model.pluck("level");
+            var frequencyData = this.model.pluck("frequency");
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: levelData,
+                    datasets: [{
+                        label: '# of deaths',
+                        data: frequencyData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255,99,132,1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Deaths by level'
+                    },
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Level'
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Frequency'
+                            },
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+
             return this;
         },
 
