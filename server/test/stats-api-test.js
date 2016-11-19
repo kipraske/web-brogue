@@ -301,6 +301,37 @@ describe("stats/levels/monsters", function() {
                 done();
             });
     });
+
+    it("calculates percentages of all deaths", function (done) {
+        request(server)
+            .get("/api/stats/levels/monsters?maxCauses=2")
+            .set('Accept', 'application/json')
+            .end(function (err, res) {
+                var bodyObj = JSON.parse(res.text);
+
+                var level1TopDeath = bodyObj[0];
+                expect(level1TopDeath).to.have.property('level', 1);
+                expect(level1TopDeath).to.have.property('cause', 'rat');
+                expect(level1TopDeath).to.have.property('frequency', 2);
+                expect(level1TopDeath).to.have.property('percentage').closeTo(66.7, 0.1);
+                expect(level1TopDeath).to.have.property('rank', 1);
+
+                var level1SecondDeath = bodyObj[1];
+                expect(level1SecondDeath).to.have.property('level', 1);
+                expect(level1SecondDeath).to.have.property('cause', 'jackal');
+                expect(level1SecondDeath).to.have.property('frequency', 1);
+                expect(level1SecondDeath).to.have.property('percentage').closeTo(33.3, 0.1);
+                expect(level1SecondDeath).to.have.property('rank', 2);
+
+                var level3TopDeath = bodyObj[2];
+                expect(level3TopDeath).to.have.property('level', 3);
+                expect(level3TopDeath).to.have.property('cause', 'pink jelly');
+                expect(level3TopDeath).to.have.property('frequency', 1);
+                expect(level3TopDeath).to.have.property('percentage', 100);
+                expect(level3TopDeath).to.have.property('rank', 1);
+                done();
+            });
+    });
 });
 
 describe("stats/levels", function() {
