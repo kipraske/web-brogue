@@ -81,6 +81,80 @@ module.exports = function(app) {
         });
     });
 
+    app.get("/api/stats/levelProbability", function (req, res) {
+
+        res.format({
+            json: function () {
+                GameRecord.find({}).lean().exec(function (err, games) {
+
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+
+                    var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
+
+                    var deathNumbersByLevel = _.mapObject(deathGamesByLevel, function(levelGames, level) {
+
+                        var numberOfDeathsOnLevelAsArray = { level: parseInt(level), frequency : levelGames.length };
+
+                        return numberOfDeathsOnLevelAsArray;
+                    });
+
+                    var deathNumbersFlattened = _.flatten(_.map(deathNumbersByLevel, function(val) { return val; }));
+
+                    var totalDeaths = allDeathGamesWithCause.length;
+                    var deathsSortedByLevel = _.sortBy(deathNumbersFlattened, 'level');
+                    var levelsToConsider = _.pluck(deathsSortedByLevel, 'level');
+                    var maxLevel = _.max(levelsToConsider);
+
+                    console.log("death");
+                    console.log(JSON.stringify(deathNumbersByLevel));
+
+                    var conditionalProbabilities = {};
+                    conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalDeaths;
+
+                    _.each(levelsToConsider, function (l) {
+                        var deathsOnThisLevel = deathNumbersByLevel[l.toString()];
+                        console.log("dotl " + l.toString());
+                        console.log(JSON.stringify(deathsOnThisLevel));
+                        var baseProbability = deathsOnThisLevel.frequency / totalDeaths;
+                        var scaling = 1.0;
+
+                        var levelsBelowThisOne = _.filter(levelsToConsider, function(nl) { return nl < l });
+                        console.log("below");
+                        console.log(JSON.stringify(levelsBelowThisOne));
+
+                        _.each(levelsBelowThisOne, function(lt) {
+                            scaling = scaling * (1 -  conditionalProbabilities[lt]);
+                        });
+
+                        console.log("scaling");
+                        console.log(JSON.stringify(scaling));
+
+                        conditionalProbabilities[l] = baseProbability / scaling;
+                    });
+
+                    console.log("probs");
+
+                    console.log(JSON.stringify(conditionalProbabilities));
+
+
+                    var probabilitiesForLevels = _.mapObject(conditionalProbabilities, function(prob, level) {
+                        var probabilityForLevel = { level: parseInt(level), probability : prob };
+
+                        return probabilityForLevel;
+                    });
+
+                    var probabilitiesFlattened = _.flatten(_.map(probabilitiesForLevels, function(val) { return val; }));
+
+                    console.log("output");
+
+                    console.log(JSON.stringify(probabilitiesFlattened));
+
+                    res.json(probabilitiesFlattened);
+                });
+            }
+        });
+    });
+
     app.get("/api/stats/general", function (req, res) {
 
         res.format({
