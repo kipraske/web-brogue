@@ -434,7 +434,43 @@ describe("stats/levelProbabilities", function() {
             recording: "file8"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8], function () {
+        var gameRecord9 = {
+            username: "flend",
+            date: new Date("2012-06-29T05:56:00.123Z"),
+            score: 154,
+            seed: 254,
+            level: 1,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Escaped the Dungeons of Doom.",
+            recording: "file9"
+        };
+
+        var gameRecord10 = {
+            username: "flend",
+            date: new Date("2015-06-29T05:56:00.123Z"),
+            score: 154,
+            seed: 254,
+            level: 40,
+            result: brogueConstants.gameOver.GAMEOVER_SUPERVICTORY,
+            easyMode: false,
+            description: "Mastered the Dungeons of Doom.",
+            recording: "file10"
+        };
+
+        var gameRecord11 = {
+            username: "flend",
+            date: new Date("2015-06-29T05:56:22.123Z"),
+            score: 154,
+            seed: 254,
+            level: 1,
+            result: brogueConstants.gameOver.GAMEOVER_QUIT,
+            easyMode: false,
+            description: "Quit on level 1.",
+            recording: "file11"
+        };
+
+        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8, gameRecord9, gameRecord10, gameRecord11], function () {
             done();
         });
     });
@@ -464,19 +500,19 @@ describe("stats/levelProbabilities", function() {
 
                 var level1Deaths = bodyObj[0];
                 expect(level1Deaths).to.have.property('level', 1);
-                expect(level1Deaths).to.have.property('probability').closeTo(0.25, 0.01);
+                expect(level1Deaths).to.have.property('probability').closeTo(0.2, 0.01);
 
                 var level2Deaths = bodyObj[1];
                 expect(level2Deaths).to.have.property('level', 2);
-                expect(level1Deaths).to.have.property('probability').closeTo(0.5, 0.01);
+                expect(level2Deaths).to.have.property('probability').closeTo(0.375, 0.01);
 
                 var level3Deaths = bodyObj[2];
                 expect(level3Deaths).to.have.property('level', 3);
-                expect(level1Deaths).to.have.property('probability').closeTo(0.66, 0.01);
+                expect(level3Deaths).to.have.property('probability').closeTo(0.4, 0.01);
 
                 var level5Deaths = bodyObj[3];
                 expect(level5Deaths).to.have.property('level', 5);
-                expect(level1Deaths).to.have.property('probability').closeTo(0.33, 0.01);
+                expect(level5Deaths).to.have.property('probability').closeTo(0.33, 0.01);
 
                 done();
             });

@@ -87,9 +87,16 @@ module.exports = function(app) {
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+                    //To calculate the difficulty, we work out the conditional probability of dying on each level
+                    //Quits are excluded
+                    //Victories are excluded from the deaths, but included in the total number of games to normalise the probability
 
-                    var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
+                    var allNormalModeGames = _.filter(games, function(game) { return game.easyMode != true; });
+                    var allNormalModeGamesExcludingQuits = _.reject(allNormalModeGames, function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_QUIT });
+                    var allNormalModeGamesExcludingQuitsAndVictories = _.reject(allNormalModeGamesExcludingQuits,
+                        function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_VICTORY || game.result == brogueConstants.gameOver.GAMEOVER_SUPERVICTORY });
+
+                    var deathGamesByLevel = _.groupBy(allNormalModeGamesExcludingQuitsAndVictories, "level");
 
                     var deathNumbersByLevel = _.mapObject(deathGamesByLevel, function(levelGames, level) {
 
@@ -100,22 +107,22 @@ module.exports = function(app) {
 
                     var deathNumbersFlattened = _.flatten(_.map(deathNumbersByLevel, function(val) { return val; }));
 
-                    var totalDeaths = allDeathGamesWithCause.length;
+                    var totalGames = allNormalModeGamesExcludingQuits.length;
+
                     var deathsSortedByLevel = _.sortBy(deathNumbersFlattened, 'level');
                     var levelsToConsider = _.pluck(deathsSortedByLevel, 'level');
-                    var maxLevel = _.max(levelsToConsider);
 
                     console.log("death");
                     console.log(JSON.stringify(deathNumbersByLevel));
 
                     var conditionalProbabilities = {};
-                    conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalDeaths;
+                    conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalGames;
 
                     _.each(levelsToConsider, function (l) {
                         var deathsOnThisLevel = deathNumbersByLevel[l.toString()];
                         console.log("dotl " + l.toString());
                         console.log(JSON.stringify(deathsOnThisLevel));
-                        var baseProbability = deathsOnThisLevel.frequency / totalDeaths;
+                        var baseProbability = deathsOnThisLevel.frequency / totalGames;
                         var scaling = 1.0;
 
                         var levelsBelowThisOne = _.filter(levelsToConsider, function(nl) { return nl < l });
