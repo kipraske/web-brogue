@@ -116,37 +116,24 @@ module.exports = function(app) {
                     var deathsSortedByLevel = _.sortBy(deathNumbersFlattened, 'level');
                     var levelsToConsider = _.pluck(deathsSortedByLevel, 'level');
 
-                    console.log("levels");
-                    console.log(JSON.stringify(levelsToConsider));
-
                     var conditionalProbabilities = {};
                     conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalGames;
 
                     _.each(levelsToConsider, function (l) {
                         var deathsOnThisLevel = deathNumbersByLevel[l.toString()];
-                        console.log("dotl " + l.toString());
-                        console.log(JSON.stringify(deathsOnThisLevel));
+
                         var baseProbability = deathsOnThisLevel.frequency / totalGames;
                         var scaling = 1.0;
 
                         var levelsBelowThisOne = _.filter(levelsToConsider, function(nl) { return nl < l });
-                        console.log("below");
-                        console.log(JSON.stringify(levelsBelowThisOne));
 
                         _.each(levelsBelowThisOne, function(lt) {
                             scaling = scaling * (1 -  conditionalProbabilities[lt]);
                         });
 
-                        console.log("scaling");
-                        console.log(JSON.stringify(scaling));
 
                         conditionalProbabilities[l] = baseProbability / scaling;
                     });
-
-                    console.log("probs");
-
-                    console.log(JSON.stringify(conditionalProbabilities));
-
 
                     var probabilitiesForLevels = _.mapObject(conditionalProbabilities, function(prob, level) {
                         var probabilityForLevel = { level: parseInt(level), probability : prob };
@@ -155,10 +142,6 @@ module.exports = function(app) {
                     });
 
                     var probabilitiesFlattened = _.flatten(_.map(probabilitiesForLevels, function(val) { return val; }));
-
-                    console.log("output");
-
-                    console.log(JSON.stringify(probabilitiesFlattened));
 
                     res.json(probabilitiesFlattened);
                 });
