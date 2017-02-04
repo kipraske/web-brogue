@@ -21,7 +21,9 @@ module.exports = function(app) {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
                     var filteredGames = stats.filterForValidGames(games);
-                    var allDeathGamesWithCause = stats.deathGamesWithCauses(filteredGames);
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
+
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(allNormalModeGames);
 
                     var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
 
