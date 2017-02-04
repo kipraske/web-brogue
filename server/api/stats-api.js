@@ -20,7 +20,8 @@ module.exports = function(app) {
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+                    var filteredGames = stats.filterForValidGames(games);
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(filteredGames);
 
                     var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
 
@@ -62,7 +63,8 @@ module.exports = function(app) {
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+                    var filteredGames = stats.filterForValidGames(games);
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(filteredGames);
 
                     var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
 
@@ -91,7 +93,9 @@ module.exports = function(app) {
                     //Quits are excluded
                     //Victories are excluded from the deaths, but included in the total number of games to normalise the probability
 
-                    var allNormalModeGames = _.filter(games, function(game) { return game.easyMode != true; });
+                    var filteredGames = stats.filterForValidGames(games);
+
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
                     var allNormalModeGamesExcludingQuits = _.reject(allNormalModeGames, function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_QUIT });
                     var allNormalModeGamesExcludingQuitsAndVictories = _.reject(allNormalModeGamesExcludingQuits,
                         function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_VICTORY || game.result == brogueConstants.gameOver.GAMEOVER_SUPERVICTORY });
@@ -112,8 +116,8 @@ module.exports = function(app) {
                     var deathsSortedByLevel = _.sortBy(deathNumbersFlattened, 'level');
                     var levelsToConsider = _.pluck(deathsSortedByLevel, 'level');
 
-                    console.log("death");
-                    console.log(JSON.stringify(deathNumbersByLevel));
+                    console.log("levels");
+                    console.log(JSON.stringify(levelsToConsider));
 
                     var conditionalProbabilities = {};
                     conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalGames;
@@ -168,8 +172,10 @@ module.exports = function(app) {
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allEasyModeGames = _.where(games, {easyMode: true});
-                    var allNormalModeGames = _.filter(games, function(game) { return game.easyMode != true; });
+                    var filteredGames = stats.filterForValidGames(games);
+
+                    var allEasyModeGames = _.where(filteredGames, {easyMode: true});
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
 
                     var allEasyModeVictories = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_VICTORY});
                     var allEasyModeQuits = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_QUIT});
@@ -197,7 +203,7 @@ module.exports = function(app) {
 
                     var totalLumenstones = _.reduce(totalLumenstonesPerGame, function(memo, num){ return memo + num; }, 0);
 
-                    var totalLevelsPerGame = _.map(games, function (game) { return parseInt(game.level) || 0 });
+                    var totalLevelsPerGame = _.map(filteredGames, function (game) { return parseInt(game.level) || 0 });
                     var totalLevels = _.reduce(totalLevelsPerGame, function(memo, num){ return memo + num; }, 0);
 
                     var allVictories = allNormalModeVictories.concat(allNormalModeSuperVictories);
@@ -213,7 +219,7 @@ module.exports = function(app) {
 
                     var statsSummary = {};
 
-                    statsSummary.totalGames = games.length;
+                    statsSummary.totalGames = filteredGames.length;
 
                     statsSummary.totalEasyModeGames = allEasyModeGames.length;
                     statsSummary.totalNormalModeGames = allNormalModeGames.length;
