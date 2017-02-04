@@ -607,7 +607,19 @@ describe("stats/levels", function() {
             recording: "file7"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7], function () {
+        var gameRecord8 = {
+            username: "flend",
+            date: new Date("2013-05-28T05:56:00.123Z"),
+            score: 253,
+            seed: 253,
+            level: 20,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: true,
+            description: "Killed by a violent explosion on depth 20.",
+            recording: "file7"
+        };
+
+        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8], function () {
             done();
         });
     });

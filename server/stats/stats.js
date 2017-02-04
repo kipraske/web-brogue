@@ -70,7 +70,7 @@ module.exports = {
     filterForValidGames: function (games) {
 
         var filteredOnValidLevel = _.filter(games, function(game) {
-            return game.level;
+            return game.level || game.level === 0;
         });
 
         return filteredOnValidLevel;

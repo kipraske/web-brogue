@@ -39,6 +39,39 @@ describe("stats.filterForValidGames", function() {
         expect(filteredGames).to.deep.equal(allValidGameRecords);
     });
 
+    it("returns victories recorded with level 0", function () {
+
+        var validGameRecord1 = {
+            username: "flend",
+            date: new Date("2011-05-26T07:56:00.123Z"),
+            score: 100,
+            seed: 200,
+            level: 0,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Killed by a pink jelly on depth 3.",
+            recording: "file1"
+        };
+
+        var validGameRecord2 = {
+            username: "flend",
+            date: new Date("2011-06-26T07:56:00.123Z"),
+            score: 150,
+            seed: 250,
+            level: 5,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a violent explosion on depth 5.",
+            recording: "file2"
+        };
+
+        var allValidGameRecords = [validGameRecord1, validGameRecord2];
+
+        var filteredGames = stats.filterForValidGames(allValidGameRecords);
+
+        expect(filteredGames).to.deep.equal(allValidGameRecords);
+    });
+
     it("removes games with null levels", function () {
 
         var gameWithNullLevel = {
