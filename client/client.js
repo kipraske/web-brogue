@@ -47,6 +47,7 @@ require([
     "models/cause-stats-model",
     "models/level-stats-model",
     "models/general-stats-model",
+    "models/level-probability-model",
     "views/view-activation-helpers",
     "views/auth-view",
     "views/chat-view",
@@ -64,8 +65,9 @@ require([
     "views/statistics-view",
     "views/level-stats-view",
     "views/general-stats-view",
-    "views/cause-stats-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView){
+    "views/cause-stats-view",
+    "views/level-probability-view"
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, LevelProbabilityModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView, LevelProbabilityView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -83,6 +85,7 @@ require([
     var levelStatsView = new LevelStatsView({model: new LevelStatsModel()});
     var causeStatsView = new CauseStatsView({model: new CauseStatsModel()});
     var generalStatsView = new GeneralStatsView({model: new GeneralStatsModel()});
+    var levelProbabilityView = new LevelProbabilityView({model: new LevelProbabilityModel()});
     var siteNewsView = new SiteNewsView({model: new SiteNewsModel() });
     var consoleKeyboardView = new ConsoleKeyProcessingView();
     var popups = {

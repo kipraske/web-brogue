@@ -200,11 +200,14 @@
     <ul>
         <li><a id="stats-general" href="#general-statistics">General stats</a></li>
         <li><a id="stats-deaths-by-level" href="#level-statistics">Deaths by Level</a></li>
+        <li><a id="stats-death-probability-by-level" href="#level-probability">Deaths Probability by Level</a></li>
         <li><a id="stats-deaths-by-cause" href="#cause-statistics">Deaths by Cause</a></li>
     </ul>
     <div id="general-statistics" class="general-statistics"></div>
     <div id="level-statistics" class="level-statistics"></div>
     <canvas id="level-statistics-chart" width="200" height="200"></canvas>
+    <div id="level-probability" class="level-probability"></div>
+    <canvas id="level-probability-chart" width="200" height="200"></canvas>
     <div id="cause-statistics" class="cause-statistics"></div>
 </script>
 
@@ -218,6 +221,12 @@
     <h3>Deaths by Level</h3>
     <p>Number of deaths per level.</p>
     <div id="level-stats-grid" />
+</script>
+
+<script id="level-probability-template" type="text/template">
+    <h3>Probability of Death by Level</h3>
+    <p>The probability of dying on a particular level, having reached that level. An analogue of perceived difficulty.</p>
+    <div id="level-probability-grid" />
 </script>
 
 <script id="general-statistics-template" type="text/template">
