@@ -1,6 +1,6 @@
 var request = require('supertest');
 var mongoose = require("mongoose");
-var gameRecordSchema = require("../database/game-record-model");
+var gameRecord = require("../database/game-record-model");
 var brogueConstants = require("../brogue/brogue-constants.js");
 var expect = require("chai").expect;
 var server = require("./server-test");
@@ -60,14 +60,14 @@ describe("stats/general", function(){
             recording: "file4"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4], function() {
+        gameRecord.create([gameRecord1, gameRecord2, gameRecord3, gameRecord4], function() {
             done();
         });
     });
 
     afterEach(function(done) {
 
-        db.model('GameRecord', gameRecordSchema).remove({}, function() {
+        gameRecord.remove({}, function() {
             done();
         });
     });
@@ -132,14 +132,14 @@ describe("stats/general", function(){
             recording: "file2"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2], function() {
+        gameRecord.create([gameRecord1, gameRecord2], function() {
             done();
         });
     });
 
     afterEach(function(done) {
 
-        db.model('GameRecord', gameRecordSchema).remove({}, function() {
+        gameRecord.remove({}, function() {
             done();
         });
     });
@@ -237,7 +237,7 @@ describe("stats/levels/monsters", function() {
             recording: "file5"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5], function () {
+        gameRecord.create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5], function () {
             done();
         });
     });
@@ -245,7 +245,7 @@ describe("stats/levels/monsters", function() {
     afterEach(function (done) {
 
         //delete all the customer records
-        db.model('GameRecord', gameRecordSchema).remove({}, function () {
+        gameRecord.remove({}, function () {
             done();
         });
     });
@@ -470,7 +470,7 @@ describe("stats/levelProbabilities", function() {
             recording: "file11"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8, gameRecord9, gameRecord10, gameRecord11], function () {
+        gameRecord.create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8, gameRecord9, gameRecord10, gameRecord11], function () {
             done();
         });
     });
@@ -478,7 +478,7 @@ describe("stats/levelProbabilities", function() {
     afterEach(function (done) {
 
         //delete all the customer records
-        db.model('GameRecord', gameRecordSchema).remove({}, function () {
+        gameRecord.remove({}, function () {
             done();
         });
     });
@@ -619,7 +619,7 @@ describe("stats/levels", function() {
             recording: "file7"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8], function () {
+        gameRecord.create([gameRecord1, gameRecord2, gameRecord3, gameRecord4, gameRecord5, gameRecord6, gameRecord7, gameRecord8], function () {
             done();
         });
     });
@@ -627,7 +627,7 @@ describe("stats/levels", function() {
     afterEach(function (done) {
 
         //delete all the customer records
-        db.model('GameRecord', gameRecordSchema).remove({}, function () {
+        gameRecord.remove({}, function () {
             done();
         });
     });

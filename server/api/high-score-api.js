@@ -1,9 +1,7 @@
 var mongoose = require('mongoose');
-var gameRecordSchema = require("../database/game-record-model");
+var GameRecord = require("../database/game-record-model");
 var paginate = require("express-paginate");
 var _ = require("underscore");
-
-var GameRecord = mongoose.model('GameRecord', gameRecordSchema);
 
 module.exports = function(app) {
 
