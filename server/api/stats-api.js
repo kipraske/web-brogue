@@ -102,6 +102,11 @@ module.exports = function(app) {
                     var allNormalModeGamesExcludingQuitsAndVictories = _.reject(allNormalModeGamesExcludingQuits,
                         function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_VICTORY || game.result == brogueConstants.gameOver.GAMEOVER_SUPERVICTORY });
 
+                    if(allNormalModeGamesExcludingQuitsAndVictories.length == 0) {
+                        res.json({});
+                        return;
+                    }
+
                     var deathGamesByLevel = _.groupBy(allNormalModeGamesExcludingQuitsAndVictories, "level");
 
                     var deathNumbersByLevel = _.mapObject(deathGamesByLevel, function(levelGames, level) {

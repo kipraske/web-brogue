@@ -519,6 +519,18 @@ describe("stats/levelProbabilities", function() {
     });
 });
 
+describe("stats/levelProbabilities with no game records", function() {
+
+
+    it("returns status 200", function (done) {
+        request(server)
+            .get("/api/stats/levelProbability")
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200, done)
+    });
+});
+
 describe("stats/levels", function() {
 
     beforeEach(function (done) {
