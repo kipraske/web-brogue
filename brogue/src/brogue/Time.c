@@ -856,6 +856,7 @@ void handleHealthAlerts() {
 			if (currentPercent < thresholds[i] && rogue.previousHealthPercent >= thresholds[i]) {
                 sprintf(buf, " <%i%% health ", thresholds[i]);
                 flashCreatureAlert(&player, buf, &badMessageColor, &darkRed);
+                waitForAcknowledgment();
 				break;
 			}
 		}
@@ -874,6 +875,7 @@ void handleHealthAlerts() {
                         strcpy(buf, " Fatally poisoned ");
                     }
                     flashCreatureAlert(&player, buf, &yellow, &darkGreen);
+                    waitForAcknowledgment();
                     break;
                 }
             }
