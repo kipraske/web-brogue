@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 		currentConsole = tcodConsole;
 #elif BROGUE_WEB
                 currentConsole = webConsole;
-#else
+#elif BROGUE_CURSES
 		currentConsole = cursesConsole;
 #endif
 

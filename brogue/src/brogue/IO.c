@@ -324,6 +324,14 @@ short actionMenu(short x, boolean playingBack) {
         buttons[buttonCount].hotkey[0] = AGGRO_DISPLAY_KEY;
         takeActionOurselves[buttonCount] = true;
         buttonCount++;
+        if (KEYBOARD_LABELS) {
+			sprintf(buttons[buttonCount].text, "  %s[: %s%s low hitpoint warnings  ",	yellowColorEscape, whiteColorEscape, rogue.warningPauseMode ? "Disable" : "Enable");
+		} else {
+			sprintf(buttons[buttonCount].text, "  %s low hitpoint warnings  ",	rogue.warningPauseMode ? "Disable" : "Enable");
+		}
+		buttons[buttonCount].hotkey[0] = WARNING_PAUSE_KEY;
+		takeActionOurselves[buttonCount] = true;
+		buttonCount++;
         sprintf(buttons[buttonCount].text, "    %s---", darkGrayColorEscape);
         buttons[buttonCount].flags &= ~B_ENABLED;
         buttonCount++;
@@ -2486,10 +2494,10 @@ void executeKeystroke(signed long keystroke, boolean controlKey, boolean shiftKe
 		case WARNING_PAUSE_KEY:
     			rogue.warningPauseMode = !rogue.warningPauseMode;
     			if (rogue.warningPauseMode) {
-            messageWithColor(KEYBOARD_LABELS ? "Pause on warnings enabled. Press '[' again to disable." : "Pause on warnings activated.",
+            messageWithColor(KEYBOARD_LABELS ? "Low hitpoint warnings (paused) enabled. Press '[' again to disable." : "Low HP warnings (paused) activated.",
                              &teal, false);
           } else {
-            messageWithColor(KEYBOARD_LABELS ? "Pause on warnings disabled. Press '[' again to enable." : "Pause on warnings deactivated.",
+            messageWithColor(KEYBOARD_LABELS ? "Low hitpoint warnings (paused) disabled. Press '[' again to enable." : "Low HP warnings (paused) deactivated.",
                              &teal, false);
     			}
     			break;
@@ -3673,13 +3681,11 @@ void printHelpScreen() {
 		"             A  ****autopilot (control-A: fast forward)",
 		"             M  ****display old messages",
         "",
-		"             S  ****suspend game and quit",
-		"             O  ****open saved game",
-		"             V  ****view saved recording",
 		"             Q  ****quit to title screen",
         "",
 		"             \\  ****disable/enable color effects",
 		"             ]  ****display/hide stealth range",
+		"             [  ****enable/disable low HP warning",
 		"   <space/esc>  ****clear message or cancel command",
 		"",
 		"        -- press space or click to continue --"
