@@ -1115,6 +1115,7 @@ enum tileFlags {
 #define RELABEL_KEY         'R'
 #define TRUE_COLORS_KEY		'\\'
 #define AGGRO_DISPLAY_KEY   ']'
+#define WARNING_PAUSE_KEY   '['
 #define DROP_KEY			'd'
 #define CALL_KEY			'c'
 #define QUIT_KEY			'Q'
@@ -2234,6 +2235,7 @@ typedef struct playerCharacter {
 	boolean eligibleToUseStairs;		// so the player uses stairs only when he steps onto them
 	boolean trueColorMode;				// whether lighting effects are disabled
     boolean displayAggroRangeMode;      // whether your stealth range is displayed
+  boolean warningPauseMode;
 	boolean quit;						// to skip the typical end-game theatrics when the player quits
 	unsigned long seed;					// the master seed for generating the entire dungeon
 	short RNG;							// which RNG are we currently using?

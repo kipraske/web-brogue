@@ -2483,6 +2483,16 @@ void executeKeystroke(signed long keystroke, boolean controlKey, boolean shiftKe
                                  &teal, false);
 			}
 			break;
+		case WARNING_PAUSE_KEY:
+    			rogue.warningPauseMode = !rogue.warningPauseMode;
+    			if (rogue.warningPauseMode) {
+            messageWithColor(KEYBOARD_LABELS ? "Pause on warnings enabled. Press '[' again to disable." : "Pause on warnings activated.",
+                             &teal, false);
+          } else {
+            messageWithColor(KEYBOARD_LABELS ? "Pause on warnings disabled. Press '[' again to enable." : "Pause on warnings deactivated.",
+                             &teal, false);
+    			}
+    			break;
 		case CALL_KEY:
 			call(NULL);
 			break;
