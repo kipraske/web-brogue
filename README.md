@@ -6,9 +6,9 @@ A web server for playing the Brogue over the internet.  Brogue is a game for Mac
 Build Instructions
 -----------------------
 
-###Step 1: Get Dependencies ###
+### Step 1: Get Dependencies ###
 
-Get the latest version of node.js and mongoDB.  Since node.js is still a bit unstable, I would recommend getting the package directly from their site rather than from the repositories
+Get the latest stable version of node.js and mongoDB.
 
 ### Step 2: Get node packages
 Navigate to the server directory and run `npm install` to get the node dependencies
@@ -33,16 +33,14 @@ If everything is running correctly it should say "Server listening on port 80"
 Upgrading Brogue
 ------------------------------
 
-To upgrade brogue, grab the latest version of the brogue source code from https://sites.google.com/site/broguegame/ for linux and update the platform code to include my changes.  I have intentionally tried to keep my updates separate from the original brogue game logic as much as possible so my updates are limited to the following 4 files:
+To upgrade brogue, grab the latest version of the brogue source code from https://sites.google.com/site/broguegame/ for linux and update the platform code to include the web changes.
 
 * Add platform/web-platform.c
 * Update platform.h to define webConsole
 * Update platform/main.c to set the currentConsole to webConsole if we are compiling with web
 * Update the makefile
 
-Future updates to brogue will likely not prevent any of these updates from being added, though care must be given if the platform-dependant logic changes for some reason.
-
-Subsequent to this, I (flend) have made rather more extensive brogue edits. I don't anticipate it being hard to apply these to a newer brogue and I will make a diff.
+There are a number of changes to the core brogue source as well, to add recording of highscores, fix some rendering bugs etc. Make a diff of the current brogue source against v1.5.3 and reapply the diff to the new brogue, fixing any conflicts.
 
 Server Configuration
 --------------------------------
