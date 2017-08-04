@@ -2,9 +2,8 @@ var Controller = require('./controller-base');
 var _ = require('underscore');
 var escape = require('escape-html');
 
-var chatRecordSchema = require('../database/chat-record-model');
+var chatRecord = require('../database/chat-record-model');
 var mongoose = require('mongoose');
-var chatRecord = mongoose.model('ChatRecord', chatRecordSchema);
 
 var LOBBY_NAME = "lobby";
 var CHAT_HISTORY_LENGTH = 100;

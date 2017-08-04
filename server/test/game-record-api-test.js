@@ -1,6 +1,6 @@
 var request = require('supertest');
 var mongoose = require("mongoose");
-var gameRecordSchema = require("../database/game-record-model");
+var gameRecord = require("../database/game-record-model");
 var brogueConstants = require("../brogue/brogue-constants.js");
 var expect = require("chai").expect;
 var assert = require("chai").assert;
@@ -25,14 +25,14 @@ describe("api/games", function(){
             recording: "file1"
         };
 
-        db.model('GameRecord', gameRecordSchema).create([gameRecord1], function() {
+        gameRecord.create([gameRecord1], function() {
             done();
         });
     });
 
     afterEach(function(done) {
 
-        db.model('GameRecord', gameRecordSchema).remove({}, function() {
+        gameRecord.remove({}, function() {
             done();
         });
     });

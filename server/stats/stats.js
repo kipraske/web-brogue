@@ -65,5 +65,14 @@ module.exports = {
             .concat(lavaDeathGamesWithCause);
 
         return allDeathGamesWithCause;
+    },
+
+    filterForValidGames: function (games) {
+
+        var filteredOnValidLevel = _.filter(games, function(game) {
+            return game.level || game.level === 0;
+        });
+
+        return filteredOnValidLevel;
     }
 };

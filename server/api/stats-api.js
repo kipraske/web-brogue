@@ -1,11 +1,9 @@
 var mongoose = require('mongoose');
-var GameRecordSchema = require("../database/game-record-model");
+var GameRecord = require("../database/game-record-model");
 
 var brogueConstants = require('../brogue/brogue-constants.js');
 var stats = require('../stats/stats.js');
 var _ = require("underscore");
-
-var GameRecord = mongoose.model('GameRecord', GameRecordSchema);
 
 module.exports = function(app) {
 
@@ -20,19 +18,23 @@ module.exports = function(app) {
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+                    var filteredGames = stats.filterForValidGames(games);
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
+
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(allNormalModeGames);
 
                     var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
 
                     var deathNumbersByLevel = _.mapObject(deathGamesByLevel, function(levelGames, level) {
 
                         var deathsByCauseOnLevel = _.groupBy(levelGames, "cause");
+
                         var numberOfDeathsByCauseOnLevel = _.mapObject(deathsByCauseOnLevel, function(causeGames, thisCause) {
                             return causeGames.length;
                         });
 
                         var numberOfDeathsByCauseOnLevelAsArray = _.map(numberOfDeathsByCauseOnLevel, function(value, key) {
-                            return { level: parseInt(level), cause : key, frequency : parseInt(value) };
+                            return { level: parseInt(level), cause : key, frequency : parseInt(value), percentage: parseInt(value) / levelGames.length * 100 };
                         });
 
                         var numberOfDeathsByCauseOnLevelAsArraySorted = _.sortBy(numberOfDeathsByCauseOnLevelAsArray, "frequency").reverse();
@@ -61,7 +63,10 @@ module.exports = function(app) {
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allDeathGamesWithCause = stats.deathGamesWithCauses(games);
+                    var filteredGames = stats.filterForValidGames(games);
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
+
+                    var allDeathGamesWithCause = stats.deathGamesWithCauses(allNormalModeGames);
 
                     var deathGamesByLevel = _.groupBy(allDeathGamesWithCause, "level");
 
@@ -80,14 +85,87 @@ module.exports = function(app) {
         });
     });
 
+    app.get("/api/stats/levelProbability", function (req, res) {
+
+        res.format({
+            json: function () {
+                GameRecord.find({}).lean().exec(function (err, games) {
+
+                    //To calculate the difficulty, we work out the conditional probability of dying on each level
+                    //Quits are excluded
+                    //Victories are excluded from the deaths, but included in the total number of games to normalise the probability
+
+                    var filteredGames = stats.filterForValidGames(games);
+
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
+                    var allNormalModeGamesExcludingQuits = _.reject(allNormalModeGames, function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_QUIT });
+                    var allNormalModeGamesExcludingQuitsAndVictories = _.reject(allNormalModeGamesExcludingQuits,
+                        function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_VICTORY || game.result == brogueConstants.gameOver.GAMEOVER_SUPERVICTORY });
+
+                    if(allNormalModeGamesExcludingQuitsAndVictories.length == 0) {
+                        res.json({});
+                        return;
+                    }
+
+                    var deathGamesByLevel = _.groupBy(allNormalModeGamesExcludingQuitsAndVictories, "level");
+
+                    var deathNumbersByLevel = _.mapObject(deathGamesByLevel, function(levelGames, level) {
+
+                        var numberOfDeathsOnLevelAsArray = { level: parseInt(level), frequency : levelGames.length };
+
+                        return numberOfDeathsOnLevelAsArray;
+                    });
+
+                    var deathNumbersFlattened = _.flatten(_.map(deathNumbersByLevel, function(val) { return val; }));
+
+                    var totalGames = allNormalModeGamesExcludingQuits.length;
+
+                    var deathsSortedByLevel = _.sortBy(deathNumbersFlattened, 'level');
+                    var levelsToConsider = _.pluck(deathsSortedByLevel, 'level');
+
+                    var conditionalProbabilities = {};
+                    conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalGames;
+
+                    _.each(levelsToConsider, function (l) {
+                        var deathsOnThisLevel = deathNumbersByLevel[l.toString()];
+
+                        var baseProbability = deathsOnThisLevel.frequency / totalGames;
+                        var scaling = 1.0;
+
+                        var levelsBelowThisOne = _.filter(levelsToConsider, function(nl) { return nl < l });
+
+                        _.each(levelsBelowThisOne, function(lt) {
+                            scaling = scaling * (1 -  conditionalProbabilities[lt]);
+                        });
+
+
+                        conditionalProbabilities[l] = baseProbability / scaling;
+                    });
+
+                    var probabilitiesForLevels = _.mapObject(conditionalProbabilities, function(prob, level) {
+                        var probabilityForLevel = { level: parseInt(level), probability : prob };
+
+                        return probabilityForLevel;
+                    });
+
+                    var probabilitiesFlattened = _.flatten(_.map(probabilitiesForLevels, function(val) { return val; }));
+
+                    res.json(probabilitiesFlattened);
+                });
+            }
+        });
+    });
+
     app.get("/api/stats/general", function (req, res) {
 
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var allEasyModeGames = _.where(games, {easyMode: true});
-                    var allNormalModeGames = _.filter(games, function(game) { return game.easyMode != true; });
+                    var filteredGames = stats.filterForValidGames(games);
+
+                    var allEasyModeGames = _.where(filteredGames, {easyMode: true});
+                    var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
 
                     var allEasyModeVictories = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_VICTORY});
                     var allEasyModeQuits = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_QUIT});
@@ -115,7 +193,7 @@ module.exports = function(app) {
 
                     var totalLumenstones = _.reduce(totalLumenstonesPerGame, function(memo, num){ return memo + num; }, 0);
 
-                    var totalLevelsPerGame = _.map(games, function (game) { return parseInt(game.level) || 0 });
+                    var totalLevelsPerGame = _.map(filteredGames, function (game) { return parseInt(game.level) || 0 });
                     var totalLevels = _.reduce(totalLevelsPerGame, function(memo, num){ return memo + num; }, 0);
 
                     var allVictories = allNormalModeVictories.concat(allNormalModeSuperVictories);
@@ -131,7 +209,7 @@ module.exports = function(app) {
 
                     var statsSummary = {};
 
-                    statsSummary.totalGames = games.length;
+                    statsSummary.totalGames = filteredGames.length;
 
                     statsSummary.totalEasyModeGames = allEasyModeGames.length;
                     statsSummary.totalNormalModeGames = allNormalModeGames.length;
@@ -150,71 +228,6 @@ module.exports = function(app) {
                     statsSummary.totalLevels = totalLevels;
 
                     statsSummary.lastVictory = lastVictoryData;
-
-                    res.json(statsSummary);
-                });
-            }
-        });
-    });
-
-    app.get("/api/stats/records", function (req, res) {
-
-        //TODO - just a copy of general for now
-        res.format({
-            json: function () {
-                GameRecord.find({}).lean().exec(function (err, games) {
-
-                    var allEasyModeGames = _.where(games, {easyMode: true});
-                    var allNormalModeGames = _.filter(games, function(game) { return game.easyMode != true; });
-
-                    var allEasyModeVictories = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_VICTORY});
-                    var allEasyModeQuits = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_QUIT});
-                    var allEasyModeDeaths = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_DEATH});
-                    var allEasyModeSuperVictories = _.where(allEasyModeGames, {result: brogueConstants.gameOver.GAMEOVER_SUPERVICTORY});
-
-                    var allNormalModeVictories = _.where(allNormalModeGames, {result: brogueConstants.gameOver.GAMEOVER_VICTORY});
-                    var allNormalModeQuits = _.where(allNormalModeGames, {result: brogueConstants.gameOver.GAMEOVER_QUIT});
-                    var allNormalModeDeaths = _.where(allNormalModeGames, {result: brogueConstants.gameOver.GAMEOVER_DEATH});
-                    var allNormalModeSuperVictories = _.where(allNormalModeGames, {result: brogueConstants.gameOver.GAMEOVER_SUPERVICTORY});
-
-                    var totalLumenstonesPerGame = _.map(allNormalModeGames, function (game) {
-
-                        var lumenRe = new RegExp("with\\s+(\\d+)\\s+lumenstones");
-                        var descriptionMatch = lumenRe.exec(game.description);
-                        if (descriptionMatch) {
-                            return parseInt(descriptionMatch[1]) || 0;
-                        }
-                        else {
-                            return 0;
-                        }
-
-                        return game;
-                    });
-
-                    var totalLumenstones = _.reduce(totalLumenstonesPerGame, function(memo, num){ return memo + num; }, 0);
-
-                    var totalLevelsPerGame = _.map(games, function (game) { return parseInt(game.level) || 0 });
-                    var totalLevels = _.reduce(totalLevelsPerGame, function(memo, num){ return memo + num; }, 0);
-
-                    var statsSummary = {};
-
-                    statsSummary.totalGames = games.length;
-
-                    statsSummary.totalEasyModeGames = allEasyModeGames.length;
-                    statsSummary.totalNormalModeGames = allNormalModeGames.length;
-
-                    statsSummary.totalEasyModeVictories = allEasyModeVictories.length;
-                    statsSummary.totalEasyModeQuits = allEasyModeQuits.length;
-                    statsSummary.totalEasyModeDeaths = allEasyModeDeaths.length;
-                    statsSummary.totalEasyModeSuperVictories = allEasyModeSuperVictories.length;
-
-                    statsSummary.totalNormalModeVictories = allNormalModeVictories.length;
-                    statsSummary.totalNormalModeQuits = allNormalModeQuits.length;
-                    statsSummary.totalNormalModeDeaths = allNormalModeDeaths.length;
-                    statsSummary.totalNormalModeSuperVictories = allNormalModeSuperVictories.length;
-
-                    statsSummary.totalLumenstones = totalLumenstones;
-                    statsSummary.totalLevels = totalLevels;
 
                     res.json(statsSummary);
                 });

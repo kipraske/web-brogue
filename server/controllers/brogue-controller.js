@@ -10,11 +10,10 @@ var brogueState = require('../enum/brogue-state');
 var brogueMode = require('../enum/brogue-mode');
 var allUsers = require('../user/all-users');
 var brogueComms = require('../brogue/brogue-comms');
-var gameRecordSchema = require('../database/game-record-model');
+var gameRecord = require('../database/game-record-model');
 var brogueConstants = require('../brogue/brogue-constants.js');
 
 var mongoose = require('mongoose');
-var gameRecord = mongoose.model('GameRecord', gameRecordSchema);
 
 // Controller for handling I/O with brogue process and client.  Note that unlike other controllers this one deals in binary data. Any incoming or outgoing binary data from this server should only come from this controller.
 

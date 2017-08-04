@@ -5,10 +5,10 @@ define([
     "chart"
 ], function ($, _, Backbone, Chart) {
 
-    var LevelStatisticsView = Backbone.View.extend({
+    var LevelProbabilityView = Backbone.View.extend({
 
-        el: '#level-statistics',
-        headingTemplate: _.template($('#level-statistics-template').html()),
+        el: '#level-probability',
+        headingTemplate: _.template($('#level-probability-template').html()),
 
         initialize: function() {
             this.listenTo(this.model, "add", this.render);
@@ -23,9 +23,9 @@ define([
                         sortable: false,
                         editable: false
                     }, {
-                        name: "frequency",
-                        label: "Frequency",
-                        cell: "integer",
+                        name: "probability",
+                        label: "Probability",
+                        cell: "number",
                         sortable: false,
                         editable: false
                     }],
@@ -40,21 +40,21 @@ define([
 
             this.$el.html(this.headingTemplate({}));
 
-            $("#level-stats-grid").append(this.grid.render().$el);
+            $("#level-probability-grid").append(this.grid.render().$el);
 
-            //Level statistics chart
+            //Level probability chart
 
-            var ctx = document.getElementById("level-statistics-chart");
+            var ctx = document.getElementById("level-probability-chart");
             var levelData = this.model.pluck("level");
-            var frequencyData = this.model.pluck("frequency");
+            var probabilityData = this.model.pluck("probability");
 
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: levelData,
                     datasets: [{
-                        label: '# of deaths',
-                        data: frequencyData,
+                        label: 'probability',
+                        data: probabilityData,
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255,99,132,1)',
                         borderWidth: 1
@@ -63,7 +63,7 @@ define([
                 options: {
                     title: {
                         display: true,
-                        text: 'Deaths by level'
+                        text: 'Death probability by level'
                     },
                     scales: {
                         xAxes: [{
@@ -94,6 +94,6 @@ define([
         }
     });
 
-    return LevelStatisticsView;
+    return LevelProbabilityView;
 });
 
