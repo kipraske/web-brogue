@@ -10,7 +10,8 @@ var gameRecordSchema = mongoose.Schema({
     easyMode: Boolean,
     result: Number,
     description: String,
-    recording: String
+    recording: String,
+    variant: String
 });
 
 gameRecordSchema.index({ date: 1, username: -1 }, { unique: true });

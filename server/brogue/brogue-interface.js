@@ -31,8 +31,9 @@ var SCREEN_REFRESH = 50;
 var IDLE_KILLER_INTERVAL = 1 * 24 * 60 * 60 * 1000;
 var IDLE_KILLER_TIMEOUT = 14 * 24 * 60 * 60 * 1000;
 
-function BrogueInterface(username) {
+function BrogueInterface(username, variant) {
     this.username = username;
+    this.variant = variant;
     this.dataRemainder = new Buffer(0);
     this.brogueEvents = new events.EventEmitter();
 
@@ -216,7 +217,8 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
         detached: true,
         stdio: 'ignore'
     };
-    this.brogueChild = childProcess.spawn(config.path.BROGUE, args, options);
+    var brogueClientPath = config.path.brogueClient[this.variant];
+    this.brogueChild = childProcess.spawn(brogueClientPath, args, options);
 };
 
 BrogueInterface.prototype.attachChildProcess = function() {

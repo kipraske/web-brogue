@@ -24,7 +24,7 @@ define([
         startBrogue: function(event){
             event.preventDefault();
             
-            send("brogue", "start");
+            send("brogue", "start", {variant: "BROGUE"});
             dispatcher.trigger("startGame");
             this.goToConsole();
         },

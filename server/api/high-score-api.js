@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var GameRecord = require("../database/game-record-model");
 var paginate = require("express-paginate");
+var config = require('../config');
 var _ = require("underscore");
 
 module.exports = function(app) {
@@ -27,10 +28,15 @@ module.exports = function(app) {
 
             var filteredRecord =
                 _.pick(gameRecord,
-                    '_id', 'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date');
+                    '_id', 'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date', 'variant');
 
             if('recording' in gameRecord && gameRecord.recording != undefined) {
                 filteredRecord.recording = 'recording-' + gameRecord._id;
+            }
+
+            //Handle games before variants were introduced
+            if('variant' in gameRecord && gameRecord.variant == undefined) {
+                filteredRecord.variant = config.variants[0];
             }
 
             filteredGameRecords.push(filteredRecord);

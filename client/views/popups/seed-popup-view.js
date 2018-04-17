@@ -43,7 +43,8 @@ define([
             event.preventDefault();        
             var seedValue = $('#seed').val();  
             send("brogue", "start", {
-                seed: seedValue
+                seed: seedValue,
+                variant: "BROGUE"
             });
         },
 

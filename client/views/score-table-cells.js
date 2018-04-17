@@ -48,7 +48,7 @@ define([
             var gameId = $(event.target).data("gameid");
             var gameDescription = $(event.target).data("gamedescription");
 
-            send("brogue", "recording", {recording: gameId});
+            send("brogue", "recording", {recording: gameId, variant: "BROGUE"});
             dispatcher.trigger("recordingGame", {recording: gameDescription});
             this.goToConsole();
         },

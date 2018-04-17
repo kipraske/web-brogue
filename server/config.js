@@ -6,10 +6,14 @@ var config = {
     port : {
         HTTP : 8080
     },
+    variants : [ "BROGUE", "GBROGUE" ],
     path : {
         CLIENT_DIR : path.normalize(__dirname + "/../client/"),
-        BROGUE : path.normalize(__dirname + "/../brogue/bin/brogue"),
-        GAME_DATA_DIR : path.normalize(__dirname + "/../game-data/")
+        GAME_DATA_DIR : path.normalize(__dirname + "/../game-data/"),
+        brogueClient: {
+            BROGUE : path.normalize(__dirname + "/../brogue/bin/brogue"),
+            GBROGUE : path.normalize(__dirname + "/../gbrogue/bin/brogue"),
+        }
     },
     db : {
         url : "mongodb://localhost/brogue"

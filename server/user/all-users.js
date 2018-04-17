@@ -30,7 +30,8 @@ module.exports = {
                 deepestLevel : 0,
                 seed : 0,
                 gold : 0,
-                easyMode : false
+                easyMode : false,
+                variant : ''
             }
         };
     },
@@ -70,7 +71,10 @@ module.exports = {
     isUserValid : function(username) {
         return username in this.users;
     },
-    
+    initialiseLobbyStatus : function(userName, variant) {
+        this.users[userName].lobbyData['variant'] = variant;
+    },
+
     updateLobbyStatus : function(userName, updateFlag, updateValue) {
 
         if (updateFlag === brogueStatus.SEED) {
