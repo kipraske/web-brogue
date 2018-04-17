@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var GameRecord = require("../database/game-record-model");
+var config = require('../config');
 
 var brogueConstants = require('../brogue/brogue-constants.js');
 var stats = require('../stats/stats.js');
@@ -10,15 +11,21 @@ module.exports = function(app) {
     app.get("/api/stats/levels/monsters", function (req, res) {
 
         var maxCausesPerLevel = Number.MAX_SAFE_INTEGER;
+
         if(req.query.maxCauses) {
             maxCausesPerLevel = req.query.maxCauses;
+        }
+
+        var variant = config.variants[0];
+        if(req.query.variant) {
+            variant = req.query.variant;
         }
 
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var filteredGames = stats.filterForValidGames(games);
+                    var filteredGames = stats.filterForValidGames(games, variant, config.variants[0]);
                     var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
 
                     var allDeathGamesWithCause = stats.deathGamesWithCauses(allNormalModeGames);
@@ -59,11 +66,16 @@ module.exports = function(app) {
 
     app.get("/api/stats/levels", function (req, res) {
 
+        var variant = config.variants[0];
+        if(req.query.variant) {
+            variant = req.query.variant;
+        }
+
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var filteredGames = stats.filterForValidGames(games);
+                    var filteredGames = stats.filterForValidGames(games, variant, config.variants[0]);
                     var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
 
                     var allDeathGamesWithCause = stats.deathGamesWithCauses(allNormalModeGames);
@@ -87,6 +99,11 @@ module.exports = function(app) {
 
     app.get("/api/stats/levelProbability", function (req, res) {
 
+        var variant = config.variants[0];
+        if(req.query.variant) {
+            variant = req.query.variant;
+        }
+
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
@@ -95,7 +112,7 @@ module.exports = function(app) {
                     //Quits are excluded
                     //Victories are excluded from the deaths, but included in the total number of games to normalise the probability
 
-                    var filteredGames = stats.filterForValidGames(games);
+                    var filteredGames = stats.filterForValidGames(games, variant, config.variants[0]);
 
                     var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });
                     var allNormalModeGamesExcludingQuits = _.reject(allNormalModeGames, function(game) { return game.result == brogueConstants.gameOver.GAMEOVER_QUIT });
@@ -158,11 +175,16 @@ module.exports = function(app) {
 
     app.get("/api/stats/general", function (req, res) {
 
+        var variant = config.variants[0];
+        if(req.query.variant) {
+            variant = req.query.variant;
+        }
+
         res.format({
             json: function () {
                 GameRecord.find({}).lean().exec(function (err, games) {
 
-                    var filteredGames = stats.filterForValidGames(games);
+                    var filteredGames = stats.filterForValidGames(games, variant, config.variants[0]);
 
                     var allEasyModeGames = _.where(filteredGames, {easyMode: true});
                     var allNormalModeGames = _.filter(filteredGames, function(game) { return game.easyMode != true; });

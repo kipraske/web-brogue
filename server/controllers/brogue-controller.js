@@ -185,7 +185,7 @@ _.extend(BrogueController.prototype, {
                 //Handle recordings before variants were introduced
                 if(!data.variant) {
                     data.variant = config.variants[0];
- Q                }
+                }
                 this.variant = data.variant;
 
                 self.startBrogueSession(brogueSessionName, variant, data, brogueMode.RECORDING);
