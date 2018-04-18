@@ -141,7 +141,6 @@ module.exports = function(app) {
                     var levelsToConsider = _.pluck(deathsSortedByLevel, 'level');
 
                     var conditionalProbabilities = {};
-                    conditionalProbabilities[1] = deathNumbersByLevel["1"].frequency / totalGames;
 
                     _.each(levelsToConsider, function (l) {
                         var deathsOnThisLevel = deathNumbersByLevel[l.toString()];

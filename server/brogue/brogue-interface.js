@@ -5,7 +5,7 @@ var events = require('events');
 var unixdgram = require('unix-dgram');
 var childProcess = require('child_process');
 var path = require('path');
-var fs = require('fs');
+var fs = require('fs-extra');
 
 var brogueMode = require('../enum/brogue-mode');
 var config = require('../config');
@@ -138,11 +138,6 @@ BrogueInterface.prototype.handleIncomingBinaryMessage = function(message, callba
     this.sendToBrogue(message, callback);
 };
 
-BrogueInterface.prototype.getChildWorkingDir = function () {
-
-    return config.path.GAME_DATA_DIR + this.username;
-};
-
 BrogueInterface.prototype.start = function (data, mode) {
 
     //Support reconnect
@@ -150,7 +145,7 @@ BrogueInterface.prototype.start = function (data, mode) {
     //Test if we can send to server socket, if so, no need to spawn a new process, just attach
     //This may happen on first connect after server restart, for example
 
-    this.createBrogueDirectoryIfRequired(this.username);
+    this.createBrogueDirectoryIfRequired();
 
     var sendBuf = new Buffer(5);
     sendBuf[0] = SCREEN_REFRESH;
@@ -497,16 +492,16 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
     }
 };
 
-BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(username) {
+BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(variant, username) {
 
-    var path = config.path.GAME_DATA_DIR + username;
+    var path = this.getChildWorkingDir();
 
     try {
         fs.accessSync(path, fs.F_OK);
     }
     catch(err) {
         try {
-            fs.mkdirSync(path, 0755);
+            fs.ensureDirSync(path);
         }
         catch (err) {
             if (err && err.code != "EEXIST") {
@@ -514,6 +509,14 @@ BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(username) {
             }
         }
     }
+};
+
+BrogueInterface.prototype.getChildWorkingDir = function(variant, username) {
+    return this.brogueGameDirectoryPath(this.variant, this.username);
+};
+
+BrogueInterface.prototype.brogueGameDirectoryPath = function(variant, username) {
+    return config.path.GAME_DATA_DIR + variant + "/" + username;
 };
 
 module.exports = BrogueInterface;

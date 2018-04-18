@@ -56,7 +56,6 @@ module.exports = function(config) {
             "error",
             "lobby",
             "authentication",
-            "saved-games",
             "brogue",
             "chat"
         ]);
