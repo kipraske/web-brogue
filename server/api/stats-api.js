@@ -1,12 +1,11 @@
 var mongoose = require('mongoose');
 var GameRecord = require("../database/game-record-model");
-var config = require('../config');
 
 var brogueConstants = require('../brogue/brogue-constants.js');
 var stats = require('../stats/stats.js');
 var _ = require("underscore");
 
-module.exports = function(app) {
+module.exports = function(app, config) {
 
     app.get("/api/stats/levels/monsters", function (req, res) {
 

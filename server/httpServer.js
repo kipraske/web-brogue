@@ -35,9 +35,9 @@ module.exports = function(config) {
         res.sendFile(config.path.CLIENT_DIR + "/index.html");
     });
 
-    highScoreApi(app);
+    highScoreApi(app, config);
     newsApi(app);
-    statsApi(app);
+    statsApi(app, config);
 
     var server = require('http').Server(app);
     var io = require('socket.io')(server);

@@ -2,12 +2,13 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "config",
     "dispatcher",
     "dataIO/send-generic",
     "backgrid",
     "moment",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, send, Backgrid, Moment, activate) {
+], function ($, _, Backbone, config, dispatcher, send, Backgrid, Moment, activate) {
 
     var LevelFormatter = _.extend({}, Backgrid.CellFormatter.prototype, {
         fromRaw: function (rawValue, model) {
@@ -48,7 +49,7 @@ define([
             var gameId = $(event.target).data("gameid");
             var gameDescription = $(event.target).data("gamedescription");
 
-            send("brogue", "recording", {recording: gameId, variant: "BROGUE"});
+            send("brogue", "recording", {recording: gameId, variant: config.variants[0].code});
             dispatcher.trigger("recordingGame", {recording: gameDescription});
             this.goToConsole();
         },

@@ -155,7 +155,6 @@ _.extend(BrogueController.prototype, {
     },
 
     watchRecording: function (data) {
-
         if (!data || !data.recording) {
             this.sendFailedToStartGameMessage("No game record given to watch.");
             return;
@@ -163,7 +162,7 @@ _.extend(BrogueController.prototype, {
 
         //Lookup recording id in database
         var splitRecordingId = data.recording.split('-');
-        if(splitRecordingId.length < 2) {
+        if (splitRecordingId.length < 2) {
             this.sendFailedToStartGameMessage("Can't process recording id " + data.recording);
             return;
         }
@@ -179,19 +178,28 @@ _.extend(BrogueController.prototype, {
             }
             if (gameRecord) {
 
-                var brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
-                data.recordingPath = gameRecord.recording;
-                data.variant = gameRecord.variant;
-                //Handle recordings before variants were introduced
-                if(!data.variant) {
-                    data.variant = config.variants[0];
+                try {
+                    var brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
+                    data.recordingPath = gameRecord.recording;
+                    data.variant = gameRecord.variant;
+                    //Handle recordings before variants were introduced
+                    if (!data.variant) {
+                        data.variant = config.variants[0];
+                    }
+                    self.variant = data.variant;
+
+                    self.startBrogueSession(brogueSessionName, self.variant, data, brogueMode.RECORDING);
+
+                    //Stop lobby updates for this user
+                    self.controllers.lobby.stopUserDataListen();
                 }
-                this.variant = data.variant;
-
-                self.startBrogueSession(brogueSessionName, variant, data, brogueMode.RECORDING);
-
-                //Stop lobby updates for this user
-                self.controllers.lobby.stopUserDataListen();
+                catch (e) {
+                    //Failed to start game to watch recording
+                    self.sendFailedToStartGameMessage("Failed to start recording: " + e.message);
+                    console.error("Failed to start game;");
+                    console.error(e.stack || e);
+                    self.endBrogueSession();
+                }
             }
             else {
                 self.sendFailedToStartGameMessage("Can't process recording id " + data.recording);
@@ -294,6 +302,9 @@ _.extend(BrogueController.prototype, {
         catch (e) {
             //Failed to start game
             this.sendFailedToStartGameMessage("Failed to start game: " + e.message);
+            console.error("Failed to start game;");
+            console.error(e.stack || e);
+            this.endBrogueSession();
         }
     },
 

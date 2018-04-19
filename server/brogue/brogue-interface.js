@@ -213,6 +213,9 @@ BrogueInterface.prototype.spawnChildProcess = function (args, childWorkingDir) {
         stdio: 'ignore'
     };
     var brogueClientPath = config.path.brogueClient[this.variant];
+    if(!brogueClientPath) {
+        throw new Error("Unable to find path for variant: " + this.variant)
+    }
     this.brogueChild = childProcess.spawn(brogueClientPath, args, options);
 };
 
@@ -511,7 +514,7 @@ BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(variant, us
     }
 };
 
-BrogueInterface.prototype.getChildWorkingDir = function(variant, username) {
+BrogueInterface.prototype.getChildWorkingDir = function() {
     return this.brogueGameDirectoryPath(this.variant, this.username);
 };
 

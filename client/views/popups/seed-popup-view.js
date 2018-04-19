@@ -4,11 +4,12 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "config",
     "dispatcher",
     "views/popups/popup-view",
     "dataIO/send-generic",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, PopupView, send, activate) {
+], function ($, _, Backbone, config, dispatcher, PopupView, send, activate) {
 
     var SeedView = PopupView.extend({
         
@@ -44,7 +45,7 @@ define([
             var seedValue = $('#seed').val();  
             send("brogue", "start", {
                 seed: seedValue,
-                variant: "BROGUE"
+                variant: config.variants[0].code
             });
         },
 

@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 var GameRecord = require("../database/game-record-model");
 var paginate = require("express-paginate");
-var config = require('../config');
 var _ = require("underscore");
 
-module.exports = function(app) {
+module.exports = function(app, config) {
 
     var sortFromQueryParams = function(req, defaultSort) {
         if (req.query.sort) {
