@@ -3,7 +3,7 @@ var GameRecord = require("../database/game-record-model");
 var paginate = require("express-paginate");
 var _ = require("underscore");
 
-module.exports = function(app) {
+module.exports = function(app, config) {
 
     var sortFromQueryParams = function(req, defaultSort) {
         if (req.query.sort) {
@@ -27,10 +27,15 @@ module.exports = function(app) {
 
             var filteredRecord =
                 _.pick(gameRecord,
-                    '_id', 'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date');
+                    '_id', 'username', 'score', 'seed', 'level', 'result', 'easyMode', 'description', 'date', 'variant');
 
             if('recording' in gameRecord && gameRecord.recording != undefined) {
                 filteredRecord.recording = 'recording-' + gameRecord._id;
+            }
+
+            //Handle games before variants were introduced
+            if('variant' in gameRecord && gameRecord.variant == undefined) {
+                filteredRecord.variant = config.variants[0];
             }
 
             filteredGameRecords.push(filteredRecord);
@@ -39,9 +44,22 @@ module.exports = function(app) {
         return filteredGameRecords;
     };
 
+    //Note: assumes gameRecords all have variant set
+    var filterGameRecordsByVariant = function(gameRecords, variant) {
+        return _.filter(gameRecords, function(gameRecord) {
+           return gameRecord.variant === variant;
+        });
+    };
+
     app.use(paginate.middleware(10, 50));
 
     app.get("/api/games", function (req, res) {
+
+        var variantFilter = false;
+        if(req.query.variant) {
+            variantFilter = req.query.variant;
+        }
+
         GameRecord.paginate({}, {
             page: req.query.page,
             limit: req.query.limit,
@@ -52,9 +70,15 @@ module.exports = function(app) {
 
             res.format({
                 json: function () {
+
+                    var gameRecordsFiltered = filterGameRecords(gameRecords);
+                    if(variantFilter) {
+                        gameRecordsFiltered = filterGameRecordsByVariant(gameRecordsFiltered, variantFilter);
+                    }
+
                     res.json({
                         object: 'list',
-                        data: filterGameRecords(gameRecords),
+                        data: gameRecordsFiltered,
                         pageCount: pageCount,
                         itemCount: itemCount
                     });
@@ -69,6 +93,11 @@ module.exports = function(app) {
         var startTime = now.setUTCHours(0,0,0,0);
         var endTime = now.setUTCHours(24,0,0,0);
 
+        var variantFilter = false;
+        if(req.query.variant) {
+            variantFilter = req.query.variant;
+        }
+
         GameRecord.paginate(
             {
                 date: {
@@ -87,11 +116,16 @@ module.exports = function(app) {
 
             if (err) return next(err);
 
+            var gameRecordsFiltered = filterGameRecords(gameRecords);
+            if(variantFilter) {
+                gameRecordsFiltered = filterGameRecordsByVariant(gameRecordsFiltered, variantFilter);
+            }
+
             res.format({
                 json: function () {
                     res.json({
                         object: 'list',
-                        data: filterGameRecords(gameRecords),
+                        data: gameRecordsFiltered,
                         pageCount: pageCount,
                         itemCount: itemCount
                     });
@@ -100,44 +134,12 @@ module.exports = function(app) {
         });
     });
 
-    app.get("/api/monthlygames", function (req, res) {
-
-        var now = new Date();
-        var startTime = new Date(now.getFullYear(), now.getMonth(), 1);
-        var endTime = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-        GameRecord.paginate(
-            {
-                date: {
-                    $gte: startTime,
-                    $lt: endTime
-                },
-                easyMode: false,
-                score: {
-                    $gt: 0
-                }
-            },
-            {   page: req.query.page,
-                limit: req.query.limit,
-                sortBy: sortFromQueryParams(req, '-score')
-            }, function (err, gameRecords, pageCount, itemCount) {
-
-                if (err) return next(err);
-
-                res.format({
-                    json: function () {
-                        res.json({
-                            object: 'list',
-                            data: filterGameRecords(gameRecords),
-                            pageCount: pageCount,
-                            itemCount: itemCount
-                        });
-                    }
-                });
-            });
-    });
-
     app.get("/api/games/:username", function (req, res) {
+
+        var variantFilter = false;
+        if(req.query.variant) {
+            variantFilter = req.query.variant;
+        }
 
         GameRecord.paginate({username: req.params.username}, {
             page: req.query.page,
@@ -147,11 +149,16 @@ module.exports = function(app) {
 
             if (err) return next(err);
 
+            var gameRecordsFiltered = filterGameRecords(gameRecords);
+            if(variantFilter) {
+                gameRecordsFiltered = filterGameRecordsByVariant(gameRecordsFiltered, variantFilter);
+            }
+
             res.format({
                 json: function () {
                     res.json({
                         object: 'list',
-                        data: filterGameRecords(gameRecords),
+                        data: gameRecordsFiltered,
                         pageCount: pageCount,
                         itemCount: itemCount
                     });

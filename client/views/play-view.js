@@ -4,11 +4,12 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "config",
     "dispatcher",
     "dataIO/send-generic",
     "dataIO/router",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, send, router, activate) {
+], function ($, _, Backbone, config, dispatcher, send, router, activate) {
     
     var PlayView = Backbone.View.extend({
         el: "#play",
@@ -24,7 +25,7 @@ define([
         startBrogue: function(event){
             event.preventDefault();
             
-            send("brogue", "start");
+            send("brogue", "start", {variant: config.variants[0].code});
             dispatcher.trigger("startGame");
             this.goToConsole();
         },

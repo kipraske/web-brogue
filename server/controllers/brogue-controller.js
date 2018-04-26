@@ -115,7 +115,8 @@ _.extend(BrogueController.prototype, {
                 result: event.eventId,
                 easyMode: Boolean(event.easyMode),
                 description: event.message,
-                recording: event.recording
+                recording: event.recording,
+                variant: this.variant
             };
 
             //Create save game record
@@ -154,7 +155,6 @@ _.extend(BrogueController.prototype, {
     },
 
     watchRecording: function (data) {
-
         if (!data || !data.recording) {
             this.sendFailedToStartGameMessage("No game record given to watch.");
             return;
@@ -162,7 +162,7 @@ _.extend(BrogueController.prototype, {
 
         //Lookup recording id in database
         var splitRecordingId = data.recording.split('-');
-        if(splitRecordingId.length < 2) {
+        if (splitRecordingId.length < 2) {
             this.sendFailedToStartGameMessage("Can't process recording id " + data.recording);
             return;
         }
@@ -178,13 +178,28 @@ _.extend(BrogueController.prototype, {
             }
             if (gameRecord) {
 
-                var brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
-                data.recordingPath = gameRecord.recording;
+                try {
+                    var brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
+                    data.recordingPath = gameRecord.recording;
+                    data.variant = gameRecord.variant;
+                    //Handle recordings before variants were introduced
+                    if (!data.variant) {
+                        data.variant = config.variants[0];
+                    }
+                    self.variant = data.variant;
 
-                self.startBrogueSession(brogueSessionName, data, brogueMode.RECORDING);
+                    self.startBrogueSession(brogueSessionName, self.variant, data, brogueMode.RECORDING);
 
-                //Stop lobby updates for this user
-                self.controllers.lobby.stopUserDataListen();
+                    //Stop lobby updates for this user
+                    self.controllers.lobby.stopUserDataListen();
+                }
+                catch (e) {
+                    //Failed to start game to watch recording
+                    self.sendFailedToStartGameMessage("Failed to start recording: " + e.message);
+                    console.error("Failed to start game;");
+                    console.error(e.stack || e);
+                    self.endBrogueSession();
+                }
             }
             else {
                 self.sendFailedToStartGameMessage("Can't process recording id " + data.recording);
@@ -199,6 +214,19 @@ _.extend(BrogueController.prototype, {
         var mode = brogueMode.OBSERVE;
 
         try {
+
+            if(!data) {
+                this.sendFailedToStartGameMessage("Data parameter is required");
+                return;
+            }
+
+            //Check variant and abort on error
+            if (!data.variant || !_.contains(config.variants, data.variant)) {
+                this.sendFailedToStartGameMessage("No valid variant selected");
+                return;
+            }
+            this.variant = data.variant;
+
             if (!observing) {
                 if (!this.controllers.auth.authenticatedUserName) {
                     this.sendFailedToStartGameMessage("Can't start a game if not logged in.");
@@ -220,6 +248,10 @@ _.extend(BrogueController.prototype, {
                         return;
                     }
                 }
+
+                allUsers.addUser(this.controllers.auth.authenticatedUserName);
+                this.startBrogueSession(brogueSessionName, data.variant, data, mode);
+                allUsers.initialiseLobbyStatus(this.controllers.auth.authenticatedUserName, data.variant);
             }
             else {
                 //Observing
@@ -238,11 +270,11 @@ _.extend(BrogueController.prototype, {
                 else {
                     brogueSessionName = data.username;
                 }
+
+                this.startBrogueSession(brogueSessionName, data.variant, data, mode);
             }
 
-            this.startBrogueSession(brogueSessionName, data, mode);
-
-            //If we got here via a seed or save game route, pass messages back to the UI
+            //If we got here via the seed route, pass messages back to the UI
             if (data && data.seed) {
                 this.sendMessage("seed", {
                     result: "success"
@@ -269,11 +301,14 @@ _.extend(BrogueController.prototype, {
         }
         catch (e) {
             //Failed to start game
-            this.sendFailedToStartGameMessage("Failed to start game");
+            this.sendFailedToStartGameMessage("Failed to start game: " + e.message);
+            console.error("Failed to start game;");
+            console.error(e.stack || e);
+            this.endBrogueSession();
         }
     },
 
-    startBrogueSession: function (sessionName, data, mode) {
+    startBrogueSession: function (sessionName, variant, data, mode) {
 
         //Connect to brogue interface
 
@@ -282,7 +317,7 @@ _.extend(BrogueController.prototype, {
         this.mode = mode;
 
         //Only spawn new games if the logged in user is requested a game (i.e. not observing)
-        this.brogueInterface = brogueComms.getBrogueInterface(this.username, data, mode);
+        this.brogueInterface = brogueComms.getBrogueInterface(this.username, variant, data, mode);
 
         //console.log("Adding listeners. Count " + this.brogueInterface.brogueEvents.listeners('data').length);
 

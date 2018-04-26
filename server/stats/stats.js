@@ -67,10 +67,22 @@ module.exports = {
         return allDeathGamesWithCause;
     },
 
-    filterForValidGames: function (games) {
+    filterForValidGames: function (games, variant, defaultVariant) {
 
         var filteredOnValidLevel = _.filter(games, function(game) {
-            return game.level || game.level === 0;
+            //Support game records with no variant
+            if(!game.variant) {
+                if(variant !== defaultVariant) {
+                    return false;
+                }
+            }
+            else if(variant !== game.variant) {
+                return false;
+            }
+            if(!(game.level || game.level === 0)) {
+                return false;
+            };
+            return true;
         });
 
         return filteredOnValidLevel;

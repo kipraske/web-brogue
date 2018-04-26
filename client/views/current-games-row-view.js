@@ -4,10 +4,11 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "config",
     "dispatcher",
     "dataIO/send-generic",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, send, activate) {
+], function ($, _, Backbone, config, dispatcher, send, activate) {
 
     var CurrentGamesRowView = Backbone.View.extend({
         tagName: "tr",
@@ -23,7 +24,7 @@ define([
 
             var userName = $(event.target).data("username");
             
-            send("brogue", "observe", {username: userName});
+            send("brogue", "observe", {username: userName, variant: config.variants[0].code});
             dispatcher.trigger("observeGame", {username: userName});
             this.goToConsole();
         },
