@@ -23,6 +23,7 @@ function BrogueController(socket) {
     this.controllerName = "brogue";
     this.socket = socket;
     this.controllers = null;
+    this.brogueSessionName = null;
 }
 
 BrogueController.prototype = new Controller();
@@ -60,7 +61,7 @@ _.extend(BrogueController.prototype, {
         this.controllers.lobby.sendAllUserData();
         this.controllers.lobby.userDataListen();
 
-        this.controllers.chat.enterLobby();
+        this.controllers.chat.leaveRoom(this.brogueSessionName);
     },
 
     stopInteractingWithCurrentGame: function() {
@@ -179,7 +180,7 @@ _.extend(BrogueController.prototype, {
             if (gameRecord) {
 
                 try {
-                    var brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
+                    self.brogueSessionName = self.controllers.auth.getUserOrAnonName() + "-" + brogueConstants.paths.RECORDING;
                     data.recordingPath = gameRecord.recording;
                     data.variant = gameRecord.variant;
                     //Handle recordings before variants were introduced
@@ -188,7 +189,7 @@ _.extend(BrogueController.prototype, {
                     }
                     self.variant = data.variant;
 
-                    self.startBrogueSession(brogueSessionName, self.variant, data, brogueMode.RECORDING);
+                    self.startBrogueSession(self.brogueSessionName, self.variant, data, brogueMode.RECORDING);
 
                     //Stop lobby updates for this user
                     self.controllers.lobby.stopUserDataListen();
@@ -210,7 +211,6 @@ _.extend(BrogueController.prototype, {
 
     startGameOrObserve: function (data, observing) {
 
-        var brogueSessionName;
         var mode = brogueMode.OBSERVE;
 
         try {
@@ -233,7 +233,7 @@ _.extend(BrogueController.prototype, {
                     return;
                 }
 
-                brogueSessionName = this.controllers.auth.authenticatedUserName;
+                this.brogueSessionName = this.controllers.auth.authenticatedUserName;
                 mode = brogueMode.GAME;
 
                 //Check seed and abort on error
@@ -250,7 +250,7 @@ _.extend(BrogueController.prototype, {
                 }
 
                 allUsers.addUser(this.controllers.auth.authenticatedUserName);
-                this.startBrogueSession(brogueSessionName, data.variant, data, mode);
+                this.startBrogueSession(this.brogueSessionName, data.variant, data, mode);
                 allUsers.initialiseLobbyStatus(this.controllers.auth.authenticatedUserName, data.variant);
             }
             else {
@@ -264,14 +264,14 @@ _.extend(BrogueController.prototype, {
                 //Work out if this is the user playing their own game or just observing
 
                 if (data.username === this.controllers.auth.authenticatedUserName) {
-                    brogueSessionName = this.controllers.auth.authenticatedUserName;
+                    this.brogueSessionName = this.controllers.auth.authenticatedUserName;
                     mode = brogueMode.GAME;
                 }
                 else {
-                    brogueSessionName = data.username;
+                    this.brogueSessionName = data.username;
                 }
 
-                this.startBrogueSession(brogueSessionName, data.variant, data, mode);
+                this.startBrogueSession(this.brogueSessionName, data.variant, data, mode);
             }
 
             //If we got here via the seed route, pass messages back to the UI
@@ -282,11 +282,11 @@ _.extend(BrogueController.prototype, {
             }
 
             //Enter this chat room
-            this.controllers.chat.enterRoom(brogueSessionName);
+            this.controllers.chat.enterRoom(this.brogueSessionName);
 
             //Send a global chat update
             if (mode == brogueMode.OBSERVE) {
-                this.controllers.chat.broadcastObserve(brogueSessionName);
+                this.controllers.chat.broadcastObserve(this.brogueSessionName);
             }
             else {
                 this.controllers.chat.broadcastStartGame();

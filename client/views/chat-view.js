@@ -46,6 +46,11 @@ define([
         chatMessage: function (message) {
 
             if(message.type) {
+
+                if(message.channel && message.channel !== 'lobby') {
+                    return;
+                }
+
                 if(message.type === "message") {
                     this.model.addChatMessageWithUserAndTime(message.username, message.data);
                 }
