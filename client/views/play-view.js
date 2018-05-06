@@ -24,9 +24,10 @@ define([
         },
         startBrogue: function(event){
             event.preventDefault();
-            
-            send("brogue", "start", {variant: config.variants[0].code});
-            dispatcher.trigger("startGame");
+
+            var thisVariant = 0;
+            send("brogue", "start", {variant: config.variants[thisVariant].code});
+            dispatcher.trigger("startGame", { variantIndex: thisVariant });
             this.goToConsole();
         },
         

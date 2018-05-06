@@ -133,6 +133,8 @@ require([
     dispatcher.on("showConsole", consoleView.resize, consoleView);
 
     dispatcher.on("startGame", headerView.startGame, headerView);
+    dispatcher.on("startGame", consoleView.initialiseForNewGame, consoleView);
+
     dispatcher.on("observeGame", headerView.observeGame, headerView);
     dispatcher.on("recordingGame", headerView.recordingGame, headerView);
     dispatcher.on("leaveGame", headerView.leaveGame, headerView);
