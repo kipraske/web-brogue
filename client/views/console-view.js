@@ -36,8 +36,13 @@ define([
 
         initialiseForNewGame: function(data) {
 
-            console.log("initialiseForNewGame: " + data.variantIndex);
-            var variantIndex = data.variantIndex;
+            var variantIndex = 0;
+            if('variantIndex' in data) {
+                variantIndex = data.variantIndex;
+            }
+            else {
+                variantIndex = _.findIndex(config.variants, {code: data.variant});
+            }
 
             this.consoleColumns = config.variants[variantIndex].consoleColumns;
             this.consoleRows = config.variants[variantIndex].consoleRows;

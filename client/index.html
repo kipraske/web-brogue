@@ -159,6 +159,7 @@
     <table id="current-games-table">
         <tr>
             <th>User</th>
+            <th>Version</th>
             <th>Idle</th>
             <th>Level</th>
             <th>Gold</th>
@@ -170,6 +171,7 @@
 
 <script id="current-games-row" type="text/template">
     <td><%= userName %></td>
+    <td><%= prettyVariant %></td>
     <td><%= formattedIdle %></td>
     <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
     <td><%= gold %></td>

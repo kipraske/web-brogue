@@ -50,7 +50,7 @@ define([
             var gameDescription = $(event.target).data("gamedescription");
 
             send("brogue", "recording", {recording: gameId, variant: config.variants[0].code});
-            dispatcher.trigger("recordingGame", {recording: gameDescription});
+            dispatcher.trigger("recordingGame", {recording: gameDescription, variantIndex: 0});
             this.goToConsole();
         },
 

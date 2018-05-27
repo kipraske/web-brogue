@@ -24,13 +24,14 @@ define([
 
             var userName = $(event.target).data("username");
             
-            send("brogue", "observe", {username: userName, variant: config.variants[0].code});
-            dispatcher.trigger("observeGame", {username: userName});
+            send("brogue", "observe", {username: userName, variant: this.model.get("variant")});
+            dispatcher.trigger("observeGame", {username: userName, variant: this.model.get("variant")});
             this.goToConsole();
         },
 
         render: function() {
             this.model.calculateFormattedIdleTime();
+            this.model.setPrettyVariant();
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
@@ -38,7 +39,7 @@ define([
         goToConsole : function() {
             activate.console();
             dispatcher.trigger("showConsole");
-        },
+        }
 
     });
 

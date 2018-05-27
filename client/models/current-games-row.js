@@ -3,18 +3,30 @@
 define([
     'jquery',
     'underscore',
-    'backbone'
-], function($, _, Backbone) {
+    'backbone',
+    'variantLookup'
+], function($, _, Backbone, VariantLookup) {
 
     var CurrentGamesRow = Backbone.Model.extend({
         defaults: {
             userName : "",
             idle : 0,
+            variant: "",
+            prettyVariant: "",
             formattedIdle : "",
             deepestLevel : 0,
             seed : 0,
             gold : 0,
             easyMode : false
+        },
+
+        setPrettyVariant: function() {
+            if(this.get("variant") in VariantLookup.variants) {
+                this.set({prettyVariant : VariantLookup.variants[this.get("variant")].display});
+            }
+            else {
+                this.set({prettyVariant : "Not found"});
+            }
         },
         
         calculateFormattedIdleTime : function(){
