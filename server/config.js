@@ -6,13 +6,13 @@ var config = {
     port : {
         HTTP : 8080
     },
-    variants : [ "BROGUE174", "GBROGUE" ],
+    variants : [ "BROGUEV174", "GBROGUEV1180211" ],
     path : {
         CLIENT_DIR : path.normalize(__dirname + "/../client/"),
         GAME_DATA_DIR : path.normalize(__dirname + "/../game-data/"),
         brogueClient: {
-            BROGUE174 : path.normalize(__dirname + "/../brogue/bin/brogue"),
-            GBROGUE : path.normalize(__dirname + "/../gbrogue/bin/brogue"),
+            BROGUEV174 : path.normalize(__dirname + "/../brogue/bin/brogue"),
+            GBROGUEV1180211 : path.normalize(__dirname + "/../gbrogue/bin/brogue"),
         }
     },
     db : {

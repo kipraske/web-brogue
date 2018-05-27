@@ -15,44 +15,52 @@ define([
         el: "#play",
         
         events: {
-            "click #start-brogue" : "startBrogue",
-            "click #start-brogue-seed" : "startBrogueSeed",
-            "click #show-saved-games" : "showSavedGames",
+            "click #start-brogue-0" : "startBrogue0",
+            "click #start-brogue-seed-0" : "startBrogueSeed0",
+            "click #start-brogue-1" : "startBrogue1",
+            "click #start-brogue-seed-1" : "startBrogueSeed1",
             "click #show-current-games" : "showCurrentGames",
             "click #show-stats" : "showStats",
             "click #show-high-scores" : "showHighScores"
         },
-        startBrogue: function(event){
+        startBrogue0: function(event) {
             event.preventDefault();
-
-            var thisVariant = 0;
-            send("brogue", "start", {variant: config.variants[thisVariant].code});
-            dispatcher.trigger("startGame", { variantIndex: thisVariant });
+            this.startBrogue(0)
+        },
+        startBrogue1: function(event) {
+            event.preventDefault();
+            this.startBrogue(1)
+        },
+        startBrogue: function(variantIndex){
+            send("brogue", "start", {variant: config.variants[variantIndex].code});
+            dispatcher.trigger("startGame", { variantIndex: variantIndex });
             this.goToConsole();
         },
-        
-        startBrogueSeed: function(event){
+        startBrogueSeed0: function(event) {
             event.preventDefault();
-
-            dispatcher.trigger("showSeedPopup");
+            this.startBrogueSeed(0)
         },
-
+        startBrogueSeed1: function(event) {
+            event.preventDefault();
+            this.startBrogueSeed(1)
+        },
+        startBrogueSeed: function(variantIndex){
+            event.preventDefault();
+            dispatcher.trigger("showSeedPopup", variantIndex);
+        },
         showCurrentGames : function(event){
             event.preventDefault();
             activate.currentGames();
         },
-
         showStats : function(event){
             event.preventDefault();
             activate.statistics();
         },
-
         showHighScores: function(event) {
             event.preventDefault();
             activate.highScores();
             dispatcher.trigger("all-scores");
         },
-        
         goToConsole : function(){
             activate.console();
             dispatcher.trigger("showConsole");

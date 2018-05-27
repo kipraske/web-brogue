@@ -262,7 +262,6 @@ BrogueInterface.prototype.attachChildEvents = function () {
         self.dataAccumulator = new Buffer(data.length + remainderLength);
         self.dataToSend = new Buffer(data.length + remainderLength);
         self.dataRemainder.copy(self.dataAccumulator);
-        var dataLengthRationalised = 10 * Math.floor(data.length / 10);
         data.copy(self.dataAccumulator, remainderLength, 0);
 
         var fullDataLength = self.dataAccumulator.length;
