@@ -38,6 +38,12 @@ define([
                         sortable: true,
                         editable: false
                     }, {
+                        name: "prettyVariant",
+                        label: "Version",
+                        cell: "string",
+                        sortable: true,
+                        editable: false
+                    }, {
                         name: "score",
                         label: "Score",
                         cell: "integer",

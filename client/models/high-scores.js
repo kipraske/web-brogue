@@ -5,8 +5,9 @@ define([
     'underscore',
     'backbone',
     'backbonePaginator',
-    'moment'
-], function($, _, Backbone, BackbonePaginator, Moment) {
+    'moment',
+    'variantLookup'
+], function($, _, Backbone, BackbonePaginator, Moment, VariantLookup) {
 
     var HighScores = Backbone.PageableCollection.extend({
         url: '/api/games',
@@ -30,6 +31,15 @@ define([
             return Moment(date).format('MMMM Do YYYY, h:mm:ss a');
         },
 
+        lookupVariant: function(variant) {
+            if(variant in VariantLookup.variants) {
+                return VariantLookup.variants[variant].display;
+            }
+            else {
+                return "Not found";
+            }
+        },
+
         parseState: function (resp, queryParams, state, options) {
            return {totalRecords: resp.itemCount };
         },
@@ -41,6 +51,7 @@ define([
 
             _.each(records, function(element, index, list) {
                 element.prettyDate = this.formatDate(element.date);
+                element.prettyVariant = this.lookupVariant(element.variant);
             }, this);
 
             return resp.data;
