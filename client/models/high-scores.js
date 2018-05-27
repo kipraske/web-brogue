@@ -81,6 +81,10 @@ define([
             this.url = 'api/monthlygames';
             this.state.sortKey = "score";
         },
+        setVariantTopScores: function(variantCode) {
+            this.url = 'api/games?variant=' + variantCode;
+            this.state.sortKey = "score";
+        },
         setUserName: function(username) {
             this.username = username;
         },

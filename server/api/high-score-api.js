@@ -44,23 +44,16 @@ module.exports = function(app, config) {
         return filteredGameRecords;
     };
 
-    //Note: assumes gameRecords all have variant set
-    var filterGameRecordsByVariant = function(gameRecords, variant) {
-        return _.filter(gameRecords, function(gameRecord) {
-           return gameRecord.variant === variant;
-        });
-    };
-
     app.use(paginate.middleware(10, 50));
 
     app.get("/api/games", function (req, res) {
 
-        var variantFilter = false;
+        var query = {};
         if(req.query.variant) {
-            variantFilter = req.query.variant;
+            query = { 'variant': req.query.variant };
         }
 
-        GameRecord.paginate({}, {
+        GameRecord.paginate(query, {
             page: req.query.page,
             limit: req.query.limit,
             sortBy: sortFromQueryParams(req, '-date')
@@ -72,9 +65,6 @@ module.exports = function(app, config) {
                 json: function () {
 
                     var gameRecordsFiltered = filterGameRecords(gameRecords);
-                    if(variantFilter) {
-                        gameRecordsFiltered = filterGameRecordsByVariant(gameRecordsFiltered, variantFilter);
-                    }
 
                     res.json({
                         object: 'list',
@@ -93,22 +83,23 @@ module.exports = function(app, config) {
         var startTime = now.setUTCHours(0,0,0,0);
         var endTime = now.setUTCHours(24,0,0,0);
 
-        var variantFilter = false;
+        var query = {
+            date: {
+                $gte: startTime,
+                $lt: endTime
+            },
+            easyMode: false,
+            score: {
+                $gt: 0
+            }
+        };
+
         if(req.query.variant) {
-            variantFilter = req.query.variant;
+            query['variant'] = req.query.variant;
         }
 
         GameRecord.paginate(
-            {
-                date: {
-                    $gte: startTime,
-                    $lt: endTime
-                },
-                easyMode: false,
-                score: {
-                    $gt: 0
-                }
-            },
+            query,
             {   page: req.query.page,
                 limit: req.query.limit,
                 sortBy: sortFromQueryParams(req, '-score')
@@ -117,9 +108,6 @@ module.exports = function(app, config) {
             if (err) return next(err);
 
             var gameRecordsFiltered = filterGameRecords(gameRecords);
-            if(variantFilter) {
-                gameRecordsFiltered = filterGameRecordsByVariant(gameRecordsFiltered, variantFilter);
-            }
 
             res.format({
                 json: function () {
@@ -136,12 +124,13 @@ module.exports = function(app, config) {
 
     app.get("/api/games/:username", function (req, res) {
 
-        var variantFilter = false;
+        var query = {username: req.params.username};
+
         if(req.query.variant) {
-            variantFilter = req.query.variant;
+            query['variant'] = req.query.variant;
         }
 
-        GameRecord.paginate({username: req.params.username}, {
+        GameRecord.paginate(query, {
             page: req.query.page,
             limit: req.query.limit,
             sortBy: sortFromQueryParams(req, '-date')
@@ -150,9 +139,6 @@ module.exports = function(app, config) {
             if (err) return next(err);
 
             var gameRecordsFiltered = filterGameRecords(gameRecords);
-            if(variantFilter) {
-                gameRecordsFiltered = filterGameRecordsByVariant(gameRecordsFiltered, variantFilter);
-            }
 
             res.format({
                 json: function () {

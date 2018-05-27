@@ -5,14 +5,17 @@ define([
     "underscore",
     "backbone",
     "dispatcher",
+    "config",
     "views/score-table-cells"
-], function ($, _, Backbone, dispatcher, TableCells) {
+], function ($, _, Backbone, dispatcher, config, TableCells) {
 
     var AllScoresView = Backbone.View.extend({
         el: '#all-scores',
         headingTemplate: _.template($('#all-scores-heading').html()),
 
         events: {
+            "click #all-scores-variant0" : "selectVariant0Scores",
+            "click #all-scores-variant1" : "selectVariant1Scores",
             "click #all-scores-user" : "selectUserScores",
             "click #all-scores-daily" : "selectDailyScores",
             "click #all-scores-monthly" : "selectMonthlyScores",
@@ -152,6 +155,22 @@ define([
             event.preventDefault();
 
             this.model.setMonthlyTopScores();
+            this.refresh();
+        },
+
+        selectVariant0Scores: function(event) {
+
+            event.preventDefault();
+
+            this.model.setVariantTopScores(config.variants[0].code);
+            this.refresh();
+        },
+
+        selectVariant1Scores: function(event) {
+
+            event.preventDefault();
+
+            this.model.setVariantTopScores(config.variants[1].code);
             this.refresh();
         }
     });
