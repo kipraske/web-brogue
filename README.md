@@ -41,7 +41,7 @@ To upgrade brogue, grab the latest version of the brogue source code from https:
 * Update platform/main.c to set the currentConsole to webConsole if we are compiling with web
 * Update the makefile
 
-There are a number of changes to the core brogue source as well, to add recording of highscores, fix some rendering bugs etc. Make a diff of the current brogue source against v1.5.3 and reapply the diff to the new brogue, fixing any conflicts.
+There are a number of changes to the core brogue source as well, to add recording of highscores, fix some rendering bugs etc. Make a diff of the current brogue source against v1.7.4 and reapply the diff to the new brogue, fixing any conflicts.
 
 Configuration
 --------------------------------
