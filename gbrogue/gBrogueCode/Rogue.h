@@ -213,7 +213,8 @@
 #define MUD_CHAR		','
 #define WEB_CHAR		':'
 //#define FOLIAGE_CHAR	0x03A8 // lower-case psi
-#define FOLIAGE_CHAR	0x2648 // Aries symbol
+//#define FOLIAGE_CHAR	0x2648 // Aries symbol
+#define FOLIAGE_CHAR 0x03C8
 #define VINE_CHAR       ':'
 #define ALTAR_CHAR		'|'
 #define LEVER_CHAR      '/'
@@ -232,7 +233,7 @@
 #define FOOD_CHAR		';'
 #define SCROLL_CHAR		0x266A//'?'		// 0x039E
 //#define RING_CHAR		0x26AA //0xffee
-#define RING_CHAR		0xffee
+#define RING_CHAR		'o'
 #define CHARM_CHAR      0x03DE
 #define POTION_CHAR		'!'
 #define ARMOR_CHAR		'['
@@ -242,7 +243,7 @@
 #define WAND_CHAR		'~'
 #define GOLD_CHAR		'*'
 #define GEM_CHAR		0x25cf
-#define TOTEM_CHAR		0x26b2
+#define TOTEM_CHAR		0x2641//0x26b2
 #define TURRET_CHAR		0x25cf
 #define UNICORN_CHAR    0x00da
 #define PET_DOG_CHAR    0x00F0 // gsr
@@ -260,7 +261,7 @@
 #define THETA_CHAR			0x03B8
 #define LAMDA_CHAR			0x03BB
 #define KOPPA_CHAR			0x03DF//0x03DE
-#define LOZENGE_CHAR		0x29EB
+#define LOZENGE_CHAR		0x25C6//0x29EB
 #define CROSS_PRODUCT_CHAR	0x2A2F
 
 #define CHAIN_TOP_LEFT		'\\'
