@@ -20,6 +20,10 @@ define([
             easyMode : false
         },
 
+        setPrettyScore : function() {
+            this.set({prettyScore : this.get("gold").toLocaleString()});
+        },
+
         setPrettyVariant: function() {
             if(this.get("variant") in VariantLookup.variants) {
                 this.set({prettyVariant : VariantLookup.variants[this.get("variant")].display});
