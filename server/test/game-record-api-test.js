@@ -35,7 +35,8 @@ describe("api/games", function(){
             result: brogueConstants.gameOver.GAMEOVER_VICTORY,
             easyMode: false,
             description: "Escaped.",
-            recording: "file2"
+            recording: "file2",
+            variant: "BROGUE"
         };
 
         gameRecord.create([gameRecord1, gameRecord2], function() {
@@ -96,19 +97,6 @@ describe("api/games", function(){
             });
     });
 
-    it("defaults to first variant if variant is missing", function(done) {
-        request(server)
-            .get("/api/games")
-            .set('Accept', 'application/json')
-            .end(function(err, res) {
-                var resText = JSON.parse(res.text);
-                var gameData = resText.data;
-                expect(gameData[0]).to.have.property('variant', 'GBROGUE');
-                expect(gameData[1]).to.have.property('variant', 'BROGUE');
-                done();
-            });
-    });
-
     it("allows games to be retrieved by ID", function(done) {
         request(server)
             .get("/api/games")
@@ -163,19 +151,7 @@ describe("api/games filtering by variant", function(){
             variant: "BROGUE"
         };
 
-        var gameRecord3 = {
-            username: "cccd",
-            date: new Date("2014-05-26T07:56:00.123Z"),
-            score: 1004,
-            seed: 2005,
-            level: 10,
-            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
-            easyMode: false,
-            description: "Escaped.",
-            recording: "file3"
-        };
-
-        gameRecord.create([gameRecord1, gameRecord2, gameRecord3], function() {
+        gameRecord.create([gameRecord1, gameRecord2], function() {
             done();
         });
     });
@@ -185,20 +161,6 @@ describe("api/games filtering by variant", function(){
         gameRecord.remove({}, function() {
             done();
         });
-    });
-
-    it("filters games based on variant, assuming default BROGUE", function(done) {
-        request(server)
-            .get("/api/games")
-            .set('Accept', 'application/json')
-            .query({ variant: 'BROGUE' })
-            .end(function(err, res) {
-                var resText = JSON.parse(res.text);
-                var gameData = resText.data;
-                expect(gameData).to.have.length.of(2);
-                expect(gameData[0]).to.have.deep.property('variant', "BROGUE");
-                done();
-            });
     });
 
     it("filters games based on non-default variant", function(done) {

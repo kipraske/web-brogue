@@ -33,11 +33,6 @@ module.exports = function(app, config) {
                 filteredRecord.recording = 'recording-' + gameRecord._id;
             }
 
-            //Handle games before variants were introduced
-            if('variant' in gameRecord && gameRecord.variant == undefined) {
-                filteredRecord.variant = config.variants[0];
-            }
-
             filteredGameRecords.push(filteredRecord);
         });
 
