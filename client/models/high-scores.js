@@ -61,8 +61,12 @@ define([
             this.url = 'api/games';
             this.state.sortKey = "date";
         },
-        setUserScores: function() {
-            this.url = 'api/games/' + this.username;
+        setAllScoresForPreviousDays: function(days) {
+            this.url = 'api/games?previousdays=' + days;
+            this.state.sortKey = "date";
+        },
+        setUserScoresForPreviousDays: function(days) {
+            this.url = 'api/games/' + this.username + '?previousdays=' + days;
             this.state.sortKey = "date";
         },
         setAllTopScores: function() {

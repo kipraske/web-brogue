@@ -8,6 +8,8 @@ define([
     "views/score-table-cells"
 ], function ($, _, Backbone, dispatcher, TableCells) {
 
+    const PREVIOUS_DAYS_OF_GAMES_TO_SHOW = 7;
+
     var HighScoresView = Backbone.View.extend({
 
         el: '#mini-scores',
@@ -81,6 +83,8 @@ define([
                 collection: this.model
             });
 
+            this.setAllScores();
+            this.refresh();
         },
 
         render: function() {
@@ -88,6 +92,7 @@ define([
             this.$el.html(this.headingTemplate({ username: this.model.username }));
 
             $("#mini-scores-grid").append(this.grid.render().$el);
+            $("#mini-scores-paginator").append(this.paginator.render().$el);
 
             return this;
         },
@@ -116,16 +121,26 @@ define([
 
             event.preventDefault();
 
-            this.model.setUserScores();
+            this.setUserScores();
             this.refresh();
+        },
+
+        setUserScores: function() {
+
+            this.model.setUserScoresForPreviousDays(PREVIOUS_DAYS_OF_GAMES_TO_SHOW);
         },
 
         selectAllScores: function(event) {
 
             event.preventDefault();
 
-            this.model.setAllScores();
+            this.setAllScores();
             this.refresh();
+        },
+
+        setAllScores: function() {
+
+            this.model.setAllScoresForPreviousDays(PREVIOUS_DAYS_OF_GAMES_TO_SHOW);
         }
     });
 

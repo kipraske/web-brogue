@@ -18,7 +18,6 @@ define([
             "click #all-scores-variant1" : "selectVariant1Scores",
             "click #all-scores-user" : "selectUserScores",
             "click #all-scores-daily" : "selectDailyScores",
-            "click #all-scores-monthly" : "selectMonthlyScores",
             "click #all-scores-all" : "selectAllScores"
         },
 
@@ -85,6 +84,8 @@ define([
                 collection: this.model
             });
 
+            this.setVariant0Scores();
+            this.refresh();
         },
 
         render: function() {
@@ -115,22 +116,11 @@ define([
 
         activate: function() {
             //Model may be in an old-state, so refresh
-            this.setAllScores();
-        },
-
-        quit: function() {
+            this.setVariant0Scores();
             this.refresh();
         },
 
-        selectAllScores: function(event) {
-
-            event.preventDefault();
-            this.setAllScores();
-        },
-
-        setAllScores: function() {
-
-            this.model.setAllTopScores();
+        quit: function() {
             this.refresh();
         },
 
@@ -150,28 +140,28 @@ define([
             this.refresh();
         },
 
-        selectMonthlyScores: function(event) {
-
-            event.preventDefault();
-
-            this.model.setMonthlyTopScores();
-            this.refresh();
-        },
-
         selectVariant0Scores: function(event) {
 
             event.preventDefault();
 
-            this.model.setVariantTopScores(config.variants[0].code);
+            this.setVariant0Scores();
             this.refresh();
+        },
+
+        setVariant0Scores: function() {
+            this.model.setVariantTopScores(config.variants[0].code);
         },
 
         selectVariant1Scores: function(event) {
 
             event.preventDefault();
 
-            this.model.setVariantTopScores(config.variants[1].code);
+            this.setVariant1Scores();
             this.refresh();
+        },
+
+        setVariant1Scores: function() {
+            this.model.setVariantTopScores(config.variants[1].code);
         }
     });
 

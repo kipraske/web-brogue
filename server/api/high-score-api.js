@@ -48,6 +48,18 @@ module.exports = function(app, config) {
             query = { 'variant': req.query.variant };
         }
 
+        if(req.query.previousdays) {
+            var previousDays = new Date();
+            var dateOffset = (24*60*60*1000) * req.query.previousdays;
+            previousDays.setTime(new Date().getTime() - dateOffset);
+
+            var startTime = previousDays;
+
+            _.extend(query, {date: {
+                $gte: startTime,
+            }});
+        }
+
         GameRecord.paginate(query, {
             page: req.query.page,
             limit: req.query.limit,
@@ -123,6 +135,22 @@ module.exports = function(app, config) {
 
         if(req.query.variant) {
             query['variant'] = req.query.variant;
+        }
+
+        if(req.query.variant) {
+            query = { 'variant': req.query.variant };
+        }
+
+        if(req.query.previousdays) {
+            var previousDays = new Date();
+            var dateOffset = (24*60*60*1000) * req.query.previousdays;
+            previousDays.setTime(new Date().getTime() - dateOffset);
+
+            var startTime = previousDays;
+
+            _.extend(query, {date: {
+                $gte: startTime,
+            }});
         }
 
         GameRecord.paginate(query, {
