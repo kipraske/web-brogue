@@ -84,7 +84,7 @@ define([
                 collection: this.model
             });
 
-            this.setVariant0Scores();
+            this.setVariantNoScores(0);
             this.refresh();
         },
 
@@ -116,7 +116,7 @@ define([
 
         activate: function() {
             //Model may be in an old-state, so refresh
-            this.setVariant0Scores();
+            this.setVariantNoScores(0);
             this.refresh();
         },
 
@@ -144,24 +144,20 @@ define([
 
             event.preventDefault();
 
-            this.setVariant0Scores();
+            this.setVariantNoScores(0);
             this.refresh();
         },
 
-        setVariant0Scores: function() {
-            this.model.setVariantTopScores(config.variants[0].code);
+        setVariantNoScores: function(variantNo) {
+            this.model.setVariantTopScores(config.variants[variantNo].code);
         },
 
         selectVariant1Scores: function(event) {
 
             event.preventDefault();
 
-            this.setVariant1Scores();
+            this.setVariantNoScores(1);
             this.refresh();
-        },
-
-        setVariant1Scores: function() {
-            this.model.setVariantTopScores(config.variants[1].code);
         }
     });
 

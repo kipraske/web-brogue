@@ -32,6 +32,9 @@ define([
             parsedData.lastVictoryUser = data.lastVictory.username;
 
             return parsedData;
+        },
+        setVariantGeneralStats: function(variantCode) {
+            this.url = 'api/stats/general?variant=' + variantCode;
         }
     });
 

@@ -1,13 +1,19 @@
 define([
     "jquery",
     "underscore",
-    "backbone"
-], function ($, _, Backbone) {
+    "backbone",
+    "config"
+], function ($, _, Backbone, config) {
 
     var CauseStatisticsView = Backbone.View.extend({
 
         el: '#cause-statistics',
         headingTemplate: _.template($('#cause-statistics-template').html()),
+
+        events: {
+            "click #deaths-by-cause-variant0" : "selectVariant0DeathCauseStats",
+            "click #deaths-by-cause-variant1" : "selectVariant1DeathCauseStats"
+        },
 
         initialize: function() {
             this.listenTo(this.model, "add", this.render);
@@ -44,6 +50,7 @@ define([
                 collection: this.model
             });
 
+            this.setDeathCauseStatsForVariant(0);
             this.refresh();
         },
 
@@ -58,6 +65,26 @@ define([
         refresh: function() {
             this.model.fetch();
             this.render();
+        },
+
+        selectVariant0DeathCauseStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathCauseStatsForVariant(0);
+            this.refresh();
+        },
+
+        setDeathCauseStatsForVariant: function(variantNo) {
+            this.model.setVariantForCauseStats(config.variants[variantNo].code);
+        },
+
+        selectVariant1DeathCauseStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathCauseStatsForVariant(1);
+            this.refresh();
         }
     });
 
