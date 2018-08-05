@@ -8,6 +8,9 @@ define([
         url: '/api/stats/levelProbability',
         parse: function (data) {
             return data;
+        },
+        setVariantForLevelProbabilityStats: function(variantCode) {
+            this.url = '/api/stats/levelProbability?variant=' + variantCode;
         }
     });
 
