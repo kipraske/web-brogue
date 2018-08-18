@@ -1,5 +1,3 @@
-// module for collecting information to share about each user
-
 var _ = require('underscore');
 
 var config = require('../config');
@@ -17,12 +15,12 @@ var IDLE_TIME_MAXIMUM_SECONDS = 48 * 60 * 60;
 
 module.exports = {
     users : {},
-    
-    // TODO - should probably split the user object defined here into its own module.  It is strange to be defining what a user is soley in "add user"
-    
-    addUser : function(userName){
 
-        this.users[userName] = {
+    addUser : function(userName, variant) {
+
+        var gameName = this.getGameName(userName, variant);
+
+        this.users[gameName] = {
             brogueState : brogueState.INACTIVE,
             lastUpdateTime : process.hrtime(),
             lobbyData : {
@@ -31,35 +29,43 @@ module.exports = {
                 seed : 0,
                 gold : 0,
                 easyMode : false,
-                variant : ''
+                userName: userName,
+                variant : variant
             }
         };
+
+        return gameName;
     },
-    removeUser : function(userName){
-        if(this.isUserValid(userName)) {
-            delete this.users[userName];
+
+    getGameName: function(userName, variant) {
+        return userName + '-' + variant;
+    },
+
+    removeUser : function (gameName) {
+        if(this.isUserValid(gameName)) {
+            delete this.users[gameName];
         }
     },
-    getUser : function(userName){
-        if(this.isUserValid(userName)) {
-            return this.users[userName];
+    getUser : function (gameName){
+        if(this.isUserValid(gameName)) {
+            return this.users[gameName];
         }
     },
-    setState: function(userName, state) {
-        if(this.isUserValid(userName)) {
-            this.users[userName].brogueState = state;
+    setState: function(gameName, state) {
+        if(this.isUserValid(gameName)) {
+            this.users[gameName].brogueState = state;
         }
     },
     tickIdleUsers: function() {
 
         var usersToRemoveDueToLongIdle = [];
 
-        for (var userName in this.users) {
-            var timeDiff = process.hrtime(this.users[userName].lastUpdateTime)[0];
-            this.users[userName].lobbyData.idle = timeDiff;
+        for (var gameName in this.users) {
+            var timeDiff = process.hrtime(this.users[gameName].lastUpdateTime)[0];
+            this.users[gameName].lobbyData.idle = timeDiff;
 
             if(timeDiff > IDLE_TIME_MAXIMUM_SECONDS) {
-                usersToRemoveDueToLongIdle.push(userName);
+                usersToRemoveDueToLongIdle.push(gameName);
             }
         }
 
@@ -68,22 +74,29 @@ module.exports = {
         }
     },
 
-    isUserValid : function(username) {
-        return username in this.users;
-    },
-    initialiseLobbyStatus : function(userName, variant) {
-        this.users[userName].lobbyData['variant'] = variant;
+    isUserValid : function(gameName) {
+        return gameName in this.users;
     },
 
-    updateLobbyStatus : function(userName, updateFlag, updateValue) {
+    initialiseLobbyStatus : function(gameName, variant) {
+        if(this.isUserValid(gameName)) {
+            this.users[gameName].lobbyData['variant'] = variant;
+        }
+    },
+
+    updateLobbyStatus : function(gameName, updateFlag, updateValue) {
+
+        if(!this.isUserValid(gameName)) {
+            return;
+        }
 
         if (updateFlag === brogueStatus.SEED) {
             // just need to report update once per push
-            this.users[userName].lastUpdateTime = process.hrtime();
+            this.users[gameName].lastUpdateTime = process.hrtime();
         }
         
         var lobbyItem = brogueStatusMap[updateFlag];
-        this.users[userName].lobbyData[lobbyItem] = updateValue;
+        this.users[gameName].lobbyData[lobbyItem] = updateValue;
     },
 
     startIdleTicker: function () {

@@ -34,6 +34,7 @@ var IDLE_KILLER_TIMEOUT = 14 * 24 * 60 * 60 * 1000;
 function BrogueInterface(username, variant) {
     this.username = username;
     this.variant = variant;
+    this.childDir = null;
     this.dataRemainder = new Buffer(0);
     this.brogueEvents = new events.EventEmitter();
 
@@ -145,7 +146,7 @@ BrogueInterface.prototype.start = function (data, mode) {
     //Test if we can send to server socket, if so, no need to spawn a new process, just attach
     //This may happen on first connect after server restart, for example
 
-    this.createBrogueDirectoryIfRequired();
+    this.childDir = this.createBrogueDirectoryIfRequired(mode);
 
     var sendBuf = new Buffer(5);
     sendBuf[0] = SCREEN_REFRESH;
@@ -189,12 +190,7 @@ BrogueInterface.prototype.newBrogueProcess = function(data, mode) {
         //Input has been sanity checked in the controller. Any errors from brogue should be caught by the usual handlers
 
         if (data) {
-            if (data.savedGame) {
-
-                args.push("-o");
-                args.push(data.savedGame);
-            }
-            else if (data.seed || data.seed === "") {
+            if (data.seed || data.seed === "") {
                 var seed = parseInt(data.seed, 10);
 
                 args.push("-s");
@@ -494,31 +490,41 @@ BrogueInterface.prototype.processBrogueEvents = function(self, eventData) {
     }
 };
 
-BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(variant, username) {
+BrogueInterface.prototype.createBrogueDirectoryIfRequired = function(mode) {
 
-    var path = this.getChildWorkingDir();
+    var path = this.brogueGameDirectoryPath(this.username, this.variant, mode);
 
     try {
         fs.accessSync(path, fs.F_OK);
+        return path;
     }
     catch(err) {
         try {
             fs.ensureDirSync(path);
+            return path;
         }
         catch (err) {
             if (err && err.code != "EEXIST") {
                 console.error("Failed to create " + path + " : " + JSON.stringify(err));
             }
+            return null;
         }
     }
 };
 
 BrogueInterface.prototype.getChildWorkingDir = function() {
-    return this.brogueGameDirectoryPath(this.variant, this.username);
+    if(!this.childDir) {
+        console.error("Brogue child dir not set.");
+    }
+    return this.childDir;
 };
 
-BrogueInterface.prototype.brogueGameDirectoryPath = function(variant, username) {
-    return config.path.GAME_DATA_DIR + variant + "/" + username;
+BrogueInterface.prototype.brogueGameDirectoryPath = function(username, variant, mode) {
+    var dirName = username;
+    if(mode == brogueMode.RECORDING) {
+        dirName += "-recording";
+    }
+    return config.path.GAME_DATA_DIR + variant + "/" + dirName;
 };
 
 module.exports = BrogueInterface;

@@ -2,6 +2,7 @@
 // Responsible for distributing messages from players and observers
 
 var brogue = require('./brogue-interface');
+var brogueMode = require('../enum/brogue-mode');
 
 module.exports = {
 
@@ -10,8 +11,10 @@ module.exports = {
     getBrogueInterface: function (username, variant, data, mode) {
 
         //This would allow us to support simultaneously playing 2 variants - but that requires refactoring the user model
-        //var gameKey = _.concat(variant, '-', username);
-        var gameKey = username;
+        var gameKey = variant + '-' + username;
+        if(mode == brogueMode.RECORDING) {
+            gameKey += "-RECORDING";
+        }
 
         if (this.brogueInterface[gameKey]) {
             if(!this.brogueInterface[gameKey].disconnected) {

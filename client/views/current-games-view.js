@@ -43,31 +43,31 @@ define([
             
             this.renderHeadingOnEmptyChange();
             
-            for (var incomingUserName in data) {
-                var update = data[incomingUserName];
+            for (var incomingGameName in data) {
+                var update = data[incomingGameName];
 
-                var action = "Observe " + incomingUserName;
+                var action = "Observe " + update.userName;
 
-                if(incomingUserName === this.userModel.get("username")) {
+                if(update.userName === this.userModel.get("username")) {
                     action = "Continue game";
                 }
 
-                if (!rowViewCollection[incomingUserName]) {
+                if (!rowViewCollection[incomingGameName]) {
                     var rowData = _.extend(update, {
-                        userName: incomingUserName,
+                        userName: update.userName,
                         action: action
                     });
                     
                     var rowModel = new CurrentGamesRowModel(rowData);
-                    var newRowView = rowViewCollection[incomingUserName] = new CurrentGamesRowView({
+                    var newRowView = rowViewCollection[incomingGameName] = new CurrentGamesRowView({
                         model : rowModel,
-                        id : "game-row-" + incomingUserName
+                        id : "game-row-" + incomingGameName
                     });
                     this.$tableElement.append(newRowView.render().el);
                 }
                 else {
-                    rowViewCollection[incomingUserName].model.set(update);
-                    rowViewCollection[incomingUserName].render();
+                    rowViewCollection[incomingGameName].model.set(update);
+                    rowViewCollection[incomingGameName].render();
                 }   
             }
             

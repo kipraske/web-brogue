@@ -22,10 +22,8 @@ define([
         observeGame: function(event){
             event.preventDefault();
 
-            var userName = $(event.target).data("username");
-            
-            send("brogue", "observe", {username: userName, variant: this.model.get("variant")});
-            dispatcher.trigger("observeGame", {username: userName, variant: this.model.get("variant")});
+            send("brogue", "observe", {username: this.model.get("userName"), variant: this.model.get("variant")});
+            dispatcher.trigger("observeGame", {username: this.model.get("userName"), variant: this.model.get("variant")});
             this.goToConsole();
         },
 
