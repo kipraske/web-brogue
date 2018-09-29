@@ -31,7 +31,7 @@
 #define USE_UNICODE
 
 // version string -- no more than 16 bytes:
-#define BROGUE_VERSION_STRING "1.7.5"
+#define BROGUE_VERSION_STRING "1.7.5-web"
 
 // debug macros -- define DEBUGGING as 1 to enable wizard mode.
 
@@ -165,7 +165,8 @@
 #define MUD_CHAR		','
 #define WEB_CHAR		':'
 //#define FOLIAGE_CHAR	0x03A8 // lower-case psi
-#define FOLIAGE_CHAR	0x2648 // Aries symbol
+//#define FOLIAGE_CHAR        0x2648 // Aries symbol (not supported on many browsers)
+#define FOLIAGE_CHAR  0x03C8 // Aries symbol
 #define VINE_CHAR       ':'
 #define ALTAR_CHAR		'|'
 #define LEVER_CHAR      '/'
@@ -181,8 +182,8 @@
 #define AMULET_CHAR		0x2640
 #define FOOD_CHAR		';'
 #define SCROLL_CHAR		0x266A//'?'		// 0x039E
-#define RING_CHAR		0x26AA
-//#define RING_CHAR		0xffee
+//#define RING_CHAR		0x26AA
+#define RING_CHAR             'o'
 #define CHARM_CHAR      0x03DF
 #define POTION_CHAR		'!'
 #define ARMOR_CHAR		'['
@@ -191,12 +192,13 @@
 #define WAND_CHAR		'~'
 #define GOLD_CHAR		'*'
 #define GEM_CHAR		0x25cf
-#define TOTEM_CHAR		0x26b2
+//#define TOTEM_CHAR		0x26b2
+#define TOTEM_CHAR            0x2641
 #define TURRET_CHAR		0x25cf
 #define UNICORN_CHAR    0x00da
 #define KEY_CHAR		'-'
-#define ELECTRIC_CRYSTAL_CHAR 0x00A4
-
+//#define ELECTRIC_CRYSTAL_CHAR 0x00A4
+#define ELECTRIC_CRYSTAL_CHAR 164
 #define UP_ARROW_CHAR		0x2191
 #define DOWN_ARROW_CHAR		0x2193
 #define LEFT_ARROW_CHAR		0x2190
@@ -206,8 +208,10 @@
 #define OMEGA_CHAR			0x03A9
 #define THETA_CHAR			0x03B8
 #define LAMDA_CHAR			0x03BB
-#define KOPPA_CHAR			0x03DE
-#define LOZENGE_CHAR		0x29EB
+//#define KOPPA_CHAR			0x03DE
+//#define LOZENGE_CHAR		0x29EB
+#define KOPPA_CHAR            0x03DF
+#define LOZENGE_CHAR          0x25C6
 #define CROSS_PRODUCT_CHAR	0x2A2F
 
 #define CHAIN_TOP_LEFT		'\\'
@@ -219,8 +223,10 @@
 #define CHAIN_LEFT			'-'
 #define CHAIN_RIGHT			'-'
 
-#define BAD_MAGIC_CHAR		0x29F2
-#define GOOD_MAGIC_CHAR		0x29F3
+//#define BAD_MAGIC_CHAR		0x29F2
+//#define GOOD_MAGIC_CHAR		0x29F3
+#define BAD_MAGIC_CHAR                0x25C6
+#define GOOD_MAGIC_CHAR               0x25C7
 
 #else
 
