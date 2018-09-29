@@ -312,6 +312,14 @@ enum eventTypes {
 	NUMBER_OF_EVENT_TYPES, // unused
 };
 
+enum notificationEventTypes {
+	GAMEOVER_QUIT,
+	GAMEOVER_DEATH,
+	GAMEOVER_VICTORY,
+	GAMEOVER_SUPERVICTORY,
+	GAMEOVER_RECORDING
+};
+
 typedef struct rogueEvent {
 	enum eventTypes eventType;
 	signed long param1;
@@ -1106,6 +1114,7 @@ enum tileFlags {
 #define RELABEL_KEY         'R'
 #define TRUE_COLORS_KEY		'\\'
 #define AGGRO_DISPLAY_KEY   ']'
+#define WARNING_PAUSE_KEY   '['
 #define DROP_KEY			'd'
 #define CALL_KEY			'c'
 #define QUIT_KEY			'Q'
@@ -2209,7 +2218,8 @@ typedef struct playerCharacter {
 	boolean alreadyFell;				// so the player can fall only one depth per turn
 	boolean eligibleToUseStairs;		// so the player uses stairs only when he steps onto them
 	boolean trueColorMode;				// whether lighting effects are disabled
-    boolean displayAggroRangeMode;      // whether your stealth range is displayed
+  boolean displayAggroRangeMode;      // whether your stealth range is displayed
+  boolean warningPauseMode;			// whether to pause (MORE) when a hitpoint warning occurs
 	boolean quit;						// to skip the typical end-game theatrics when the player quits
 	unsigned long seed;					// the master seed for generating the entire dungeon
 	short RNG;							// which RNG are we currently using?
@@ -2589,6 +2599,7 @@ extern "C" {
 	void initializeRogue(unsigned long seed);
 	void gameOver(char *killedBy, boolean useCustomPhrasing);
     void victory(boolean superVictory);
+    void notifyEvent(short eventId, int data1, int data2, const char *str1, const char *str2);
 	void enableEasyMode();
 	int rand_range(int lowerBound, int upperBound);
 	unsigned long seedRandomGenerator(unsigned long seed);
@@ -3109,11 +3120,12 @@ extern "C" {
 	void recordMouseClick(short x, short y, boolean controlKey, boolean shiftKey);
 	void OOSCheck(unsigned long x, short numberOfBytes);
 	void RNGCheck();
-	void executePlaybackInput(rogueEvent *recordingInput);
+	boolean executePlaybackInput(rogueEvent *recordingInput);
 	void getAvailableFilePath(char *filePath, const char *defaultPath, const char *suffix);
     boolean characterForbiddenInFilename(const char theChar);
 	void saveGame();
 	void saveRecording();
+	void saveRecordingNoPrompt();
 	void parseFile();
 	void RNGLog(char *message);
     
