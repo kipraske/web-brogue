@@ -19,6 +19,8 @@ define([
             "click #start-brogue-seed-0" : "startBrogueSeed0",
             "click #start-brogue-1" : "startBrogue1",
             "click #start-brogue-seed-1" : "startBrogueSeed1",
+            "click #start-brogue-2" : "startBrogue2",
+            "click #start-brogue-seed-2" : "startBrogueSeed2",
             "click #show-current-games" : "showCurrentGames",
             "click #show-stats" : "showStats",
             "click #show-high-scores" : "showHighScores"
@@ -30,6 +32,10 @@ define([
         startBrogue1: function(event) {
             event.preventDefault();
             this.startBrogue(1)
+        },
+        startBrogue2: function(event) {
+            event.preventDefault();
+            this.startBrogue(2)
         },
         startBrogue: function(variantIndex){
             send("brogue", "start", {variant: config.variants[variantIndex].code});
@@ -43,6 +49,10 @@ define([
         startBrogueSeed1: function(event) {
             event.preventDefault();
             this.startBrogueSeed(1)
+        },
+        startBrogueSeed2: function(event) {
+            event.preventDefault();
+            this.startBrogueSeed(2)
         },
         startBrogueSeed: function(variantIndex){
             event.preventDefault();
