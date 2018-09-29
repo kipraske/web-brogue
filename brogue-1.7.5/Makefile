@@ -12,6 +12,8 @@ else ifeq (${LASTTARGET},curses)
 all : curses
 else ifeq (${LASTTARGET},tcod)
 all : tcod
+else ifeq (${LASTTARGET}, web)
+all : web
 else
 all : both
 endif
@@ -41,7 +43,8 @@ BROGUEFILES=src/brogue/Architect.o \
 	src/platform/platformdependent.o \
 	src/platform/curses-platform.o \
 	src/platform/tcod-platform.o \
-	src/platform/term.o
+	src/platform/term.o \
+	src/platform/web-platform.o
 
 TCOD_DEF = -DBROGUE_TCOD -I$(LIBTCODDIR)/include
 TCOD_DEP = ${LIBTCODDIR}
@@ -50,6 +53,8 @@ TCOD_LIB = -L. -L${LIBTCODDIR} ${SDL_FLAGS} -ltcod -Wl,-rpath,.
 CURSES_DEF = -DBROGUE_CURSES
 CURSES_LIB = -lncurses -lm
 
+WEB_DEF = -DBROGUE_WEB
+WEB_LIB = -lm
 
 tcod : DEPENDENCIES += ${TCOD_DEP}
 tcod : DEFINES += ${TCOD_DEF}
@@ -61,26 +66,38 @@ curses : LIBRARIES = ${CURSES_LIB}
 both : DEPENDENCIES += ${TCOD_DEP}
 both : DEFINES += ${TCOD_DEF} ${CURSES_DEF}
 both : LIBRARIES += ${TCOD_LIB} ${CURSES_LIB}
+	
+web : DEFINES += ${WEB_DEF}
+web : LIBRARIES += ${WEB_LIB}
 
 ifeq (${LASTTARGET},both)
 both : bin/brogue
 tcod : clean bin/brogue
 curses : clean bin/brogue
+web : clean bin/brogue
 else ifeq (${LASTTARGET},curses)
 curses : bin/brogue
 tcod : clean bin/brogue
 both : clean bin/brogue
+web : clean bin/brogue
 else ifeq (${LASTTARGET},tcod)
 tcod : bin/brogue
+curses : clean bin/brogue
+both : clean bin/brogue
+web : clean bin/brogue
+else ifeq (${LASTTARGET}, web)
+web : bin/brogue
+tcod : clean bin/brogue
 curses : clean bin/brogue
 both : clean bin/brogue
 else
 both : bin/brogue
 curses : bin/brogue
 tcod : bin/brogue
+web : bin/brogue
 endif
 
-.PHONY : clean both curses tcod tar
+.PHONY : clean both curses tcod web tar
 
 bin/brogue : ${DEPENDENCIES} ${BROGUEFILES}
 	$(CC) -O2 -march=i586 -o bin/brogue ${BROGUEFILES} ${LIBRARIES} -Wl,-rpath,.
