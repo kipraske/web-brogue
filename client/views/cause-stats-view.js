@@ -12,7 +12,8 @@ define([
 
         events: {
             "click #deaths-by-cause-variant0" : "selectVariant0DeathCauseStats",
-            "click #deaths-by-cause-variant1" : "selectVariant1DeathCauseStats"
+            "click #deaths-by-cause-variant1" : "selectVariant1DeathCauseStats",
+            "click #deaths-by-cause-variant2" : "selectVariant2DeathCauseStats"
         },
 
         initialize: function() {
@@ -85,7 +86,15 @@ define([
 
             this.setDeathCauseStatsForVariant(1);
             this.refresh();
-        }
+        },
+
+        selectVariant2DeathCauseStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathCauseStatsForVariant(2);
+            this.refresh();
+        },
     });
 
     return CauseStatisticsView;

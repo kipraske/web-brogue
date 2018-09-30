@@ -112,8 +112,9 @@
     <h2>High Scores</h2>
     <ul>
         <li><a id="all-scores-daily" href="#all-scores-daily">Daily Top Scores</a></li>
-        <li><a id="all-scores-variant0" href="#all-scores-variant0">All-time Top Scores (Brogue)</a></li>
-        <li><a id="all-scores-variant1" href="#all-scores-variant1">All-time Top Scores (gBrogue)</a></li>
+        <li><a id="all-scores-variant0" href="#all-scores-variant0">All-time Top Scores (Brogue 1.7.5)</a></li>
+        <li><a id="all-scores-variant1" href="#all-scores-variant1">All-time Top Scores (Brogue 1.7.4)</a></li>
+        <li><a id="all-scores-variant2" href="#all-scores-variant1">All-time Top Scores (gBrogue)</a></li>
         <% if (username) { %>
         <li><a id="all-scores-user" href="#all-scores-user">My Top Scores (<%= username %>)</a></li>
         <% } %>
@@ -218,8 +219,9 @@
 <script id="cause-statistics-template" type="text/template">
     <h3>Deaths by Cause</h3>
     <ul>
-        <li><a id="deaths-by-cause-variant0" href="#deaths-by-cause-variant0">Deaths for Brogue</a></li>
-        <li><a id="deaths-by-cause-variant1" href="#deaths-by-cause-variant1">Deaths for gBrogue</a></li>
+        <li><a id="deaths-by-cause-variant0" href="#deaths-by-cause-variant0">Deaths for Brogue 1.7.5</a></li>
+        <li><a id="deaths-by-cause-variant1" href="#deaths-by-cause-variant1">Deaths for Brogue 1.7.4</a></li>
+        <li><a id="deaths-by-cause-variant2" href="#deaths-by-cause-variant2">Deaths for gBrogue</a></li>
     </ul>
     <p>The top 3 causes of death by the level on which they happened.</p>
     <div id="cause-stats-grid" />
@@ -228,8 +230,9 @@
 <script id="level-statistics-template" type="text/template">
     <h3>Deaths by Level</h3>
     <ul>
-        <li><a id="deaths-by-level-variant0" href="#deaths-by-level-variant0">Deaths for Brogue</a></li>
-        <li><a id="deaths-by-level-variant1" href="#deaths-by-level-variant1">Deaths for gBrogue</a></li>
+        <li><a id="deaths-by-level-variant0" href="#deaths-by-level-variant0">Deaths for Brogue 1.7.5</a></li>
+        <li><a id="deaths-by-level-variant1" href="#deaths-by-level-variant1">Deaths for Brogue 1.7.4</a></li>
+        <li><a id="deaths-by-level-variant2" href="#deaths-by-level-variant2">Deaths for gBrogue</a></li>
     </ul>
     <p>Number of deaths per level.</p>
     <div id="level-stats-grid" />
@@ -238,8 +241,9 @@
 <script id="level-probability-template" type="text/template">
     <h3>Probability of Death by Level</h3>
     <ul>
-        <li><a id="deaths-probability-by-level-variant0" href="#deaths-probability-by-level-variant0">Deaths for Brogue</a></li>
-        <li><a id="deaths-probability-by-level-variant1" href="#deaths-probability-by-level-variant1">Deaths for gBrogue</a></li>
+        <li><a id="deaths-probability-by-level-variant0" href="#deaths-probability-by-level-variant0">Deaths for Brogue 1.7.5</a></li>
+        <li><a id="deaths-probability-by-level-variant1" href="#deaths-probability-by-level-variant1">Deaths for Brogue 1.7.4</a></li>
+        <li><a id="deaths-probability-by-level-variant2" href="#deaths-probability-by-level-variant2">Deaths for gBrogue</a></li>
     </ul>
     <p>The probability of dying on a particular level, having reached that level. An analogue of perceived difficulty.</p>
     <div id="level-probability-grid" />
@@ -248,8 +252,9 @@
 <script id="general-statistics-template" type="text/template">
     <h3>General Statistics</h3>
     <ul>
-        <li><a id="general-stats-variant0" href="#general-stats-variant0">Stats for Brogue</a></li>
-        <li><a id="general-stats-variant1" href="#general-stats-variant1">Stats for gBrogue</a></li>
+        <li><a id="general-stats-variant0" href="#general-stats-variant0">Stats for Brogue 1.7.5</a></li>
+        <li><a id="general-stats-variant1" href="#general-stats-variant1">Stats for Brogue 1.7.4</a></li>
+        <li><a id="general-stats-variant2" href="#general-stats-variant2">Stats for gBrogue</a></li>
     </ul>
     <ul>
         <li>Total games played: <%= totalGames %> (easy mode: <%= totalEasyModeGames %>)</li>

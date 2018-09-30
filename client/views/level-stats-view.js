@@ -13,7 +13,8 @@ define([
 
         events: {
             "click #deaths-by-level-variant0" : "selectVariant0DeathsPerLevelStats",
-            "click #deaths-by-level-variant1" : "selectVariant1DeathsPerLevelStats"
+            "click #deaths-by-level-variant1" : "selectVariant1DeathsPerLevelStats",
+            "click #deaths-by-level-variant2" : "selectVariant2DeathsPerLevelStats"
         },
 
         initialize: function() {
@@ -117,6 +118,14 @@ define([
             event.preventDefault();
 
             this.setDeathsByLevelStatsForVariant(1);
+            this.refresh();
+        },
+
+        selectVariant2DeathsPerLevelStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathsByLevelStatsForVariant(2);
             this.refresh();
         }
     });
