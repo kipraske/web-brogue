@@ -2,13 +2,20 @@ define([
     "jquery",
     "underscore",
     "backbone",
-    "chart"
-], function ($, _, Backbone, Chart) {
+    "chart",
+    "config"
+], function ($, _, Backbone, Chart, config) {
 
     var LevelStatisticsView = Backbone.View.extend({
 
         el: '#level-statistics',
         headingTemplate: _.template($('#level-statistics-template').html()),
+
+        events: {
+            "click #deaths-by-level-variant0" : "selectVariant0DeathsPerLevelStats",
+            "click #deaths-by-level-variant1" : "selectVariant1DeathsPerLevelStats",
+            "click #deaths-by-level-variant2" : "selectVariant2DeathsPerLevelStats"
+        },
 
         initialize: function() {
             this.listenTo(this.model, "add", this.render);
@@ -33,6 +40,7 @@ define([
                 collection: this.model
             });
 
+            this.setDeathsByLevelStatsForVariant(0);
             this.refresh();
         },
 
@@ -91,6 +99,34 @@ define([
         refresh: function() {
             this.model.fetch();
             this.render();
+        },
+
+        selectVariant0DeathsPerLevelStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathsByLevelStatsForVariant(0);
+            this.refresh();
+        },
+
+        setDeathsByLevelStatsForVariant: function(variantNo) {
+            this.model.setVariantForLevelStats(config.variants[variantNo].code);
+        },
+
+        selectVariant1DeathsPerLevelStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathsByLevelStatsForVariant(1);
+            this.refresh();
+        },
+
+        selectVariant2DeathsPerLevelStats: function(event) {
+
+            event.preventDefault();
+
+            this.setDeathsByLevelStatsForVariant(2);
+            this.refresh();
         }
     });
 

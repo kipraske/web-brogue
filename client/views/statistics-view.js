@@ -9,10 +9,6 @@ define([
         el: '#server-statistics',
         headingTemplate: _.template($('#stats-heading').html()),
 
-        events: {
-            "click #level-statistics" : "selectDeathsByLevel"
-        },
-
         initialize: function() {
 
             this.refresh();
@@ -26,10 +22,6 @@ define([
 
         refresh: function() {
             this.render();
-        },
-
-        selectDeathsByLevel: function(event) {
-            //No action
         }
     });
 

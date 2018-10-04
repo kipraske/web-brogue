@@ -5,8 +5,9 @@ define([
     'underscore',
     'backbone',
     'backbonePaginator',
-    'moment'
-], function($, _, Backbone, BackbonePaginator, Moment) {
+    'moment',
+    'variantLookup'
+], function($, _, Backbone, BackbonePaginator, Moment, VariantLookup) {
 
     var HighScores = Backbone.PageableCollection.extend({
         url: '/api/games',
@@ -30,6 +31,15 @@ define([
             return Moment(date).format('MMMM Do YYYY, h:mm:ss a');
         },
 
+        lookupVariant: function(variant) {
+            if(variant in VariantLookup.variants) {
+                return VariantLookup.variants[variant].display;
+            }
+            else {
+                return "Not found";
+            }
+        },
+
         parseState: function (resp, queryParams, state, options) {
            return {totalRecords: resp.itemCount };
         },
@@ -41,6 +51,7 @@ define([
 
             _.each(records, function(element, index, list) {
                 element.prettyDate = this.formatDate(element.date);
+                element.prettyVariant = this.lookupVariant(element.variant);
             }, this);
 
             return resp.data;
@@ -50,8 +61,12 @@ define([
             this.url = 'api/games';
             this.state.sortKey = "date";
         },
-        setUserScores: function() {
-            this.url = 'api/games/' + this.username;
+        setAllScoresForPreviousDays: function(days) {
+            this.url = 'api/games?previousdays=' + days;
+            this.state.sortKey = "date";
+        },
+        setUserScoresForPreviousDays: function(days) {
+            this.url = 'api/games/' + this.username + '?previousdays=' + days;
             this.state.sortKey = "date";
         },
         setAllTopScores: function() {
@@ -68,6 +83,10 @@ define([
         },
         setMonthlyTopScores: function() {
             this.url = 'api/monthlygames';
+            this.state.sortKey = "score";
+        },
+        setVariantTopScores: function(variantCode) {
+            this.url = 'api/games?variant=' + variantCode;
             this.state.sortKey = "score";
         },
         setUserName: function(username) {

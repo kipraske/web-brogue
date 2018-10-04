@@ -2,12 +2,13 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "config",
     "dispatcher",
     "dataIO/send-generic",
     "backgrid",
     "moment",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, send, Backgrid, Moment, activate) {
+], function ($, _, Backbone, config, dispatcher, send, Backgrid, Moment, activate) {
 
     var LevelFormatter = _.extend({}, Backgrid.CellFormatter.prototype, {
         fromRaw: function (rawValue, model) {
@@ -47,9 +48,10 @@ define([
 
             var gameId = $(event.target).data("gameid");
             var gameDescription = $(event.target).data("gamedescription");
+            var gameVariant = $(event.target).data("variant");
 
-            send("brogue", "recording", {recording: gameId});
-            dispatcher.trigger("recordingGame", {recording: gameDescription});
+            send("brogue", "recording", {recording: gameId, variant: gameVariant});
+            dispatcher.trigger("recordingGame", {recording: gameDescription, variant: gameVariant});
             this.goToConsole();
         },
 
@@ -68,6 +70,7 @@ define([
                     title: this.model.title,
                     id: 'watch-game',
                     "data-gameid": formattedValue,
+                    "data-variant": this.model.get("variant"),
                     "data-gamedescription": this.model.get("username") + "-" + this.model.get("seed") + "-" + formatDate(this.model.get("date"))
                 }).text("Watch game"));
             }

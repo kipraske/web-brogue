@@ -19,11 +19,7 @@ function LobbyController(socket) {
 LobbyController.prototype = new Controller();
 _.extend(LobbyController.prototype, {
     controllerName: "lobby",
-    // The lobby would not normally get user requests, but I am adding this so we can test these functions
     handlerCollection : {
-        requestSingleUserData : function(username){
-            //console.log(allUsers.users[username].lobbyData);
-        },
         requestAllUserData : function(includeEveryone){
             this.sendAllUserData(includeEveryone);
         }
@@ -32,7 +28,7 @@ _.extend(LobbyController.prototype, {
     userDataListen : function(){
         var self = this;
         this.broadcastInterval = setInterval(function(){
-            self.sendAllUserData(false);
+            self.sendAllUserData();
         }, config.lobby.UPDATE_INTERVAL);
     },
     stopUserDataListen: function(){
@@ -43,19 +39,19 @@ _.extend(LobbyController.prototype, {
         var self = this;
         var returnLobbyData;
 
-        for (var userName in allUsers.users) {
+        for (var gameName in allUsers.users) {
 
             // Only send data to the lobby of the users who are actually playing a game
             if (!returnLobbyData) {
                 returnLobbyData = {};
             }
 
-            var userEntry = allUsers.users[userName];
-            returnLobbyData[userName] = userEntry.lobbyData;
+            var userEntry = allUsers.users[gameName];
+            returnLobbyData[gameName] = userEntry.lobbyData;
 
             // update idle time
             var timeDiff = process.hrtime(userEntry.lastUpdateTime)[0];
-            returnLobbyData[userName]["idle"] = timeDiff;
+            returnLobbyData[gameName]["idle"] = timeDiff;
         }
         
         // In the event our periodic calling tries to send data to a closed socket

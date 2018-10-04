@@ -1,6 +1,7 @@
 var expect = require("chai").expect;
 
 var brogueConstants = require("../brogue/brogue-constants.js");
+var config = require("./config-test");
 
 var stats = require("../stats/stats.js");
 
@@ -34,9 +35,78 @@ describe("stats.filterForValidGames", function() {
 
         var allValidGameRecords = [validGameRecord1, validGameRecord2];
 
-        var filteredGames = stats.filterForValidGames(allValidGameRecords);
+        var filteredGames = stats.filterForValidGames(allValidGameRecords, config.variants[0], config.variants[0]);
 
         expect(filteredGames).to.deep.equal(allValidGameRecords);
+    });
+
+    it("filters on variant", function () {
+
+        var validGameRecord1 = {
+            username: "flend",
+            date: new Date("2011-05-26T07:56:00.123Z"),
+            score: 100,
+            seed: 200,
+            level: 3,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a pink jelly on depth 3.",
+            recording: "file1",
+            variant: "BROGUE1"
+        };
+
+        var validGameRecord2 = {
+            username: "flend",
+            date: new Date("2011-06-26T07:56:00.123Z"),
+            score: 150,
+            seed: 250,
+            level: 5,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a violent explosion on depth 5.",
+            recording: "file2",
+            variant: "BROGUE2"
+        };
+
+        var allValidGameRecords = [validGameRecord1, validGameRecord2];
+
+        var filteredGames = stats.filterForValidGames(allValidGameRecords, "BROGUE2", config.variants[0]);
+
+        expect(filteredGames).to.deep.equal([validGameRecord2]);
+    });
+
+    it("treats games with no variant as being of variant config.variants[0]", function () {
+
+        var validGameRecord1 = {
+            username: "flend",
+            date: new Date("2011-05-26T07:56:00.123Z"),
+            score: 100,
+            seed: 200,
+            level: 3,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a pink jelly on depth 3.",
+            recording: "file1"
+        };
+
+        var validGameRecord2 = {
+            username: "flend",
+            date: new Date("2011-06-26T07:56:00.123Z"),
+            score: 150,
+            seed: 250,
+            level: 5,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a violent explosion on depth 5.",
+            recording: "file2",
+            variant: "BROGUE2"
+        };
+
+        var allValidGameRecords = [validGameRecord1, validGameRecord2];
+
+        var filteredGames = stats.filterForValidGames(allValidGameRecords, config.variants[0], config.variants[0]);
+
+        expect(filteredGames).to.deep.equal([validGameRecord1]);
     });
 
     it("returns victories recorded with level 0", function () {
@@ -67,7 +137,7 @@ describe("stats.filterForValidGames", function() {
 
         var allValidGameRecords = [validGameRecord1, validGameRecord2];
 
-        var filteredGames = stats.filterForValidGames(allValidGameRecords);
+        var filteredGames = stats.filterForValidGames(allValidGameRecords, config.variants[0], config.variants[0]);
 
         expect(filteredGames).to.deep.equal(allValidGameRecords);
     });
@@ -100,7 +170,7 @@ describe("stats.filterForValidGames", function() {
 
         var allGameRecords = [gameWithNullLevel, validGameRecord1];
 
-        var filteredGames = stats.filterForValidGames(allGameRecords);
+        var filteredGames = stats.filterForValidGames(allGameRecords, config.variants[0], config.variants[0]);
 
         expect(filteredGames).to.deep.equal([ validGameRecord1 ]);
     });
@@ -132,7 +202,7 @@ describe("stats.filterForValidGames", function() {
 
         var allGameRecords = [validGameRecord1, gameWithUndefinedLevel];
 
-        var filteredGames = stats.filterForValidGames(allGameRecords);
+        var filteredGames = stats.filterForValidGames(allGameRecords, config.variants[0], config.variants[0]);
 
         expect(filteredGames).to.deep.equal([ validGameRecord1 ]);
     });

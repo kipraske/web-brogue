@@ -104,6 +104,87 @@ describe("stats/general", function(){
     });
 });
 
+describe("stats/general filters by variant", function() {
+
+    beforeEach(function (done) {
+
+        var gameRecord1 = {
+            username: "flend",
+            date: new Date("2011-05-26T07:56:00.123Z"),
+            score: 100,
+            seed: 200,
+            level: 3,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a pink jelly on depth 3.",
+            recording: "file1",
+            variant: "BROGUE"
+        };
+
+        var gameRecord2 = {
+            username: "flend",
+            date: new Date("2011-06-26T07:56:00.123Z"),
+            score: 150,
+            seed: 250,
+            level: 5,
+            result: brogueConstants.gameOver.GAMEOVER_DEATH,
+            easyMode: false,
+            description: "Killed by a violent explosion on depth 5.",
+            recording: "file2",
+            variant: "BROGUE"
+        };
+
+        var gameRecord3 = {
+            username: "ccc",
+            date: new Date("2013-06-27T07:56:01.123Z"),
+            score: 150,
+            seed: 250,
+            level: 26,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Escaped the Dungeons of Doom with 3 lumenstones!",
+            recording: "file3",
+            variant: "GBROGUE"
+        };
+
+        var gameRecord4 = {
+            username: "dave",
+            date: new Date("2012-06-26T07:56:01.123Z"),
+            score: 150,
+            seed: 250,
+            level: 26,
+            result: brogueConstants.gameOver.GAMEOVER_VICTORY,
+            easyMode: false,
+            description: "Escaped the Dungeons of Doom!",
+            recording: "file4",
+            variant: "GBROGUE"
+        };
+
+        gameRecord.create([gameRecord1, gameRecord2, gameRecord3, gameRecord4], function () {
+            done();
+        });
+    });
+
+    afterEach(function (done) {
+
+        gameRecord.remove({}, function () {
+            done();
+        });
+    });
+
+    it("totalGames is calculated correctly when filtering", function (done) {
+        request(server)
+            .get("/api/stats/general")
+            .set('Accept', 'application/json')
+            .query({ variant: 'BROGUE' })
+            .end(function (err, res) {
+                var bodyObj = JSON.parse(res.text);
+                expect(bodyObj).to.have.property('totalGames', 2);
+                done();
+            });
+    });
+});
+
 describe("stats/general", function(){
 
     beforeEach(function(done) {

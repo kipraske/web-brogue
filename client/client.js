@@ -55,7 +55,6 @@ require([
     "views/play-view",
     "views/header-view",
     "views/current-games-view",
-    "views/saved-games-view",
     "views/mini-scores-view",
     "views/all-scores-view",
     "views/site-news-view",
@@ -67,7 +66,7 @@ require([
     "views/general-stats-view",
     "views/cause-stats-view",
     "views/level-probability-view"
-], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, LevelProbabilityModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, SavedGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView, LevelProbabilityView){
+], function( $, _, Backbone, BackbonePaginator, Backgrid, BackgridPaginator, dispatcher, debugMode, socket, router, HighScoresModel, ChatModel, SiteNewsModel, CauseStatsModel, LevelStatsModel, GeneralStatsModel, LevelProbabilityModel, activate, AuthView, ChatView, ConsoleChatView, PlayView, HeaderView, CurrentGamesView, HighScoresView, AllScoresView, SiteNewsView, ConsoleView, ConsoleKeyProcessingView, SeedPopupView, StatisticsView, LevelStatsView, GeneralStatsView, CauseStatsView, LevelProbabilityView){
     
     // If you want to enable debug mode, uncomment this function
     debugMode();
@@ -77,7 +76,6 @@ require([
     var playView = new PlayView();
     var headerView = new HeaderView();
     var currentGamesView = new CurrentGamesView();
-    var savedGamesView = new SavedGamesView();
     var consoleView = new ConsoleView();
     var chatView = new ChatView({model: new ChatModel()});
     var consoleChatView = new ConsoleChatView({model: new ChatModel()});
@@ -135,8 +133,14 @@ require([
     dispatcher.on("showConsole", consoleView.resize, consoleView);
 
     dispatcher.on("startGame", headerView.startGame, headerView);
+    dispatcher.on("startGame", consoleView.initialiseForNewGame, consoleView);
+
     dispatcher.on("observeGame", headerView.observeGame, headerView);
+    dispatcher.on("observeGame", consoleView.initialiseForNewGame, consoleView);
+
     dispatcher.on("recordingGame", headerView.recordingGame, headerView);
+    dispatcher.on("recordingGame", consoleView.initialiseForNewGame, consoleView);
+
     dispatcher.on("leaveGame", headerView.leaveGame, headerView);
 
     dispatcher.on("reconnect", authView.requestLogin, authView);
@@ -152,7 +156,6 @@ require([
         "brogue" : consoleView.queueUpdateCellModelData.bind(consoleView),
         "quit" : function(data) { dispatcher.trigger("quit", data) },
         "lobby" : currentGamesView.updateRowModelData.bind(currentGamesView),
-        "saved games" : savedGamesView.updateRowModelData.bind(savedGamesView),
         "chat": function(data) { dispatcher.trigger("chat", data) },
         "auth" : authView.handleMessage.bind(authView),
         "seed" : popups.seedView.handleMessage.bind(popups.seedView),

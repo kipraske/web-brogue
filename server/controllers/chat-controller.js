@@ -12,8 +12,9 @@ function ChatController(socket) {
     this.controllerName = "chat";
     this.socket = socket;
     this.controllers = null;
-    this.roomName = LOBBY_NAME;
+    this.roomName = null;
 
+    //The player enters the lobby and always remains in this room (the chat box may be hidden on front-end)
     this.socket.join(LOBBY_NAME);
 }
 
@@ -42,11 +43,15 @@ _.extend(ChatController.prototype, {
                 data: messageSanitised
             }};
 
-            this.socket.to(this.roomName).emit('message', broadcastMessage);
-
-            if(this.roomName == LOBBY_NAME) {
+            if(data.channel === LOBBY_NAME) {
+                this.socket.to(LOBBY_NAME).emit('message', broadcastMessage);
                 this.persistLobbyMessage({ username: broadcastMessage.data.username,
-                                           message: messageTruncated });
+                    message: messageTruncated });
+            }
+            else {
+                if(this.roomName) {
+                    this.socket.to(this.roomName).emit('message', broadcastMessage);
+                }
             }
         },
         lobbyHistory: function(data) {
@@ -105,18 +110,17 @@ _.extend(ChatController.prototype, {
         };
 
         chatRecord.create(thisChatRecord, function (err) {
-            console.error("Chat save failure:" + err);
+            if(err) {
+                console.error("Chat save failure:" + err);
+            }
         });
     },
     enterRoom: function(roomName) {
-        this.socket.leave(this.roomName);
         this.roomName = roomName;
         this.socket.join(roomName);
     },
-    enterLobby: function() {
-        this.socket.leave(this.roomName);
-        this.roomName = LOBBY_NAME;
-        this.socket.join(LOBBY_NAME);
+    leaveRoom: function(roomName) {
+        this.socket.leave(roomName);
     },
     broadcastLoginMessage: function() {
         this.broadcastUserStatusMessage("logged in.")

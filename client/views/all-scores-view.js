@@ -5,17 +5,20 @@ define([
     "underscore",
     "backbone",
     "dispatcher",
+    "config",
     "views/score-table-cells"
-], function ($, _, Backbone, dispatcher, TableCells) {
+], function ($, _, Backbone, dispatcher, config, TableCells) {
 
     var AllScoresView = Backbone.View.extend({
         el: '#all-scores',
         headingTemplate: _.template($('#all-scores-heading').html()),
 
         events: {
+            "click #all-scores-variant0" : "selectVariant0Scores",
+            "click #all-scores-variant1" : "selectVariant1Scores",
+            "click #all-scores-variant2" : "selectVariant2Scores",
             "click #all-scores-user" : "selectUserScores",
             "click #all-scores-daily" : "selectDailyScores",
-            "click #all-scores-monthly" : "selectMonthlyScores",
             "click #all-scores-all" : "selectAllScores"
         },
 
@@ -34,6 +37,12 @@ define([
                     }, {
                         name: "prettyDate",
                         label: "Date",
+                        cell: "string",
+                        sortable: true,
+                        editable: false
+                    }, {
+                        name: "prettyVariant",
+                        label: "Version",
                         cell: "string",
                         sortable: true,
                         editable: false
@@ -76,6 +85,8 @@ define([
                 collection: this.model
             });
 
+            this.setVariantNoScores(0);
+            this.refresh();
         },
 
         render: function() {
@@ -106,22 +117,11 @@ define([
 
         activate: function() {
             //Model may be in an old-state, so refresh
-            this.setAllScores();
-        },
-
-        quit: function() {
+            this.setVariantNoScores(0);
             this.refresh();
         },
 
-        selectAllScores: function(event) {
-
-            event.preventDefault();
-            this.setAllScores();
-        },
-
-        setAllScores: function() {
-
-            this.model.setAllTopScores();
+        quit: function() {
             this.refresh();
         },
 
@@ -141,11 +141,31 @@ define([
             this.refresh();
         },
 
-        selectMonthlyScores: function(event) {
+        selectVariant0Scores: function(event) {
 
             event.preventDefault();
 
-            this.model.setMonthlyTopScores();
+            this.setVariantNoScores(0);
+            this.refresh();
+        },
+
+        setVariantNoScores: function(variantNo) {
+            this.model.setVariantTopScores(config.variants[variantNo].code);
+        },
+
+        selectVariant1Scores: function(event) {
+
+            event.preventDefault();
+
+            this.setVariantNoScores(1);
+            this.refresh();
+        },
+
+        selectVariant2Scores: function(event) {
+
+            event.preventDefault();
+
+            this.setVariantNoScores(2);
             this.refresh();
         }
     });

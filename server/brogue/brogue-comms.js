@@ -2,30 +2,38 @@
 // Responsible for distributing messages from players and observers
 
 var brogue = require('./brogue-interface');
+var brogueMode = require('../enum/brogue-mode');
 
 module.exports = {
 
     brogueInterface: {},
 
-    getBrogueInterface: function (username, data, mode) {
-        if (this.brogueInterface[username]) {
-            if(!this.brogueInterface[username].disconnected) {
-                return this.brogueInterface[username];
+    getBrogueInterface: function (username, variant, data, mode) {
+
+        //This would allow us to support simultaneously playing 2 variants - but that requires refactoring the user model
+        var gameKey = variant + '-' + username;
+        if(mode == brogueMode.RECORDING) {
+            gameKey += "-RECORDING";
+        }
+
+        if (this.brogueInterface[gameKey]) {
+            if(!this.brogueInterface[gameKey].disconnected) {
+                return this.brogueInterface[gameKey];
             }
         }
 
         //If no interface exists, or it is disconnected, start with a new interface
 
         try {
-            this.brogueInterface[username] = new brogue(username);
-            this.brogueInterface[username].start(data, mode);
+            this.brogueInterface[gameKey] = new brogue(username, variant);
+            this.brogueInterface[gameKey].start(data, mode);
         }
         catch(e) {
-            delete this.brogueInterface[username];
+            delete this.brogueInterface[gameKey];
             throw e;
         }
 
-        return this.brogueInterface[username];
+        return this.brogueInterface[gameKey];
     }
 }
 

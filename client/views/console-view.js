@@ -5,14 +5,13 @@ define([
     "underscore",
     "backbone",
     "dispatcher",
+    "config",
     'dataIO/send-keypress',
     "views/console-cell-view",
     "models/console-cell",
     "views/view-activation-helpers"
-], function($, _, Backbone, dispatcher, sendKeypressEvent, ConsoleCellView, CellModel, activate) {
+], function($, _, Backbone, dispatcher, config, sendKeypressEvent, ConsoleCellView, CellModel, activate) {
 
-    var _CONSOLE_ROWS = 34;
-    var _CONSOLE_COLUMNS = 100;
     var _MESSAGE_UPDATE_SIZE = 10;
 
     var _consoleCells = [];
@@ -33,18 +32,33 @@ define([
         },
         initialize: function() {
             this.$el.addClass("full-height");
-
-            this.calculateConsoleSize();
-            this.calculateConsoleCellSize();
-
-            this.initializeConsoleCells();
         },
+
+        initialiseForNewGame: function(data) {
+
+            var variantIndex = 0;
+            if('variantIndex' in data) {
+                variantIndex = data.variantIndex;
+            }
+            else {
+                variantIndex = _.findIndex(config.variants, {code: data.variant});
+            }
+
+            this.consoleColumns = config.variants[variantIndex].consoleColumns;
+            this.consoleRows = config.variants[variantIndex].consoleRows;
+            this.initializeConsoleCells();
+            this.resize();
+        },
+
         initializeConsoleCells: function() {
             var consoleCellsFragment = document.createDocumentFragment();
-            
-            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
+
+            _consoleCells = [];
+            this.$el.children("div.console-cell").remove();
+
+            for (var i = 0; i < this.consoleColumns; i++) {
                 var column = [];
-                for (var j = 0; j < _CONSOLE_ROWS; j++) {
+                for (var j = 0; j < this.consoleRows; j++) {
                     var cellModel = new CellModel({
                         x: i,
                         y: j,
@@ -74,29 +88,30 @@ define([
             _consoleHeight = this.$el.height();
         },
         calculateConsoleCellSize: function() {
-            _consoleCellWidthPercent = 100 / _CONSOLE_COLUMNS;
+
+            _consoleCellWidthPercent = 100 / this.consoleColumns;
 
             // Cell Aspect Ratio
             var cellPixelWidth = _consoleWidth * (_consoleCellWidthPercent / 100);
             var cellPixelHeight = cellPixelWidth / _consoleCellAspectRatio;
 
             //If this height will make the console go off screen, recalculate size and horizontally center instead
-            if (cellPixelHeight * _CONSOLE_ROWS > _consoleHeight) {              
-                cellPixelHeight = _consoleHeight / _CONSOLE_ROWS;
+            if (cellPixelHeight * this.consoleRows > _consoleHeight) {
+                cellPixelHeight = _consoleHeight / this.consoleRows;
                 cellPixelWidth = cellPixelHeight * _consoleCellAspectRatio;
 
-                _consoleCellHeightPercent = 100 / _CONSOLE_ROWS;
+                _consoleCellHeightPercent = 100 / this.consoleRows;
                 _consoleCellWidthPercent = 100 * cellPixelWidth / _consoleWidth;
                 _consoleCellTopOffsetPercent = 0;
 
-                var leftOffSetPx = (_consoleWidth - cellPixelWidth * _CONSOLE_COLUMNS) / 2;
+                var leftOffSetPx = (_consoleWidth - cellPixelWidth * this.consoleColumns) / 2;
                 _consoleCellLeftOffsetPercent = leftOffSetPx / _consoleWidth * 100;
             }
             else {
                 // Vertically center the console
                 _consoleCellHeightPercent = 100 * cellPixelHeight / _consoleHeight;
                 _consoleCellLeftOffsetPercent = 0;
-                var topOffSetPx = (_consoleHeight - cellPixelHeight * _CONSOLE_ROWS) / 2;
+                var topOffSetPx = (_consoleHeight - cellPixelHeight * this.consoleRows) / 2;
                 _consoleCellTopOffsetPercent = topOffSetPx / _consoleHeight * 100;
             }
 
@@ -105,8 +120,9 @@ define([
             _consoleCellCharPaddingPx = cellPixelHeight / 10;
         },
         render: function() {
-            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
-                for (var j = 0; j < _CONSOLE_ROWS; j++) {
+
+            for (var i = 0; i < this.consoleColumns; i++) {
+                for (var j = 0; j < this.consoleRows; j++) {
                     _consoleCells[i][j].render();
                 }
             }
@@ -115,8 +131,12 @@ define([
         resize: function() {
             this.calculateConsoleSize();
             this.calculateConsoleCellSize();
-            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
-                for (var j = 0; j < _CONSOLE_ROWS; j++) {
+            this.setNewConsoleCellSize();
+        },
+        setNewConsoleCellSize : function() {
+
+            for (var i = 0; i < this.consoleColumns; i++) {
+                for (var j = 0; j < this.consoleRows; j++) {
                     _consoleCells[i][j].model.set({
                         widthPercent: _consoleCellWidthPercent,
                         heightPercent: _consoleCellHeightPercent,
@@ -147,13 +167,23 @@ define([
                 var dataXCoord = dataArray[dIndex++];
                 var dataYCoord = dataArray[dIndex++];
 
+                var combinedUTF16Char = dataArray[dIndex++] << 8 | dataArray[dIndex++];
+
+                //console.log("[(" + dataXCoord + "," + dataYCoord + ") " + combinedUTF16Char + "]");
+
                 // Status updates have coords (255,255). For now ignore these, eventually we may find a UI use for them
-                if (dataXCoord === 255 && dataYCoord === 255){
+                if (dataXCoord === 255 && dataYCoord === 255) {
                     dIndex += _MESSAGE_UPDATE_SIZE - 2;
                     continue;
                 }
 
-                var combinedUTF16Char = dataArray[dIndex++] << 8 | dataArray[dIndex++];
+                //Other out-of-range data
+                if (dataXCoord >= this.consoleColumns || dataXCoord < 0 ||
+                    dataYCoord < 0 || dataYCoord >= this.consoleRows) {
+                    console.error("Out of range cell update: [(" + dataXCoord + "," + dataYCoord + ") " + combinedUTF16Char + "]");
+                    dIndex += 6;
+                    continue;
+                }
 
                 _consoleCells[dataXCoord][dataYCoord].model.set({
                     char: combinedUTF16Char,
@@ -170,8 +200,8 @@ define([
         },
         
         clearConsole : function(){
-            for (var i = 0; i < _CONSOLE_COLUMNS; i++) {
-                for (var j = 0; j < _CONSOLE_ROWS; j++) {
+            for (var i = 0; i < this.consoleColumns; i++) {
+                for (var j = 0; j < this.consoleRows; j++) {
                     _consoleCells[i][j].model.clear();
                     _consoleCells[i][j].render();
                 }

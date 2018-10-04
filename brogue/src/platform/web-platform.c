@@ -331,6 +331,9 @@ static void notify_event(short eventId, int data1, int data2, const char *str1, 
       if(!str1[j - msg1_start])
         break;
   }
+  if(j == msg1_end) {
+      statusOutputBuffer[msg1_end - 1] = 0;
+  }
 
   int msg2_end = EVENT_SIZE;
   for (j = msg1_end; j < msg2_end; j++){
@@ -338,6 +341,7 @@ static void notify_event(short eventId, int data1, int data2, const char *str1, 
       if(!str2[j - msg1_end])
         break;
   }
+  statusOutputBuffer[EVENT_SIZE - 1] = 0;
 
   write_to_socket(statusOutputBuffer, EVENT_SIZE);
   flush_output_buffer();

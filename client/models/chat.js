@@ -48,7 +48,7 @@ define([
                 formattedDate =  Moment(date).format('D/MMM ')
             }
 
-            formattedDate += Moment(date).format('h:mm');
+            formattedDate += Moment(date).format('HH:mm');
             return formattedDate;
         },
 

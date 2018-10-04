@@ -4,11 +4,12 @@ define([
     "jquery",
     "underscore",
     "backbone",
+    "config",
     "dispatcher",
     "views/popups/popup-view",
     "dataIO/send-generic",
     "views/view-activation-helpers"
-], function ($, _, Backbone, dispatcher, PopupView, send, activate) {
+], function ($, _, Backbone, config, dispatcher, PopupView, send, activate) {
 
     var SeedView = PopupView.extend({
         
@@ -17,6 +18,7 @@ define([
         },
         
         template : _.template($('#seed-popup').html()),
+        variantIndex : 0,
         
         initialize : function(){
             _.extend(this.events, PopupView.prototype.events);
@@ -32,7 +34,7 @@ define([
             }
             else if (message.result === "success") {
                 this.closePopup();
-                dispatcher.trigger("startGame");
+                dispatcher.trigger("startGame", { variantIndex: this.variantIndex });
 
                 activate.console();
                 dispatcher.trigger("showConsole");
@@ -43,12 +45,14 @@ define([
             event.preventDefault();        
             var seedValue = $('#seed').val();  
             send("brogue", "start", {
-                seed: seedValue
+                seed: seedValue,
+                variant: config.variants[this.variantIndex].code
             });
         },
 
-        showSeedPopup: function() {
+        showSeedPopup: function(variantIndex) {
             this.showPopup("");
+            this.variantIndex = variantIndex;
             return;
         },
         

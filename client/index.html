@@ -18,14 +18,14 @@
     <div id="loading" class="loading">Loading...</div>
     <div id="auth" class="auth"></div>
     <div id="play" class="play inactive">
-        <h2>Play Brogue 1.7.4</h2>
+        <h2>Play Brogue!</h2>
         <ul>
-            <li><a id="start-brogue" href="#brogue">Start or Continue Game</a></li>
-            <li><a id="start-brogue-seed" href="#brogue">Start New Game With Seed</a></li>
-            <!--<li><a id="show-saved-games" href="#show-saved-games">Load Saved Game</a></li>-->
-            <li><a id="show-current-games" href="#show-current-games">Show Current Games </a></li>
-            <li><a id="show-high-scores" href="#show-high-scores">Show High Scores</a></li>
-            <li><a id="show-stats" href="#show-stats">Show Statistics</a></li>
+            <li><strong>Brogue v1.7.5 - <a id="start-brogue-0" href="#brogue">(play)</a> <a id="start-brogue-seed-0" href="#brogue">(seed)</a></strong></li>
+            <li>Brogue v1.7.4 - <a id="start-brogue-1" href="#brogue">(play)</a> <a id="start-brogue-seed-1" href="#brogue">(seed)</a></li>
+            <li>gBrogue v1.18.02.11 - <a id="start-brogue-2" href="#brogue">(play)</a> <a id="start-brogue-seed-2" href="#brogue">(seed)</a></li>
+            <li><a id="show-current-games" href="#show-current-games">Current Games </a></li>
+            <li><a id="show-high-scores" href="#show-high-scores">High Scores</a></li>
+            <li><a id="show-stats" href="#show-stats">Game Statistics</a></li>
         </ul>
     </div>
     <div id="lobby-chat" class="lobby-chat"></div>
@@ -34,8 +34,9 @@
         <p>Play Brogue the roguelike in your browser!</p>
         <p><a href="https://www.google.com/chrome/">Chrome</a> is <strong>strongly recommended</strong>. Other browsers (e.g. <a href="http://www.mozilla.org">Firefox</a>) should work but may be slower.</p>
         <p>This site is based in the EU (London). Too much lag? - try the <a href="http://brogue.lumenstone.org">US site</a>.</p>
-        <p><a href="//sites.google.com/site/broguegame/">Brogue</a> is a Roguelike game by Brian Walker. Check out the <a href="//sites.google.com/site/broguegame/">instructions/tips</a>.</p>
-        <p>web-brogue is maintained by Tom Ford.  Kip Raske build the original version and runs the <a href="http://brogue.lumenstone.org">US site</a>. Fork the code <a href="//github.com/flend/web-brogue">on github</a>, and post an issue or make a pull request.</p>
+        <p><a href="https://sites.google.com/site/broguegame/">Brogue</a> is a Roguelike game by Brian Walker. Check out the <a href="//sites.google.com/site/broguegame/">instructions/tips</a>.</p>
+        <a><a href="https://github.com/gbelo/gBrogue">gBrogue</a> is a fork of Brogue by Greg Reed.</p>
+        <p>web-brogue is maintained by Tom Ford.  Kip Raske built the original version and runs the <a href="http://brogue.lumenstone.org">US site</a>. Fork the code <a href="//github.com/flend/web-brogue">on github</a>, and post an issue or make a pull request.</p>
         <p>Have fun and get that amulet and those lumenstones!</p>
     </div>
     <div id="current-games" class="current-games"></div>
@@ -111,8 +112,9 @@
     <h2>High Scores</h2>
     <ul>
         <li><a id="all-scores-daily" href="#all-scores-daily">Daily Top Scores</a></li>
-        <li><a id="all-scores-monthly" href="#all-scores-monthly">Monthly Top Scores</a></li>
-        <li><a id="all-scores-all" href="#all-scores-all">All-time Top Scores</a></li>
+        <li><a id="all-scores-variant0" href="#all-scores-variant0">All-time Top Scores (Brogue 1.7.5)</a></li>
+        <li><a id="all-scores-variant1" href="#all-scores-variant1">All-time Top Scores (Brogue 1.7.4)</a></li>
+        <li><a id="all-scores-variant2" href="#all-scores-variant1">All-time Top Scores (gBrogue)</a></li>
         <% if (username) { %>
         <li><a id="all-scores-user" href="#all-scores-user">My Top Scores (<%= username %>)</a></li>
         <% } %>
@@ -130,6 +132,7 @@
         <% } %>
     </ul>
     <div id="mini-scores-grid" />
+    <div id="mini-scores-paginator" />
 </script>
 
 <script id="welcome" type="text/template">
@@ -158,6 +161,7 @@
     <table id="current-games-table">
         <tr>
             <th>User</th>
+            <th>Version</th>
             <th>Idle</th>
             <th>Level</th>
             <th>Gold</th>
@@ -169,9 +173,10 @@
 
 <script id="current-games-row" type="text/template">
     <td><%= userName %></td>
+    <td><%= prettyVariant %></td>
     <td><%= formattedIdle %></td>
     <td><% if (easyMode) { %>&<% } %><%= deepestLevel %></td>
-    <td><%= gold %></td>
+    <td><%= prettyScore %></td>
     <td><%= seed %></td>
     <td><a id="observe-game" data-username="<%= userName %>" href="#brogue"><%= action %></a></td>
 </script>
@@ -213,24 +218,44 @@
 
 <script id="cause-statistics-template" type="text/template">
     <h3>Deaths by Cause</h3>
+    <ul>
+        <li><a id="deaths-by-cause-variant0" href="#deaths-by-cause-variant0">Deaths for Brogue 1.7.5</a></li>
+        <li><a id="deaths-by-cause-variant1" href="#deaths-by-cause-variant1">Deaths for Brogue 1.7.4</a></li>
+        <li><a id="deaths-by-cause-variant2" href="#deaths-by-cause-variant2">Deaths for gBrogue</a></li>
+    </ul>
     <p>The top 3 causes of death by the level on which they happened.</p>
     <div id="cause-stats-grid" />
 </script>
 
 <script id="level-statistics-template" type="text/template">
     <h3>Deaths by Level</h3>
+    <ul>
+        <li><a id="deaths-by-level-variant0" href="#deaths-by-level-variant0">Deaths for Brogue 1.7.5</a></li>
+        <li><a id="deaths-by-level-variant1" href="#deaths-by-level-variant1">Deaths for Brogue 1.7.4</a></li>
+        <li><a id="deaths-by-level-variant2" href="#deaths-by-level-variant2">Deaths for gBrogue</a></li>
+    </ul>
     <p>Number of deaths per level.</p>
     <div id="level-stats-grid" />
 </script>
 
 <script id="level-probability-template" type="text/template">
     <h3>Probability of Death by Level</h3>
+    <ul>
+        <li><a id="deaths-probability-by-level-variant0" href="#deaths-probability-by-level-variant0">Deaths for Brogue 1.7.5</a></li>
+        <li><a id="deaths-probability-by-level-variant1" href="#deaths-probability-by-level-variant1">Deaths for Brogue 1.7.4</a></li>
+        <li><a id="deaths-probability-by-level-variant2" href="#deaths-probability-by-level-variant2">Deaths for gBrogue</a></li>
+    </ul>
     <p>The probability of dying on a particular level, having reached that level. An analogue of perceived difficulty.</p>
     <div id="level-probability-grid" />
 </script>
 
 <script id="general-statistics-template" type="text/template">
     <h3>General Statistics</h3>
+    <ul>
+        <li><a id="general-stats-variant0" href="#general-stats-variant0">Stats for Brogue 1.7.5</a></li>
+        <li><a id="general-stats-variant1" href="#general-stats-variant1">Stats for Brogue 1.7.4</a></li>
+        <li><a id="general-stats-variant2" href="#general-stats-variant2">Stats for gBrogue</a></li>
+    </ul>
     <ul>
         <li>Total games played: <%= totalGames %> (easy mode: <%= totalEasyModeGames %>)</li>
         <li>Total victories: <%= totalNormalModeVictories %></li>
